@@ -1,0 +1,17 @@
+{
+  "name": "notifire",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@types/nodemailer": "*"
+  },
+  "scripts": {
+    "build": "tsc index.ts --outDir dist"
+  },
+  "dependencies": {
+    "axios": "^1.5.1",
+    "dotenv": "^16.3.1",
+    "nodemailer": "^6.9.6",
+    "config": "*"
+  }
+}

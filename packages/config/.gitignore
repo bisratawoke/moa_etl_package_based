@@ -1,0 +1,5 @@
+.env.dev
+devConfig.ts
+prodConfig.ts
+dist/devConfig.js
+dist/prodConfig.js

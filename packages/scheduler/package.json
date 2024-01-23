@@ -1,0 +1,21 @@
+{
+  "name": "scheduler",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc index.ts --outDir dist"
+  },
+  "devDependencies": {
+    "@types/node-schedule": "*",
+    "@types/node": "*"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "node-schedule": "^2.1.1",
+    "notifire": "*",
+    "kmis-etl": "*",
+    "irrigation": "*",
+    "etl-exception": "*",
+    "config": "*"
+  }
+}

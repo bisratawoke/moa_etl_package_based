@@ -1,0 +1,21 @@
+{
+  "name": "kmis",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@types/uuid": "*"
+  },
+  "scripts": {
+    "build": "tsc index.ts --outDir dist"
+  },
+  "dependencies": {
+    "@terraformer/wkt": "^2.2.0",
+    "axios": "^1.5.0",
+    "convert-excel-to-json": "^1.7.0",
+    "dotenv": "^16.3.1",
+    "uuid": "^9.0.0",
+    "notifire": "*",
+    "etl-exception": "*",
+    "config": "*"
+  }
+}

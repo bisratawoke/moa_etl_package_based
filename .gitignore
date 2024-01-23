@@ -1,12 +1,19 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-dist
+# dist
 tmp
 /out-tsc
-
+# /packages
 # dependencies
 node_modules
+
+# # env files
+packages/config/.env.dev
+packages/config/devConfig.ts
+packages/config/prodConfig.ts
+packages/config/dist/devConfig.json
+packages/config/dist/prodConfig.json
 
 # IDEs and editors
 /.idea
