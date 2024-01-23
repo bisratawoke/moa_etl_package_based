@@ -21,6 +21,7 @@ var etlExceptionType;
     etlExceptionType["EXTRACTION"] = "EXTRACTION";
     etlExceptionType["TRANSFORMATION"] = "TRANSFORMATION";
     etlExceptionType["LOADING"] = "LOADING";
+    etlExceptionType["UNKNOWN"] = "UNKNOWN";
 })(etlExceptionType || (exports.etlExceptionType = etlExceptionType = {}));
 var etlExceptions = /** @class */ (function (_super) {
     __extends(etlExceptions, _super);

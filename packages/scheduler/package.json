@@ -16,6 +16,8 @@
     "kmis-etl": "*",
     "irrigation": "*",
     "etl-exception": "*",
-    "config": "*"
+    "calm": "*",
+    "config": "*",
+    "nrlais": "1.0.0"
   }
 }

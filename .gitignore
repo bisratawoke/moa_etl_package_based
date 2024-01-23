@@ -8,13 +8,16 @@ tmp
 # dependencies
 node_modules
 
-# # env files
+# env files
 packages/config/.env.dev
 packages/config/devConfig.ts
 packages/config/prodConfig.ts
 packages/config/dist/devConfig.json
 packages/config/dist/prodConfig.json
 
+# docker compose files used for development
+packages/nrlais/docker-compose.yml
+packages/nrlais/parcels_etl/config.json
 # IDEs and editors
 /.idea
 .project

@@ -50,7 +50,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EXTRACTION_STATUS = exports.EXTRACTION_METHOD = void 0;
 var axios_1 = require("axios");
 var nodemailer = require("nodemailer");
-var config_1 = require("config");
 var EXTRACTION_METHOD;
 (function (EXTRACTION_METHOD) {
     EXTRACTION_METHOD["SYSTEMATIC"] = "systematic";
@@ -67,32 +66,26 @@ var Notifier = /** @class */ (function () {
         this.elasticConfig = elasticConfig;
     }
     Notifier.prototype.getEmailCred = function () {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
             var headers, result, err_1;
-            return __generator(this, function (_g) {
-                switch (_g.label) {
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
-                        _g.trys.push([0, 2, , 3]);
-                        console.log({
+                        _e.trys.push([0, 2, , 3]);
+                        headers = {
                             auth: {
                                 username: (_a = this.elasticConfig) === null || _a === void 0 ? void 0 : _a.username,
                                 password: (_b = this.elasticConfig) === null || _b === void 0 ? void 0 : _b.password,
                             },
-                        });
-                        headers = {
-                            auth: {
-                                username: (_c = this.elasticConfig) === null || _c === void 0 ? void 0 : _c.username,
-                                password: (_d = this.elasticConfig) === null || _d === void 0 ? void 0 : _d.password,
-                            },
                         };
-                        return [4 /*yield*/, axios_1.default.get("".concat((_e = this.elasticConfig) === null || _e === void 0 ? void 0 : _e.host, "/notifier/_search"), headers)];
+                        return [4 /*yield*/, axios_1.default.get("".concat((_c = this.elasticConfig) === null || _c === void 0 ? void 0 : _c.host, "/notifier/_search"), headers)];
                     case 1:
-                        result = _g.sent();
+                        result = _e.sent();
                         return [2 /*return*/, result.data.hits.hits[0]._source];
                     case 2:
-                        err_1 = _g.sent();
-                        console.log((_f = err_1 === null || err_1 === void 0 ? void 0 : err_1.response) === null || _f === void 0 ? void 0 : _f.data);
+                        err_1 = _e.sent();
+                        console.log((_d = err_1 === null || err_1 === void 0 ? void 0 : err_1.response) === null || _d === void 0 ? void 0 : _d.data);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -195,8 +188,3 @@ var Notifier = /** @class */ (function () {
     return Notifier;
 }());
 exports.default = Notifier;
-var notifier = new Notifier({
-    username: config_1.default.ELASTIC_USERNAME,
-    password: config_1.default.ELASTIC_PASSWORD,
-    host: config_1.default.ELASTIC_URL,
-});

@@ -36,12 +36,6 @@ export default class Notifier {
 
   private async getEmailCred() {
     try {
-      console.log({
-        auth: {
-          username: this.elasticConfig?.username,
-          password: this.elasticConfig?.password,
-        },
-      });
       const headers: any = {
         auth: {
           username: this.elasticConfig?.username,
@@ -56,7 +50,6 @@ export default class Notifier {
       return result.data.hits.hits[0]._source;
     } catch (err: any) {
       console.log(err?.response?.data);
-      // console.log(err);
     }
   }
 
@@ -126,9 +119,3 @@ export default class Notifier {
     }
   }
 }
-
-let notifier = new Notifier({
-  username: config.ELASTIC_USERNAME,
-  password: config.ELASTIC_PASSWORD,
-  host: config.ELASTIC_URL,
-});
