@@ -6,7 +6,7 @@ export enum OPERATION_TYPE {
   ETL = "ETL",
 }
 
-export async function nrlais_parcel_elt(opType: OPERATION_TYPE) {
+export function nrlais_parcel_elt(opType: OPERATION_TYPE): any {
   return async () => {
     try {
       if (opType == OPERATION_TYPE.SYNC) {

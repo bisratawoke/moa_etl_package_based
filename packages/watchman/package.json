@@ -1,0 +1,11 @@
+{
+  "name": "watchman",
+  "version": "1.0.0",
+  "description": "This package duty is to continously ping the various services that are intergrated in this project and record their responses",
+  "scripts": {
+    "build": "tsc index.ts --outDir dist"
+  },
+  "dependencies": {
+    "axios": "*"
+  }
+}

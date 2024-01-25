@@ -1,0 +1,9 @@
+version: "3.3"
+services:
+  mypgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=QuirkY3lephantSpectacle@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=Df9&GpLs4z*TcEhYqWx2vA7nB5mQ1oZuI8rJ3kX0
+    ports:
+      - "5050:80"

@@ -2,7 +2,9 @@
   "name": "package-based",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "npx nx run-many --target=build && set NODE_ENV=development && node ./packages/scheduler/dist/index.js"
+  },
   "private": true,
   "devDependencies": {
     "@nx/js": "17.2.8",

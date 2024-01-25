@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "config";
+import etlExceptions, { etlExceptionType } from "etl-exception";
 import * as fs from "fs";
 import * as path from "path";
 export const indexName =
@@ -127,7 +128,7 @@ async function doesParcelExist(parcel_id: string) {
 
 export interface IConfig {
   created_at: string;
-  update_at: string;
+  updated_at: string;
 }
 
 export function readConfig(): IConfig {
@@ -141,4 +142,42 @@ export function updateConfig(data: IConfig) {
     path.resolve(__dirname, "config.json"),
     JSON.stringify({ ...currentConfig, ...data })
   );
+}
+
+export async function getMaxCreatedAtAndUpdatedAtFromIndex(
+  indexName: string
+): Promise<IConfig> {
+  try {
+    const response = await axios.post(
+      `${config.ELASTIC_URL}/elastic/gateway/${indexName}/_search`,
+      {
+        aggs: {
+          max_created_at: {
+            max: {
+              field: "created_at",
+            },
+          },
+          max_updated_at: {
+            max: {
+              field: "updated_at",
+            },
+          },
+        },
+      },
+      {
+        auth: {
+          username: config.ELASTIC_USERNAME,
+          password: config.ELASTIC_PASSWORD,
+        },
+      }
+    );
+
+    return {
+      created_at: response.data._source.created_at,
+      updated_at: response.data._source.updated,
+    };
+  } catch (error) {
+    if (error instanceof etlExceptions) throw error;
+    else throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+  }
 }

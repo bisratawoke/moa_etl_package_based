@@ -12,6 +12,6 @@
     "axios": "^1.5.1",
     "dotenv": "^16.3.1",
     "nodemailer": "^6.9.6",
-    "config": "*"
+    "moa_config": "*"
   }
 }

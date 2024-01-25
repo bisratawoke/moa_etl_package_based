@@ -12,6 +12,6 @@
     "dotenv": "*",
     "notifire": "*",
     "etl-exception": "*",
-    "config": "*"
+    "moa_config": "*"
   }
 }

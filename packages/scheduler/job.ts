@@ -10,9 +10,9 @@ let notifier = new Notifier({
 
 export default function jobber(
   indexName: any,
-  job: () => Promise<void>,
+  job: () => Promise<void> | any,
   retryInterval?: any
-) {
+): () => Promise<void> {
   return async () => {
     try {
       await notifier.notify({

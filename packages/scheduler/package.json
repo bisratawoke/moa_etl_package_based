@@ -17,7 +17,8 @@
     "irrigation": "*",
     "etl-exception": "*",
     "calm": "*",
-    "config": "*",
-    "nrlais": "1.0.0"
+    "moa_config": "*",
+    "nrlais": "1.0.0",
+    "socio-econ": "1.0.0"
   }
 }

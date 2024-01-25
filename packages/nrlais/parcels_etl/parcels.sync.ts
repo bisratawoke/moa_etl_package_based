@@ -2,7 +2,7 @@ const { Pool } = require("pg");
 const Cursor = require("pg-cursor");
 const fs = require("fs");
 const axios = require("axios");
-import config from "config";
+import config from "moa_config";
 import { transformer, insertIntoElastic, indexName } from "./utils";
 
 export default async function sync() {
@@ -26,5 +26,7 @@ export default async function sync() {
     await insertIntoElastic(indexName, rec);
     rows = await cursor.read(1);
   }
-  cursor.close(() => client.release());
+  cursor.close(() => {
+    client.release();
+  });
 }

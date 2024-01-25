@@ -1,7 +1,7 @@
 import axios from "axios";
 const { v4: uuidv4 } = require("uuid");
 import etlExceptions, { etlExceptionType } from "etl-exception";
-import config from "config";
+import config from "moa_config";
 const elasticUrl = config.ELASTIC_URL;
 const indexName = config.irrigationIndexName;
 const username: any = config.ELASTIC_USERNAME;

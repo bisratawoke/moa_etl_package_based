@@ -1,5 +1,5 @@
 {
-  "name": "nrlais",
+  "name": "psnp-pw",
   "version": "1.0.0",
   "main": "dist/index.js",
   "devDependencies": {
@@ -9,12 +9,12 @@
     "build": "tsc index.ts --outDir dist"
   },
   "dependencies": {
-    "moa_config": "*",
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
     "pg": "^8.11.3",
     "pg-cursor": "^2.10.3",
     "pg-promise": "^11.5.4",
-    "etl-exception": "*"
+    "etl-exception": "*",
+    "moa_config": "1.0.0"
   }
 }

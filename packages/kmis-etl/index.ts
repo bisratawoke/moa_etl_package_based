@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require("uuid");
 // import {v4 as uuidv4} from "uuid"
 import axios from "axios";
 import etlExceptions, { etlExceptionType } from "etl-exception";
-import config from "config";
+import config from "moa_config";
 
 const elasticUrl = config.ELASTIC_URL;
 const username: any = config.ELASTIC_USERNAME;
@@ -74,7 +74,8 @@ async function hectarOfAreaClosureWithinEtlCalendar() {
 async function insertNumberOfWoredasWithEth() {
   try {
     const res = await removePreviousData(
-      "slm_number_of_woredas_in_eth_calendar"
+      // "slm_number_of_woredas_in_eth_calendar"
+      "slm_number_of_woredas_in_eth_calendar_scheduler_test"
     );
     const response = await axios.get(
       "http://slmpkmis.gov.et/api-slm-vis/public/region-mid-end-indicators-region-project-aggregated?indicator_code=IR8"
@@ -94,7 +95,8 @@ async function insertNumberOfWoredasWithEth() {
         setTimeout(async () => {
           await insertIntoElastic(
             payload,
-            "slm_number_of_woredas_in_eth_calendar"
+            // "slm_number_of_woredas_in_eth_calendar"
+            "slm_number_of_woredas_in_eth_calendar_scheduler_test"
           );
         }, 300 * indx);
       }
@@ -109,7 +111,9 @@ async function insertNumberOfWoredasWithEth() {
 
 async function insertCommunityWaterShedsCoopWithEthCalendar() {
   try {
-    let res = await removePreviousData("watercoopsinethcalendar");
+    //watercoopsinethcalendar_calendar_test
+    //watercoopsinethcalendar
+    let res = await removePreviousData("watercoopsinethcalendar_calendar_test");
     const dataFromKmisApi = await axios.get(
       "http://slmpkmis.gov.et/api-slm-vis/public/woreda-quarterly-indicators-project-aggregated?indicator_code=IR7"
     );
@@ -126,7 +130,10 @@ async function insertCommunityWaterShedsCoopWithEthCalendar() {
             quarter: rec.quarter,
           };
           setTimeout(async () => {
-            await insertIntoElastic(payload, "watercoopsinethcalendar");
+            await insertIntoElastic(
+              payload,
+              "watercoopsinethcalendar_calendar_test"
+            );
           }, idx * 300);
         } catch (error) {
           console.log(error);
@@ -142,7 +149,10 @@ async function insertCommunityWaterShedsCoopWithEthCalendar() {
 
 async function lswi() {
   try {
-    const result = await removePreviousData("slm_land_surface_water_index");
+    //slm_land_surface_water_index
+    const result = await removePreviousData(
+      "slm_land_surface_water_index_scheduler_test"
+    );
     const dataFromKmisApi = await axios.get(
       "http://slmpkmis.gov.et/api-slm-vis/public/mws-mid-end-indicators-mws-project-aggregated?indicator_code=PDO3"
     );
@@ -161,7 +171,7 @@ async function lswi() {
         setTimeout(async () => {
           await insertIntoElastic(
             data,
-            "slm_land_surface_water_index",
+            "slm_land_surface_water_index_scheduler_test",
             data.id
           );
         }, indx * 100);
@@ -177,6 +187,9 @@ async function lswi() {
 
 async function insertMajorWatershed() {
   try {
+    const result = await removePreviousData(
+      "smlp_major_watershed_schedular_test"
+    );
     const response = await axios.get(
       "http://slmpkmis.gov.et/api-slm-vis/public/cws_basic"
     );
@@ -186,8 +199,14 @@ async function insertMajorWatershed() {
         record_type: "SLMP",
       };
 
+      //smlp_major_watershed_schedular_test
+      //smlp_major_watershed
       setTimeout(async () => {
-        await insertIntoElastic(payload, "smlp_major_watershed", payload.id);
+        await insertIntoElastic(
+          payload,
+          "smlp_major_watershed_schedular_test",
+          payload.id
+        );
       }, 300 * indx);
     });
   } catch (error: any) {
@@ -229,14 +248,16 @@ async function removePreviousData(indexName: string) {
 
 export default async function main() {
   try {
-    console.log("========== in main =========");
+    console.log("======== in main ===========");
     await hectarOfAreaClosureWithinEtlCalendar();
-    // await lswi();
-    // await insertNumberOfWoredasWithEth();
-    // await insertCommunityWaterShedsCoopWithEthCalendar();
-    // await insertMajorWatershed();
+    await lswi();
+    await insertNumberOfWoredasWithEth();
+    await insertCommunityWaterShedsCoopWithEthCalendar();
+    await insertMajorWatershed();
   } catch (error) {
-    // console.log(error);
-    throw error;
+    if (error instanceof etlExceptions) throw error;
+    else {
+      throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+    }
   }
 }

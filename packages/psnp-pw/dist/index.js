@@ -36,44 +36,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nrlais_parcel_elt = exports.OPERATION_TYPE = void 0;
-var parcels_sync_1 = require("./parcels.sync");
-var parcels_etl_1 = require("./parcels.etl");
-var OPERATION_TYPE;
-(function (OPERATION_TYPE) {
-    OPERATION_TYPE["SYNC"] = "SYNC";
-    OPERATION_TYPE["ETL"] = "ETL";
-})(OPERATION_TYPE || (exports.OPERATION_TYPE = OPERATION_TYPE = {}));
-function nrlais_parcel_elt(opType) {
-    var _this = this;
-    return function () { return __awaiter(_this, void 0, void 0, function () {
+var psnp_pw_extract_1 = require("./src/services/extract/psnp_pw.extract");
+function main() {
+    return __awaiter(this, void 0, void 0, function () {
         var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 6, , 7]);
-                    if (!(opType == OPERATION_TYPE.SYNC)) return [3 /*break*/, 2];
-                    return [4 /*yield*/, (0, parcels_sync_1.default)()];
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, (0, psnp_pw_extract_1.extract_activites_info)()];
                 case 1:
                     _a.sent();
-                    return [3 /*break*/, 5];
+                    return [3 /*break*/, 3];
                 case 2:
-                    if (!(opType == OPERATION_TYPE.ETL)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, (0, parcels_etl_1.default)()];
-                case 3:
-                    _a.sent();
-                    return [3 /*break*/, 5];
-                case 4:
-                    console.log("error please specify the operation type");
-                    _a.label = 5;
-                case 5: return [3 /*break*/, 7];
-                case 6:
                     error_1 = _a.sent();
                     console.log(error_1);
-                    return [3 /*break*/, 7];
-                case 7: return [2 /*return*/];
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
-    }); };
+    });
 }
-exports.nrlais_parcel_elt = nrlais_parcel_elt;
+exports.default = main;
+main();

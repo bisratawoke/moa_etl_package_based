@@ -1,6 +1,6 @@
 import axios from "axios";
 const nodemailer = require("nodemailer");
-import config from "config";
+import config from "moa_config";
 
 export interface IElasticConfig {
   host: string;

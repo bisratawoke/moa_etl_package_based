@@ -51,10 +51,10 @@ var uuidv4 = require("uuid").v4;
 // import {v4 as uuidv4} from "uuid"
 var axios_1 = require("axios");
 var etl_exception_1 = require("etl-exception");
-var config_1 = require("config");
-var elasticUrl = config_1.default.ELASTIC_URL;
-var username = config_1.default.ELASTIC_USERNAME;
-var password = config_1.default.ELASTIC_PASSWORD;
+var moa_config_1 = require("moa_config");
+var elasticUrl = moa_config_1.default.ELASTIC_URL;
+var username = moa_config_1.default.ELASTIC_USERNAME;
+var password = moa_config_1.default.ELASTIC_PASSWORD;
 function insertIntoElastic(obj, indexname, id) {
     return __awaiter(this, void 0, void 0, function () {
         var indexName, result, error_1, exp;
@@ -144,7 +144,9 @@ function insertNumberOfWoredasWithEth() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, removePreviousData("slm_number_of_woredas_in_eth_calendar")];
+                    return [4 /*yield*/, removePreviousData(
+                        // "slm_number_of_woredas_in_eth_calendar"
+                        "slm_number_of_woredas_in_eth_calendar_scheduler_test")];
                 case 1:
                     res = _a.sent();
                     return [4 /*yield*/, axios_1.default.get("http://slmpkmis.gov.et/api-slm-vis/public/region-mid-end-indicators-region-project-aggregated?indicator_code=IR8")];
@@ -159,7 +161,9 @@ function insertNumberOfWoredasWithEth() {
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "slm_number_of_woredas_in_eth_calendar")];
+                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, 
+                                            // "slm_number_of_woredas_in_eth_calendar"
+                                            "slm_number_of_woredas_in_eth_calendar_scheduler_test")];
                                         case 1:
                                             _a.sent();
                                             return [2 /*return*/];
@@ -189,7 +193,7 @@ function insertCommunityWaterShedsCoopWithEthCalendar() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, removePreviousData("watercoopsinethcalendar")];
+                    return [4 /*yield*/, removePreviousData("watercoopsinethcalendar_calendar_test")];
                 case 1:
                     res = _a.sent();
                     return [4 /*yield*/, axios_1.default.get("http://slmpkmis.gov.et/api-slm-vis/public/woreda-quarterly-indicators-project-aggregated?indicator_code=IR7")];
@@ -204,7 +208,7 @@ function insertCommunityWaterShedsCoopWithEthCalendar() {
                                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
-                                            case 0: return [4 /*yield*/, insertIntoElastic(payload_1, "watercoopsinethcalendar")];
+                                            case 0: return [4 /*yield*/, insertIntoElastic(payload_1, "watercoopsinethcalendar_calendar_test")];
                                             case 1:
                                                 _a.sent();
                                                 return [2 /*return*/];
@@ -238,7 +242,7 @@ function lswi() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, removePreviousData("slm_land_surface_water_index")];
+                    return [4 /*yield*/, removePreviousData("slm_land_surface_water_index_scheduler_test")];
                 case 1:
                     result = _a.sent();
                     return [4 /*yield*/, axios_1.default.get("http://slmpkmis.gov.et/api-slm-vis/public/mws-mid-end-indicators-mws-project-aggregated?indicator_code=PDO3")];
@@ -253,7 +257,7 @@ function lswi() {
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, insertIntoElastic(data, "slm_land_surface_water_index", data.id)];
+                                        case 0: return [4 /*yield*/, insertIntoElastic(data, "slm_land_surface_water_index_scheduler_test", data.id)];
                                         case 1:
                                             _a.sent();
                                             return [2 /*return*/];
@@ -277,24 +281,29 @@ function lswi() {
 }
 function insertMajorWatershed() {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_6, exp;
+        var result, response, error_6, exp;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1.default.get("http://slmpkmis.gov.et/api-slm-vis/public/cws_basic")];
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, removePreviousData("smlp_major_watershed_schedular_test")];
                 case 1:
+                    result = _a.sent();
+                    return [4 /*yield*/, axios_1.default.get("http://slmpkmis.gov.et/api-slm-vis/public/cws_basic")];
+                case 2:
                     response = _a.sent();
                     response.data._embedded.cws_basic.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
                         var payload;
                         var _this = this;
                         return __generator(this, function (_a) {
                             payload = __assign(__assign({}, rec), { record_type: "SLMP" });
+                            //smlp_major_watershed_schedular_test
+                            //smlp_major_watershed
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "smlp_major_watershed", payload.id)];
+                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "smlp_major_watershed_schedular_test", payload.id)];
                                         case 1:
                                             _a.sent();
                                             return [2 /*return*/];
@@ -304,14 +313,14 @@ function insertMajorWatershed() {
                             return [2 /*return*/];
                         });
                     }); });
-                    return [3 /*break*/, 3];
-                case 2:
+                    return [3 /*break*/, 4];
+                case 3:
                     error_6 = _a.sent();
                     if (error_6 instanceof etl_exception_1.default)
                         throw error_6;
                     exp = new etl_exception_1.default(error_6.message, etl_exception_1.etlExceptionType.LOADING);
                     throw exp;
-                case 3: return [2 /*return*/];
+                case 4: return [2 /*return*/];
             }
         });
     });
@@ -357,17 +366,33 @@ function main() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    console.log("========== in main =========");
+                    _a.trys.push([0, 6, , 7]);
+                    console.log("======== in main ===========");
                     return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
                 case 1:
                     _a.sent();
-                    return [3 /*break*/, 3];
+                    return [4 /*yield*/, lswi()];
                 case 2:
+                    _a.sent();
+                    return [4 /*yield*/, insertNumberOfWoredasWithEth()];
+                case 3:
+                    _a.sent();
+                    return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
+                case 4:
+                    _a.sent();
+                    return [4 /*yield*/, insertMajorWatershed()];
+                case 5:
+                    _a.sent();
+                    return [3 /*break*/, 7];
+                case 6:
                     error_8 = _a.sent();
-                    // console.log(error);
-                    throw error_8;
-                case 3: return [2 /*return*/];
+                    if (error_8 instanceof etl_exception_1.default)
+                        throw error_8;
+                    else {
+                        throw new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                    }
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     });

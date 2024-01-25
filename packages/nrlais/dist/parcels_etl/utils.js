@@ -56,9 +56,10 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.indexName = void 0;
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.indexName = void 0;
 var axios_1 = require("axios");
 var config_1 = require("config");
+var etl_exception_1 = require("etl-exception");
 var fs = require("fs");
 var path = require("path");
 exports.indexName = "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
@@ -195,3 +196,48 @@ function updateConfig(data) {
     fs.writeFileSync(path.resolve(__dirname, "config.json"), JSON.stringify(__assign(__assign({}, currentConfig), data)));
 }
 exports.updateConfig = updateConfig;
+function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/elastic/gateway/").concat(indexName, "/_search"), {
+                            aggs: {
+                                max_created_at: {
+                                    max: {
+                                        field: "created_at",
+                                    },
+                                },
+                                max_updated_at: {
+                                    max: {
+                                        field: "updated_at",
+                                    },
+                                },
+                            },
+                        }, {
+                            auth: {
+                                username: config_1.default.ELASTIC_USERNAME,
+                                password: config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 1:
+                    response = _a.sent();
+                    return [2 /*return*/, {
+                            created_at: response.data._source.created_at,
+                            updated_at: response.data._source.updated,
+                        }];
+                case 2:
+                    error_3 = _a.sent();
+                    if (error_3 instanceof etl_exception_1.default)
+                        throw error_3;
+                    else
+                        throw new etl_exception_1.default(error_3.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = getMaxCreatedAtAndUpdatedAtFromIndex;

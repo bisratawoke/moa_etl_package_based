@@ -40,7 +40,7 @@ var Pool = require("pg").Pool;
 var Cursor = require("pg-cursor");
 var fs = require("fs");
 var axios = require("axios");
-var config_1 = require("config");
+var moa_config_1 = require("moa_config");
 var utils_1 = require("./utils");
 function sync() {
     return __awaiter(this, void 0, void 0, function () {
@@ -49,11 +49,11 @@ function sync() {
             switch (_a.label) {
                 case 0:
                     pool = new Pool({
-                        host: config_1.default.NRLAIS_DB_HOST,
-                        port: config_1.default.NRLAIS_DB_PORT,
-                        password: config_1.default.NRLAIS_DB_PASSWORD,
-                        user: config_1.default.NRLAIS_DB_USER,
-                        database: config_1.default.NRLAIS_DB_NAME,
+                        host: moa_config_1.default.NRLAIS_DB_HOST,
+                        port: moa_config_1.default.NRLAIS_DB_PORT,
+                        password: moa_config_1.default.NRLAIS_DB_PASSWORD,
+                        user: moa_config_1.default.NRLAIS_DB_USER,
+                        database: moa_config_1.default.NRLAIS_DB_NAME,
                     });
                     return [4 /*yield*/, pool.connect()];
                 case 1:
@@ -78,7 +78,9 @@ function sync() {
                     rows = _a.sent();
                     return [3 /*break*/, 3];
                 case 7:
-                    cursor.close(function () { return client.release(); });
+                    cursor.close(function () {
+                        client.release();
+                    });
                     return [2 /*return*/];
             }
         });

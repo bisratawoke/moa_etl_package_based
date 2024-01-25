@@ -50,12 +50,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
 var uuidv4 = require("uuid").v4;
 var etl_exception_1 = require("etl-exception");
-var config_1 = require("config");
-var elasticUrl = config_1.default.ELASTIC_URL;
-var indexName = config_1.default.irrigationIndexName;
-var username = config_1.default.ELASTIC_USERNAME;
-var password = config_1.default.ELASTIC_PASSWORD;
-var irrigationBaseUrl = config_1.default.irrigationBaseUrl;
+var moa_config_1 = require("moa_config");
+var elasticUrl = moa_config_1.default.ELASTIC_URL;
+var indexName = moa_config_1.default.irrigationIndexName;
+var username = moa_config_1.default.ELASTIC_USERNAME;
+var password = moa_config_1.default.ELASTIC_PASSWORD;
+var irrigationBaseUrl = moa_config_1.default.irrigationBaseUrl;
 function insertIntoElastic(obj, indexName, id) {
     return __awaiter(this, void 0, void 0, function () {
         var result, error_1;

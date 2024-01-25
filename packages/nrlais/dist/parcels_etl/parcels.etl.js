@@ -36,31 +36,63 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var dbConnection_1 = require("../dbConnection");
 var etl_exception_1 = require("etl-exception");
 var utils_1 = require("./utils");
+var moa_config_1 = require("moa_config");
+var pg_1 = require("pg");
 function etl() {
     return __awaiter(this, void 0, void 0, function () {
-        var config;
+        var pool, client, config, error_1;
+        var _this = this;
         return __generator(this, function (_a) {
-            try {
-                config = (0, utils_1.readConfig)();
-                dbConnection_1.default.query("select * from account where created_at > ".concat(config.created_at, " or updated_at > ").concat(config.update_at), function (err, result) {
-                    if (err) {
-                        throw new etl_exception_1.default(err.message, etl_exception_1.etlExceptionType.EXTRACTION);
-                    }
-                    else {
-                        console.log(result.rows);
-                    }
-                });
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    pool = new pg_1.Pool({
+                        host: moa_config_1.default.NRLAIS_DB_HOST,
+                        port: moa_config_1.default.NRLAIS_DB_PORT,
+                        password: moa_config_1.default.NRLAIS_DB_PASSWORD,
+                        user: moa_config_1.default.NRLAIS_DB_USER,
+                        database: moa_config_1.default.NRLAIS_DB_NAME,
+                    });
+                    return [4 /*yield*/, pool.connect()];
+                case 1:
+                    client = _a.sent();
+                    config = (0, utils_1.readConfig)();
+                    client.query("select * from account where created_at > '".concat(config.created_at, "' or updated_at > '").concat(config.updated_at, "'"), function (err, result) { return __awaiter(_this, void 0, void 0, function () {
+                        var x, max_created_at_updated_at;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    if (!err) return [3 /*break*/, 1];
+                                    throw new etl_exception_1.default(err.message, etl_exception_1.etlExceptionType.EXTRACTION);
+                                case 1:
+                                    for (x = 0; x < result.rows.length; x++) {
+                                        /**
+                                         * TODO: transform , check if record already exists , insert record
+                                         *
+                                         */
+                                        console.log(result.rows[x]);
+                                    }
+                                    return [4 /*yield*/, (0, utils_1.getMaxCreatedAtAndUpdatedAtFromIndex)(utils_1.indexName)];
+                                case 2:
+                                    max_created_at_updated_at = _a.sent();
+                                    (0, utils_1.updateConfig)(max_created_at_updated_at);
+                                    _a.label = 3;
+                                case 3: return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_1 = _a.sent();
+                    if (error_1 instanceof etl_exception_1.default)
+                        throw error_1;
+                    else
+                        throw new etl_exception_1.default(error_1.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
-            catch (error) {
-                if (error instanceof etl_exception_1.default)
-                    throw error;
-                else
-                    throw new etl_exception_1.default(error.message, etl_exception_1.etlExceptionType.UNKNOWN);
-            }
-            return [2 /*return*/];
         });
     });
 }
