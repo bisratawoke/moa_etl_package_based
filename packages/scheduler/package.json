@@ -19,6 +19,7 @@
     "calm": "*",
     "moa_config": "*",
     "nrlais": "1.0.0",
-    "socio-econ": "1.0.0"
+    "socio-econ": "1.0.0",
+    "psnp-pw": "1.0.0"
   }
 }

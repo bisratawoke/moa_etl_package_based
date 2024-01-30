@@ -17,6 +17,7 @@ packages/config/dist/prodConfig.json
 
 # docker compose files used for development
 packages/nrlais/docker-compose.yml
+packages/psnp-pw/docker-compose.yml
 packages/nrlais/parcels_etl/config.json
 # IDEs and editors
 /.idea

@@ -36,33 +36,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var schedule = require("node-schedule");
-var psnp_pw_1 = require("psnp-pw");
-(function (job) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, job(psnp_pw_1.OPERATION_TYPE.ACTIVITIES)];
-            case 1:
-                _a.sent();
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                console.log(error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
+exports.insertIntoElastic = void 0;
+var axios_1 = require("axios");
+var moa_config_1 = require("moa_config");
+var etl_exception_1 = require("etl-exception");
+var uuidv4 = require("uuid").v4;
+function insertIntoElastic(obj, indexname, id) {
+    return __awaiter(this, void 0, void 0, function () {
+        var indexName, result, error_1, exp;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    indexName = indexname;
+                    return [4 /*yield*/, axios_1.default.post("".concat(moa_config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(id ? id : uuidv4()), obj, {
+                            auth: {
+                                username: moa_config_1.default.ELASTIC_USERNAME,
+                                password: moa_config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 1:
+                    result = _a.sent();
+                    console.log(result.status);
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_1 = _a.sent();
+                    exp = new etl_exception_1.default(error_1.message, etl_exception_1.etlExceptionType.LOADING);
+                    throw exp;
+                case 3: return [2 /*return*/];
+            }
+        });
     });
-}); })(psnp_pw_1.default);
-// schedule.scheduleJob(
-//   "1/ * * * *",
-//   jobber("nrlias_data", nrlais_parcel_elt(OPERATION_TYPE.ETL), 3600000)
-// );
-// schedule.scheduleJob(
-//   "54 10 * * *",
-//   jobber("small_holder_irrigation", irrigation, 3600000)
-// );
-// schedule.scheduleJob("40 10 * * *", jobber("kmis", kmis, 3600000));
-// schedule.scheduleJob("", jobber("calm", calm, 3600000));
+}
+exports.insertIntoElastic = insertIntoElastic;

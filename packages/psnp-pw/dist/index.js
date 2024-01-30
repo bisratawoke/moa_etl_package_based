@@ -35,27 +35,82 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var psnp_pw_extract_1 = require("./src/services/extract/psnp_pw.extract");
-function main() {
+exports.OPERATION_TYPE = void 0;
+var psnp_pw_services_extract_location_1 = require("./src/services/extract/psnp_pw.services.extract.location");
+var psnp_pw_services_load_1 = require("./src/services/load/psnp_pw.services.load");
+var OPERATION_TYPE;
+(function (OPERATION_TYPE) {
+    OPERATION_TYPE["LOCATION"] = "LOCATION";
+    OPERATION_TYPE["ACTIVITIES"] = "ACTIVITIES";
+})(OPERATION_TYPE || (exports.OPERATION_TYPE = OPERATION_TYPE = {}));
+function main(optType) {
+    var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _d, _e, _f, location_1, e_1_1, count, error_1;
+        return __generator(this, function (_g) {
+            switch (_g.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, (0, psnp_pw_extract_1.extract_activites_info)()];
+                    _g.trys.push([0, 17, , 18]);
+                    if (!(optType === OPERATION_TYPE.LOCATION)) return [3 /*break*/, 13];
+                    _g.label = 1;
                 case 1:
-                    _a.sent();
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
+                    _g.trys.push([1, 6, 7, 12]);
+                    _d = true, _e = __asyncValues((0, psnp_pw_services_extract_location_1.admin_location_info_extraction)());
+                    _g.label = 2;
+                case 2: return [4 /*yield*/, _e.next()];
+                case 3:
+                    if (!(_f = _g.sent(), _a = _f.done, !_a)) return [3 /*break*/, 5];
+                    _c = _f.value;
+                    _d = false;
+                    location_1 = _c;
+                    _g.label = 4;
+                case 4:
+                    _d = true;
+                    return [3 /*break*/, 2];
+                case 5: return [3 /*break*/, 12];
+                case 6:
+                    e_1_1 = _g.sent();
+                    e_1 = { error: e_1_1 };
+                    return [3 /*break*/, 12];
+                case 7:
+                    _g.trys.push([7, , 10, 11]);
+                    if (!(!_d && !_a && (_b = _e.return))) return [3 /*break*/, 9];
+                    return [4 /*yield*/, _b.call(_e)];
+                case 8:
+                    _g.sent();
+                    _g.label = 9;
+                case 9: return [3 /*break*/, 11];
+                case 10:
+                    if (e_1) throw e_1.error;
+                    return [7 /*endfinally*/];
+                case 11: return [7 /*endfinally*/];
+                case 12: return [3 /*break*/, 16];
+                case 13:
+                    if (!(optType === OPERATION_TYPE.ACTIVITIES)) return [3 /*break*/, 15];
+                    count = 0;
+                    return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)({ name: "hey" }, "psnp_swc_treatment_result_scheduler_test")];
+                case 14:
+                    _g.sent();
+                    return [3 /*break*/, 16];
+                case 15:
+                    console.log("Please specify a proper OPERATION_TYPE");
+                    _g.label = 16;
+                case 16: return [3 /*break*/, 18];
+                case 17:
+                    error_1 = _g.sent();
                     console.log(error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 18];
+                case 18: return [2 /*return*/];
             }
         });
     });
 }
 exports.default = main;
-main();
