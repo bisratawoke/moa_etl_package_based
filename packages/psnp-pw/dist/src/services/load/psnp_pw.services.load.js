@@ -61,6 +61,7 @@ function insertIntoElastic(obj, indexname, id) {
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
+                    console.log(error_1);
                     exp = new etl_exception_1.default(error_1.message, etl_exception_1.etlExceptionType.LOADING);
                     throw exp;
                 case 3: return [2 /*return*/];

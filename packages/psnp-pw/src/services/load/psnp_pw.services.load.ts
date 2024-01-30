@@ -18,6 +18,7 @@ export async function insertIntoElastic(obj: any, indexname: any, id?: any) {
     );
     console.log(result.status);
   } catch (error: any) {
+    console.log(error);
     const exp = new etlExceptions(error.message, etlExceptionType.LOADING);
     throw exp;
   }

@@ -40,7 +40,7 @@ export async function* extract_activites_info() {
     );
     let rows = await cursor.read(1);
     while (rows.length) {
-      let rec = rows[0];
+      let rec = { ...rows[0], location: JSON.parse(rows[0].location) };
 
       yield rec;
       rows = await cursor.read(1);

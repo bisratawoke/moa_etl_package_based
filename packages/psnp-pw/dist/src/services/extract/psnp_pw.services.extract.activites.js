@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __generator = (this && this.__generator) || function (thisArg, body) {
     var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
     return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
@@ -62,7 +73,7 @@ function extract_activites_info() {
                     _a.label = 3;
                 case 3:
                     if (!rows.length) return [3 /*break*/, 7];
-                    rec = rows[0];
+                    rec = __assign(__assign({}, rows[0]), { location: JSON.parse(rows[0].location) });
                     return [4 /*yield*/, __await(rec)];
                 case 4: return [4 /*yield*/, _a.sent()];
                 case 5:
