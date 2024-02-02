@@ -9,10 +9,14 @@ import config from "moa_config";
 
 console.log(config);
 
-schedule.scheduleJob("55 10 * * *", psnp_etl(PSNP_OP_TYPE.ACTIVITIES));
-schedule.scheduleJob("55 10 * * *", psnp_etl(PSNP_OP_TYPE.LOCATION));
-schedule.scheduleJob("55 10 * * *", psnp_etl(PSNP_OP_TYPE.MAJOR_WATERSHED));
-schedule.scheduleJob("55 10 * * *", psnp_etl(PSNP_OP_TYPE.MICRO_WATERSHED));
+(async (job) => {
+  await job();
+})(psnp_etl(PSNP_OP_TYPE.ACTIVITIES));
+
+// schedule.scheduleJob("55 10 * * *", psnp_etl(PSNP_OP_TYPE.ACTIVITIES));
+// schedule.scheduleJob("55 10 * * *", psnp_etl(PSNP_OP_TYPE.LOCATION));
+// schedule.scheduleJob("55 10 * * *", psnp_etl(PSNP_OP_TYPE.MAJOR_WATERSHED));
+// schedule.scheduleJob("55 10 * * *", psnp_etl(PSNP_OP_TYPE.MICRO_WATERSHED));
 // schedule.scheduleJob(
 //   "1/ * * * *",
 //   jobber("nrlias_data", nrlais_parcel_elt(OPERATION_TYPE.ETL), 3600000)
