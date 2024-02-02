@@ -5,6 +5,9 @@ import calm from "calm";
 import { OPERATION_TYPE, nrlais_parcel_elt } from "nrlais";
 import psnp_etl, { OPERATION_TYPE as PSNP_OP_TYPE } from "psnp-pw";
 import jobber from "./job";
+import config from "moa_config";
+
+console.log(config);
 
 schedule.scheduleJob("20 10 * * *", psnp_etl(PSNP_OP_TYPE.ACTIVITIES));
 schedule.scheduleJob("20 10 * * *", psnp_etl(PSNP_OP_TYPE.LOCATION));
