@@ -20,6 +20,7 @@ export enum OPERATION_TYPE {
 }
 
 export default function main(optType: OPERATION_TYPE) {
+  console.log("====== im called =====");
   return async () => {
     try {
       let count = 0;
