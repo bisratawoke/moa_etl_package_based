@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var schedule = require("node-schedule");
 var psnp_pw_1 = require("psnp-pw");
+var moa_config_1 = require("moa_config");
+console.log(moa_config_1.default);
 schedule.scheduleJob("20 10 * * *", (0, psnp_pw_1.default)(psnp_pw_1.OPERATION_TYPE.ACTIVITIES));
 schedule.scheduleJob("20 10 * * *", (0, psnp_pw_1.default)(psnp_pw_1.OPERATION_TYPE.LOCATION));
 schedule.scheduleJob("20 10 * * *", (0, psnp_pw_1.default)(psnp_pw_1.OPERATION_TYPE.MAJOR_WATERSHED));
