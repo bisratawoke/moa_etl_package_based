@@ -9,6 +9,7 @@ export async function* extract_activites_info(): AsyncGenerator<
   unknown
 > {
   try {
+    // act.attribs as activity_attribs
     const client = await pool.connect();
     const cursor = client.query(
       new Cursor(`select
@@ -24,8 +25,7 @@ export async function* extract_activites_info(): AsyncGenerator<
             ST_AsGeoJson(act.geom) as location ,
             mws.name as "Micro Watershed" ,
             cws.name as "Major Watershed" ,
-            cws.id as cws_id ,
-            act.attribs as activity_attribs ,
+            cws.id as cws_id  ,
             act.started start_date , 
             act.completed  end_date ,
             act.status activity_status , 
