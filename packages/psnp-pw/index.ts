@@ -19,63 +19,65 @@ export enum OPERATION_TYPE {
   MICRO_WATERSHED = "MICRO_WATERSHEDS",
 }
 
-export default async function main(optType: OPERATION_TYPE) {
-  try {
-    let count = 0;
-    switch (optType) {
-      case OPERATION_TYPE.LOCATION:
-        for await (const location of admin_location_info_extraction()) {
-          setTimeout(async () => {
-            let record: any = adminLocationTransformer(location);
-            await insertIntoElastic(
-              record,
-              "psnp_pw_admin_location",
-              record.id
-            );
-          }, count * 3000);
-        }
-        break;
-      case OPERATION_TYPE.MAJOR_WATERSHED:
-        for await (const location of extractMajorWatershed()) {
-          setTimeout(async () => {
-            let record: any = majorWatershedTransformer(location);
-            await insertIntoElastic(
-              record,
-              "psnp_pw_major_watershed",
-              record.id
-            );
-          }, count * 3000);
-        }
-        break;
-      case OPERATION_TYPE.MICRO_WATERSHED:
-        for await (const location of extractMicrowatshed()) {
-          setTimeout(async () => {
-            let record = microwatshedTransformer(location);
-            await insertIntoElastic(
-              record,
-              "psnp_pw_micro_watershed",
-              record.id
-            );
-          }, count * 3000);
-        }
-        break;
-      case OPERATION_TYPE.ACTIVITIES:
-        for await (const activity of extract_activites_info()) {
-          let record = actTransformer(activity);
-          setTimeout(async () => {
-            await insertIntoElastic(
-              record,
-              "psnp_swc_treatment_result_scheduler_test",
-              record.id
-            );
-          }, count * 3000);
-        }
-        break;
-      default:
-        console.log("Please specify a proper OPERATION_TYPE");
+export default function main(optType: OPERATION_TYPE) {
+  return async () => {
+    try {
+      let count = 0;
+      switch (optType) {
+        case OPERATION_TYPE.LOCATION:
+          for await (const location of admin_location_info_extraction()) {
+            setTimeout(async () => {
+              let record: any = adminLocationTransformer(location);
+              await insertIntoElastic(
+                record,
+                "psnp_pw_admin_location",
+                record.id
+              );
+            }, count * 3000);
+          }
+          break;
+        case OPERATION_TYPE.MAJOR_WATERSHED:
+          for await (const location of extractMajorWatershed()) {
+            setTimeout(async () => {
+              let record: any = majorWatershedTransformer(location);
+              await insertIntoElastic(
+                record,
+                "psnp_pw_major_watershed",
+                record.id
+              );
+            }, count * 3000);
+          }
+          break;
+        case OPERATION_TYPE.MICRO_WATERSHED:
+          for await (const location of extractMicrowatshed()) {
+            setTimeout(async () => {
+              let record = microwatshedTransformer(location);
+              await insertIntoElastic(
+                record,
+                "psnp_pw_micro_watershed",
+                record.id
+              );
+            }, count * 3000);
+          }
+          break;
+        case OPERATION_TYPE.ACTIVITIES:
+          for await (const activity of extract_activites_info()) {
+            let record = actTransformer(activity);
+            setTimeout(async () => {
+              await insertIntoElastic(
+                record,
+                "psnp_swc_treatment_result_scheduler_test",
+                record.id
+              );
+            }, count * 3000);
+          }
+          break;
+        default:
+          console.log("Please specify a proper OPERATION_TYPE");
+      }
+    } catch (error) {
+      if (error instanceof etlExceptions) throw error;
+      else throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
     }
-  } catch (error) {
-    if (error instanceof etlExceptions) throw error;
-    else throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-  }
+  };
 }

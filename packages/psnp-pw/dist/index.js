@@ -58,17 +58,18 @@ var OPERATION_TYPE;
     OPERATION_TYPE["MICRO_WATERSHED"] = "MICRO_WATERSHEDS";
 })(OPERATION_TYPE || (exports.OPERATION_TYPE = OPERATION_TYPE = {}));
 function main(optType) {
-    var _a, e_1, _b, _c, _d, e_2, _e, _f, _g, e_3, _h, _j, _k, e_4, _l, _m;
-    return __awaiter(this, void 0, void 0, function () {
-        var count, _o, _loop_1, _p, _q, _r, e_1_1, _loop_2, _s, _t, _u, e_2_1, _loop_3, _v, _w, _x, e_3_1, _loop_4, _y, _z, _0, e_4_1, error_1;
+    var _this = this;
+    return function () { return __awaiter(_this, void 0, void 0, function () {
+        var count, _a, _loop_1, _b, _c, _d, e_1_1, _loop_2, _e, _f, _g, e_2_1, _loop_3, _h, _j, _k, e_3_1, _loop_4, _l, _m, _o, e_4_1, error_1;
         var _this = this;
+        var _p, e_1, _q, _r, _s, e_2, _t, _u, _v, e_3, _w, _x, _y, e_4, _z, _0;
         return __generator(this, function (_1) {
             switch (_1.label) {
                 case 0:
                     _1.trys.push([0, 51, , 52]);
                     count = 0;
-                    _o = optType;
-                    switch (_o) {
+                    _a = optType;
+                    switch (_a) {
                         case OPERATION_TYPE.LOCATION: return [3 /*break*/, 1];
                         case OPERATION_TYPE.MAJOR_WATERSHED: return [3 /*break*/, 13];
                         case OPERATION_TYPE.MICRO_WATERSHED: return [3 /*break*/, 25];
@@ -78,9 +79,9 @@ function main(optType) {
                 case 1:
                     _1.trys.push([1, 6, 7, 12]);
                     _loop_1 = function () {
-                        _c = _r.value;
-                        _p = false;
-                        var location_1 = _c;
+                        _r = _d.value;
+                        _b = false;
+                        var location_1 = _r;
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                             var record;
                             return __generator(this, function (_a) {
@@ -95,15 +96,15 @@ function main(optType) {
                             });
                         }); }, count * 3000);
                     };
-                    _p = true, _q = __asyncValues((0, psnp_pw_services_extract_location_1.admin_location_info_extraction)());
+                    _b = true, _c = __asyncValues((0, psnp_pw_services_extract_location_1.admin_location_info_extraction)());
                     _1.label = 2;
-                case 2: return [4 /*yield*/, _q.next()];
+                case 2: return [4 /*yield*/, _c.next()];
                 case 3:
-                    if (!(_r = _1.sent(), _a = _r.done, !_a)) return [3 /*break*/, 5];
+                    if (!(_d = _1.sent(), _p = _d.done, !_p)) return [3 /*break*/, 5];
                     _loop_1();
                     _1.label = 4;
                 case 4:
-                    _p = true;
+                    _b = true;
                     return [3 /*break*/, 2];
                 case 5: return [3 /*break*/, 12];
                 case 6:
@@ -112,8 +113,8 @@ function main(optType) {
                     return [3 /*break*/, 12];
                 case 7:
                     _1.trys.push([7, , 10, 11]);
-                    if (!(!_p && !_a && (_b = _q.return))) return [3 /*break*/, 9];
-                    return [4 /*yield*/, _b.call(_q)];
+                    if (!(!_b && !_p && (_q = _c.return))) return [3 /*break*/, 9];
+                    return [4 /*yield*/, _q.call(_c)];
                 case 8:
                     _1.sent();
                     _1.label = 9;
@@ -126,9 +127,9 @@ function main(optType) {
                 case 13:
                     _1.trys.push([13, 18, 19, 24]);
                     _loop_2 = function () {
-                        _f = _u.value;
-                        _s = false;
-                        var location_2 = _f;
+                        _u = _g.value;
+                        _e = false;
+                        var location_2 = _u;
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                             var record;
                             return __generator(this, function (_a) {
@@ -143,15 +144,15 @@ function main(optType) {
                             });
                         }); }, count * 3000);
                     };
-                    _s = true, _t = __asyncValues((0, psnp_pw_services_extract_location_1.extractMajorWatershed)());
+                    _e = true, _f = __asyncValues((0, psnp_pw_services_extract_location_1.extractMajorWatershed)());
                     _1.label = 14;
-                case 14: return [4 /*yield*/, _t.next()];
+                case 14: return [4 /*yield*/, _f.next()];
                 case 15:
-                    if (!(_u = _1.sent(), _d = _u.done, !_d)) return [3 /*break*/, 17];
+                    if (!(_g = _1.sent(), _s = _g.done, !_s)) return [3 /*break*/, 17];
                     _loop_2();
                     _1.label = 16;
                 case 16:
-                    _s = true;
+                    _e = true;
                     return [3 /*break*/, 14];
                 case 17: return [3 /*break*/, 24];
                 case 18:
@@ -160,8 +161,8 @@ function main(optType) {
                     return [3 /*break*/, 24];
                 case 19:
                     _1.trys.push([19, , 22, 23]);
-                    if (!(!_s && !_d && (_e = _t.return))) return [3 /*break*/, 21];
-                    return [4 /*yield*/, _e.call(_t)];
+                    if (!(!_e && !_s && (_t = _f.return))) return [3 /*break*/, 21];
+                    return [4 /*yield*/, _t.call(_f)];
                 case 20:
                     _1.sent();
                     _1.label = 21;
@@ -174,9 +175,9 @@ function main(optType) {
                 case 25:
                     _1.trys.push([25, 30, 31, 36]);
                     _loop_3 = function () {
-                        _j = _x.value;
-                        _v = false;
-                        var location_3 = _j;
+                        _x = _k.value;
+                        _h = false;
+                        var location_3 = _x;
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                             var record;
                             return __generator(this, function (_a) {
@@ -191,15 +192,15 @@ function main(optType) {
                             });
                         }); }, count * 3000);
                     };
-                    _v = true, _w = __asyncValues((0, psnp_pw_services_extract_location_1.extractMicrowatshed)());
+                    _h = true, _j = __asyncValues((0, psnp_pw_services_extract_location_1.extractMicrowatshed)());
                     _1.label = 26;
-                case 26: return [4 /*yield*/, _w.next()];
+                case 26: return [4 /*yield*/, _j.next()];
                 case 27:
-                    if (!(_x = _1.sent(), _g = _x.done, !_g)) return [3 /*break*/, 29];
+                    if (!(_k = _1.sent(), _v = _k.done, !_v)) return [3 /*break*/, 29];
                     _loop_3();
                     _1.label = 28;
                 case 28:
-                    _v = true;
+                    _h = true;
                     return [3 /*break*/, 26];
                 case 29: return [3 /*break*/, 36];
                 case 30:
@@ -208,8 +209,8 @@ function main(optType) {
                     return [3 /*break*/, 36];
                 case 31:
                     _1.trys.push([31, , 34, 35]);
-                    if (!(!_v && !_g && (_h = _w.return))) return [3 /*break*/, 33];
-                    return [4 /*yield*/, _h.call(_w)];
+                    if (!(!_h && !_v && (_w = _j.return))) return [3 /*break*/, 33];
+                    return [4 /*yield*/, _w.call(_j)];
                 case 32:
                     _1.sent();
                     _1.label = 33;
@@ -222,9 +223,9 @@ function main(optType) {
                 case 37:
                     _1.trys.push([37, 42, 43, 48]);
                     _loop_4 = function () {
-                        _m = _0.value;
-                        _y = false;
-                        var activity = _m;
+                        _0 = _o.value;
+                        _l = false;
+                        var activity = _0;
                         var record = (0, pnsp_pw_services_transform_activities_1.default)(activity);
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
@@ -237,15 +238,15 @@ function main(optType) {
                             });
                         }); }, count * 3000);
                     };
-                    _y = true, _z = __asyncValues((0, psnp_pw_services_extract_activites_1.extract_activites_info)());
+                    _l = true, _m = __asyncValues((0, psnp_pw_services_extract_activites_1.extract_activites_info)());
                     _1.label = 38;
-                case 38: return [4 /*yield*/, _z.next()];
+                case 38: return [4 /*yield*/, _m.next()];
                 case 39:
-                    if (!(_0 = _1.sent(), _k = _0.done, !_k)) return [3 /*break*/, 41];
+                    if (!(_o = _1.sent(), _y = _o.done, !_y)) return [3 /*break*/, 41];
                     _loop_4();
                     _1.label = 40;
                 case 40:
-                    _y = true;
+                    _l = true;
                     return [3 /*break*/, 38];
                 case 41: return [3 /*break*/, 48];
                 case 42:
@@ -254,8 +255,8 @@ function main(optType) {
                     return [3 /*break*/, 48];
                 case 43:
                     _1.trys.push([43, , 46, 47]);
-                    if (!(!_y && !_k && (_l = _z.return))) return [3 /*break*/, 45];
-                    return [4 /*yield*/, _l.call(_z)];
+                    if (!(!_l && !_y && (_z = _m.return))) return [3 /*break*/, 45];
+                    return [4 /*yield*/, _z.call(_m)];
                 case 44:
                     _1.sent();
                     _1.label = 45;
@@ -279,6 +280,6 @@ function main(optType) {
                 case 52: return [2 /*return*/];
             }
         });
-    });
+    }); };
 }
 exports.default = main;
