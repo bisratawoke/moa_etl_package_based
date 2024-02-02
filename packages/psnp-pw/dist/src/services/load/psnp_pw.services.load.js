@@ -41,6 +41,7 @@ var axios_1 = require("axios");
 var moa_config_1 = require("moa_config");
 var etl_exception_1 = require("etl-exception");
 var uuidv4 = require("uuid").v4;
+//slmp_2001_2015_swc_treatments_result,psnp_phy_swc_treatment_result,mass_mobilization_physical_swc_treatment_report,calm_soil_water_conservation_treatments,pasidp_swc_treatments*
 function insertIntoElastic(obj, indexname, id) {
     return __awaiter(this, void 0, void 0, function () {
         var indexName, result, error_1, exp;
@@ -61,8 +62,9 @@ function insertIntoElastic(obj, indexname, id) {
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
-                    console.log(error_1);
-                    exp = new etl_exception_1.default(error_1.message, etl_exception_1.etlExceptionType.LOADING);
+                    console.log(error_1.response.status);
+                    console.log(error_1.response.data);
+                    exp = new etl_exception_1.default(JSON.stringify(error_1.response.data), etl_exception_1.etlExceptionType.LOADING);
                     throw exp;
                 case 3: return [2 /*return*/];
             }
