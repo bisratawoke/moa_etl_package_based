@@ -44,36 +44,50 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OPERATION_TYPE = void 0;
+var etl_exception_1 = require("etl-exception");
 var psnp_pw_services_extract_activites_1 = require("./src/services/extract/psnp_pw.services.extract.activites");
 var psnp_pw_services_extract_location_1 = require("./src/services/extract/psnp_pw.services.extract.location");
 var psnp_pw_services_load_1 = require("./src/services/load/psnp_pw.services.load");
+var pnsp_pw_services_transform_activities_1 = require("./src/services/transform/pnsp_pw.services.transform.activities");
+var psnp_pw_services_transform_location_1 = require("./src/services/transform/psnp_pw.services.transform.location");
 var OPERATION_TYPE;
 (function (OPERATION_TYPE) {
-    OPERATION_TYPE["LOCATION"] = "LOCATION";
+    OPERATION_TYPE["LOCATION"] = "ADMIN_LOCATION";
+    OPERATION_TYPE["MAJOR_WATERSHED"] = "MAJOR_WATERSHEDS";
     OPERATION_TYPE["ACTIVITIES"] = "ACTIVITIES";
+    OPERATION_TYPE["MICRO_WATERSHED"] = "MICRO_WATERSHEDS";
 })(OPERATION_TYPE || (exports.OPERATION_TYPE = OPERATION_TYPE = {}));
 function main(optType) {
-    var _a, e_1, _b, _c, _d, e_2, _e, _f;
+    var _a, e_1, _b, _c, _d, e_2, _e, _f, _g, e_3, _h, _j, _k, e_4, _l, _m;
     return __awaiter(this, void 0, void 0, function () {
-        var count, _loop_1, _g, _h, _j, e_1_1, count, _loop_2, _k, _l, _m, e_2_1, error_1;
+        var count, _o, _loop_1, _p, _q, _r, e_1_1, _loop_2, _s, _t, _u, e_2_1, _loop_3, _v, _w, _x, e_3_1, _loop_4, _y, _z, _0, e_4_1, error_1;
         var _this = this;
-        return __generator(this, function (_o) {
-            switch (_o.label) {
+        return __generator(this, function (_1) {
+            switch (_1.label) {
                 case 0:
-                    _o.trys.push([0, 28, , 29]);
-                    if (!(optType === OPERATION_TYPE.LOCATION)) return [3 /*break*/, 13];
+                    _1.trys.push([0, 51, , 52]);
                     count = 0;
-                    _o.label = 1;
+                    _o = optType;
+                    switch (_o) {
+                        case OPERATION_TYPE.LOCATION: return [3 /*break*/, 1];
+                        case OPERATION_TYPE.MAJOR_WATERSHED: return [3 /*break*/, 13];
+                        case OPERATION_TYPE.MICRO_WATERSHED: return [3 /*break*/, 25];
+                        case OPERATION_TYPE.ACTIVITIES: return [3 /*break*/, 37];
+                    }
+                    return [3 /*break*/, 49];
                 case 1:
-                    _o.trys.push([1, 6, 7, 12]);
+                    _1.trys.push([1, 6, 7, 12]);
                     _loop_1 = function () {
-                        _c = _j.value;
-                        _g = false;
+                        _c = _r.value;
+                        _p = false;
                         var location_1 = _c;
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var record;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(location_1, "psnp_swc_treatment_result_scheduler_test", location_1.id)];
+                                    case 0:
+                                        record = (0, psnp_pw_services_transform_location_1.adminLocationTransformer)(location_1);
+                                        return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_pw_admin_location", record.id)];
                                     case 1:
                                         _a.sent();
                                         return [2 /*return*/];
@@ -81,48 +95,47 @@ function main(optType) {
                             });
                         }); }, count * 3000);
                     };
-                    _g = true, _h = __asyncValues((0, psnp_pw_services_extract_location_1.admin_location_info_extraction)());
-                    _o.label = 2;
-                case 2: return [4 /*yield*/, _h.next()];
+                    _p = true, _q = __asyncValues((0, psnp_pw_services_extract_location_1.admin_location_info_extraction)());
+                    _1.label = 2;
+                case 2: return [4 /*yield*/, _q.next()];
                 case 3:
-                    if (!(_j = _o.sent(), _a = _j.done, !_a)) return [3 /*break*/, 5];
+                    if (!(_r = _1.sent(), _a = _r.done, !_a)) return [3 /*break*/, 5];
                     _loop_1();
-                    _o.label = 4;
+                    _1.label = 4;
                 case 4:
-                    _g = true;
+                    _p = true;
                     return [3 /*break*/, 2];
                 case 5: return [3 /*break*/, 12];
                 case 6:
-                    e_1_1 = _o.sent();
+                    e_1_1 = _1.sent();
                     e_1 = { error: e_1_1 };
                     return [3 /*break*/, 12];
                 case 7:
-                    _o.trys.push([7, , 10, 11]);
-                    if (!(!_g && !_a && (_b = _h.return))) return [3 /*break*/, 9];
-                    return [4 /*yield*/, _b.call(_h)];
+                    _1.trys.push([7, , 10, 11]);
+                    if (!(!_p && !_a && (_b = _q.return))) return [3 /*break*/, 9];
+                    return [4 /*yield*/, _b.call(_q)];
                 case 8:
-                    _o.sent();
-                    _o.label = 9;
+                    _1.sent();
+                    _1.label = 9;
                 case 9: return [3 /*break*/, 11];
                 case 10:
                     if (e_1) throw e_1.error;
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
-                case 12: return [3 /*break*/, 27];
+                case 12: return [3 /*break*/, 50];
                 case 13:
-                    if (!(optType === OPERATION_TYPE.ACTIVITIES)) return [3 /*break*/, 26];
-                    count = 0;
-                    _o.label = 14;
-                case 14:
-                    _o.trys.push([14, 19, 20, 25]);
+                    _1.trys.push([13, 18, 19, 24]);
                     _loop_2 = function () {
-                        _f = _m.value;
-                        _k = false;
-                        var activity = _f;
+                        _f = _u.value;
+                        _s = false;
+                        var location_2 = _f;
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var record;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(activity, "psnp_swc_treatment_result_scheduler_test", activity.id)];
+                                    case 0:
+                                        record = (0, psnp_pw_services_transform_location_1.majorWatershedTransformer)(location_2);
+                                        return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_pw_major_watershed", record.id)];
                                     case 1:
                                         _a.sent();
                                         return [2 /*return*/];
@@ -130,43 +143,140 @@ function main(optType) {
                             });
                         }); }, count * 3000);
                     };
-                    _k = true, _l = __asyncValues((0, psnp_pw_services_extract_activites_1.extract_activites_info)());
-                    _o.label = 15;
-                case 15: return [4 /*yield*/, _l.next()];
-                case 16:
-                    if (!(_m = _o.sent(), _d = _m.done, !_d)) return [3 /*break*/, 18];
+                    _s = true, _t = __asyncValues((0, psnp_pw_services_extract_location_1.extractMajorWatershed)());
+                    _1.label = 14;
+                case 14: return [4 /*yield*/, _t.next()];
+                case 15:
+                    if (!(_u = _1.sent(), _d = _u.done, !_d)) return [3 /*break*/, 17];
                     _loop_2();
-                    _o.label = 17;
-                case 17:
-                    _k = true;
-                    return [3 /*break*/, 15];
-                case 18: return [3 /*break*/, 25];
-                case 19:
-                    e_2_1 = _o.sent();
+                    _1.label = 16;
+                case 16:
+                    _s = true;
+                    return [3 /*break*/, 14];
+                case 17: return [3 /*break*/, 24];
+                case 18:
+                    e_2_1 = _1.sent();
                     e_2 = { error: e_2_1 };
-                    return [3 /*break*/, 25];
+                    return [3 /*break*/, 24];
+                case 19:
+                    _1.trys.push([19, , 22, 23]);
+                    if (!(!_s && !_d && (_e = _t.return))) return [3 /*break*/, 21];
+                    return [4 /*yield*/, _e.call(_t)];
                 case 20:
-                    _o.trys.push([20, , 23, 24]);
-                    if (!(!_k && !_d && (_e = _l.return))) return [3 /*break*/, 22];
-                    return [4 /*yield*/, _e.call(_l)];
-                case 21:
-                    _o.sent();
-                    _o.label = 22;
-                case 22: return [3 /*break*/, 24];
-                case 23:
+                    _1.sent();
+                    _1.label = 21;
+                case 21: return [3 /*break*/, 23];
+                case 22:
                     if (e_2) throw e_2.error;
                     return [7 /*endfinally*/];
-                case 24: return [7 /*endfinally*/];
-                case 25: return [3 /*break*/, 27];
-                case 26:
-                    console.log("Please specify a proper OPERATION_TYPE");
-                    _o.label = 27;
-                case 27: return [3 /*break*/, 29];
+                case 23: return [7 /*endfinally*/];
+                case 24: return [3 /*break*/, 50];
+                case 25:
+                    _1.trys.push([25, 30, 31, 36]);
+                    _loop_3 = function () {
+                        _j = _x.value;
+                        _v = false;
+                        var location_3 = _j;
+                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var record;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        record = (0, psnp_pw_services_transform_location_1.microwatshedTransformer)(location_3);
+                                        return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_pw_micro_watershed", record.id)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, count * 3000);
+                    };
+                    _v = true, _w = __asyncValues((0, psnp_pw_services_extract_location_1.extractMicrowatshed)());
+                    _1.label = 26;
+                case 26: return [4 /*yield*/, _w.next()];
+                case 27:
+                    if (!(_x = _1.sent(), _g = _x.done, !_g)) return [3 /*break*/, 29];
+                    _loop_3();
+                    _1.label = 28;
                 case 28:
-                    error_1 = _o.sent();
-                    console.log(error_1);
-                    return [3 /*break*/, 29];
-                case 29: return [2 /*return*/];
+                    _v = true;
+                    return [3 /*break*/, 26];
+                case 29: return [3 /*break*/, 36];
+                case 30:
+                    e_3_1 = _1.sent();
+                    e_3 = { error: e_3_1 };
+                    return [3 /*break*/, 36];
+                case 31:
+                    _1.trys.push([31, , 34, 35]);
+                    if (!(!_v && !_g && (_h = _w.return))) return [3 /*break*/, 33];
+                    return [4 /*yield*/, _h.call(_w)];
+                case 32:
+                    _1.sent();
+                    _1.label = 33;
+                case 33: return [3 /*break*/, 35];
+                case 34:
+                    if (e_3) throw e_3.error;
+                    return [7 /*endfinally*/];
+                case 35: return [7 /*endfinally*/];
+                case 36: return [3 /*break*/, 50];
+                case 37:
+                    _1.trys.push([37, 42, 43, 48]);
+                    _loop_4 = function () {
+                        _m = _0.value;
+                        _y = false;
+                        var activity = _m;
+                        var record = (0, pnsp_pw_services_transform_activities_1.default)(activity);
+                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_swc_treatment_result_scheduler_test", record.id)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, count * 3000);
+                    };
+                    _y = true, _z = __asyncValues((0, psnp_pw_services_extract_activites_1.extract_activites_info)());
+                    _1.label = 38;
+                case 38: return [4 /*yield*/, _z.next()];
+                case 39:
+                    if (!(_0 = _1.sent(), _k = _0.done, !_k)) return [3 /*break*/, 41];
+                    _loop_4();
+                    _1.label = 40;
+                case 40:
+                    _y = true;
+                    return [3 /*break*/, 38];
+                case 41: return [3 /*break*/, 48];
+                case 42:
+                    e_4_1 = _1.sent();
+                    e_4 = { error: e_4_1 };
+                    return [3 /*break*/, 48];
+                case 43:
+                    _1.trys.push([43, , 46, 47]);
+                    if (!(!_y && !_k && (_l = _z.return))) return [3 /*break*/, 45];
+                    return [4 /*yield*/, _l.call(_z)];
+                case 44:
+                    _1.sent();
+                    _1.label = 45;
+                case 45: return [3 /*break*/, 47];
+                case 46:
+                    if (e_4) throw e_4.error;
+                    return [7 /*endfinally*/];
+                case 47: return [7 /*endfinally*/];
+                case 48: return [3 /*break*/, 50];
+                case 49:
+                    console.log("Please specify a proper OPERATION_TYPE");
+                    _1.label = 50;
+                case 50: return [3 /*break*/, 52];
+                case 51:
+                    error_1 = _1.sent();
+                    if (error_1 instanceof etl_exception_1.default)
+                        throw error_1;
+                    else
+                        throw new etl_exception_1.default(error_1.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                    return [3 /*break*/, 52];
+                case 52: return [2 /*return*/];
             }
         });
     });

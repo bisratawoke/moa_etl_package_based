@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __generator = (this && this.__generator) || function (thisArg, body) {
     var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
     return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
@@ -58,7 +47,7 @@ var etl_exception_1 = require("etl-exception");
 var psnp_pw_services_database_1 = require("../database/psnp_pw.services.database");
 function extract_activites_info() {
     return __asyncGenerator(this, arguments, function extract_activites_info_1() {
-        var client_1, cursor, rows, rec, error_1;
+        var client_1, cursor, rows, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -66,15 +55,14 @@ function extract_activites_info() {
                     return [4 /*yield*/, __await(psnp_pw_services_database_1.default.connect())];
                 case 1:
                     client_1 = _a.sent();
-                    cursor = client_1.query(new Cursor("select\n            act.id as id ,\n            kebele.name as kebele_name ,\n            woreda.name as woreda_name ,\n            zone.name as zone_name ,\n            region.name as region_name ,\n            act.status, act_type.name as activity_name ,\n            act_type.unit as Unit ,\n            act_type.name as treatment ,\n            act_type.feature_type as feature_type , 'PSNP PW' as record_type ,\n            ST_AsGeoJson(act.geom) as location ,\n            mws.name as \"Micro Watershed\" ,\n            cws.name as \"Major Watershed\" ,\n            cws.id as cws_id ,\n            act.attribs as activity_attribs ,\n            act.started start_date , \n            act.completed  end_date ,\n            act.status activity_status , \n            EXTRACT(YEAR FROM act.created_at) AS year,\n            CAST(EXTRACT(YEAR FROM act.created_at) AS VARCHAR) AS string_year,\n            'PSNP PW' as record_type\n            from activities as act\n            inner join activity_types as act_type on act_type.id = act.activity_type_id\n            inner join kebeles as kebele on act.kebele_id = kebele.id\n            inner join woredas as woreda on kebele.parent_id = woreda.id\n            inner join zones as zone on zone.id = woreda.parent_id\n            inner join regions as region on region.id = zone.parent_id\n            left join microwatersheds as mws on act.microwatershed_id = mws.id\n            left join watersheds as cws on mws.parent_id = cws.id\n        "));
+                    cursor = client_1.query(new Cursor("select\n            act.id as id ,\n            kebele.name as kebele_name ,\n            woreda.name as woreda_name ,\n            zone.name as zone_name ,\n            region.name as region_name ,\n            act.status, act_type.name as activity_name ,\n            act_type.unit as Unit ,\n            act_type.name as treatment ,\n            act_type.feature_type as feature_type , 'PSNP PW' as record_type ,\n            ST_AsGeoJson(act.geom) as location ,\n            mws.name as \"Micro Watershed\" ,\n            cws.name as \"Major Watershed\" ,\n            cws.id as cws_id ,\n            act.attribs as activity_attribs ,\n            act.started start_date , \n            act.completed  end_date ,\n            act.status activity_status , \n            ST_Area(act.geom) as area,\n            EXTRACT(YEAR FROM act.created_at) AS year,\n            CAST(EXTRACT(YEAR FROM act.created_at) AS VARCHAR) AS string_year,\n            'PSNP PW' as record_type\n            from activities as act\n            inner join activity_types as act_type on act_type.id = act.activity_type_id\n            inner join kebeles as kebele on act.kebele_id = kebele.id\n            inner join woredas as woreda on kebele.parent_id = woreda.id\n            inner join zones as zone on zone.id = woreda.parent_id\n            inner join regions as region on region.id = zone.parent_id\n            left join microwatersheds as mws on act.microwatershed_id = mws.id\n            left join watersheds as cws on mws.parent_id = cws.id\n        "));
                     return [4 /*yield*/, __await(cursor.read(1))];
                 case 2:
                     rows = _a.sent();
                     _a.label = 3;
                 case 3:
                     if (!rows.length) return [3 /*break*/, 7];
-                    rec = __assign(__assign({}, rows[0]), { location: JSON.parse(rows[0].location) });
-                    return [4 /*yield*/, __await(rec)];
+                    return [4 /*yield*/, __await(rows[0])];
                 case 4: return [4 /*yield*/, _a.sent()];
                 case 5:
                     _a.sent();

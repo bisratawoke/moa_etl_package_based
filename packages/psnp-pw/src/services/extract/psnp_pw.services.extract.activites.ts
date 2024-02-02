@@ -3,7 +3,11 @@ const Cursor = require("pg-cursor");
 import etlExceptions, { etlExceptionType } from "etl-exception";
 import pool from "../database/psnp_pw.services.database";
 
-export async function* extract_activites_info() {
+export async function* extract_activites_info(): AsyncGenerator<
+  any,
+  void,
+  unknown
+> {
   try {
     const client = await pool.connect();
     const cursor = client.query(
@@ -25,6 +29,7 @@ export async function* extract_activites_info() {
             act.started start_date , 
             act.completed  end_date ,
             act.status activity_status , 
+            ST_Area(act.geom) as area,
             EXTRACT(YEAR FROM act.created_at) AS year,
             CAST(EXTRACT(YEAR FROM act.created_at) AS VARCHAR) AS string_year,
             'PSNP PW' as record_type
@@ -40,9 +45,7 @@ export async function* extract_activites_info() {
     );
     let rows = await cursor.read(1);
     while (rows.length) {
-      let rec = { ...rows[0], location: JSON.parse(rows[0].location) };
-
-      yield rec;
+      yield rows[0];
       rows = await cursor.read(1);
     }
     cursor.close(() => {

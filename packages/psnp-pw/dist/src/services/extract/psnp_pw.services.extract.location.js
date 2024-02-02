@@ -40,10 +40,11 @@ var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _ar
     function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.admin_location_info_extraction = void 0;
+exports.extractMicrowatshed = exports.extractMajorWatershed = exports.admin_location_info_extraction = void 0;
 var etl_exception_1 = require("etl-exception");
 var Cursor = require("pg-cursor");
 var psnp_pw_services_database_1 = require("../database/psnp_pw.services.database");
+//TODO: Maybe consider created a general/common postgres extract that all packages can use
 function admin_location_info_extraction() {
     return __asyncGenerator(this, arguments, function admin_location_info_extraction_1() {
         var client_1, cursor, rows, rec, error_1;
@@ -54,7 +55,7 @@ function admin_location_info_extraction() {
                     return [4 /*yield*/, __await(psnp_pw_services_database_1.default.connect())];
                 case 1:
                     client_1 = _a.sent();
-                    cursor = client_1.query(new Cursor("\n        select \n            kebele.name as kebele_name,\n            woreda.name as woreda_name,\n            zone.name as zone_name,\n            region.name as region_name,\n            cws.id as cws_id,\n            cws.name as \"Major Watershed\",\n            mws.name as \"Micro Watershed\",\n            ST_AsGeoJSON(kebele.geom) as kebele_location,\n            ST_AsGeoJSON(woreda.geom) as woreda_location,\n            ST_AsGeoJSON(zone.geom) as zone_location,\n            ST_AsGeoJSON(region.geom) as region_location,\n            ST_AsGeoJSON(mws.geom) as microwatershed_location,\n            ST_AsGeoJSON(cws.geom) as watershed_location,\n            ST_Area(mws.geom)/10000 as microwatershed_area,\n            ST_Area(cws.geom)/10000 as majorwatershed_area,\n            'PSNP PW' As record_type\n            from kebeles as kebele \n            full join microwatersheds as mws on kebele.parent_id = mws.id \n            full join watersheds as cws on mws.parent_id = cws.id \n            full join woredas as woreda on woreda.id = kebele.parent_id \n            full join zones as zone on zone.id = woreda.parent_id \n            full join regions as region on region.id = zone.parent_id\n    "));
+                    cursor = client_1.query(new Cursor("\n        select \n            kebele.id as id,\n            kebele.name as kebele_name,\n            woreda.name as woreda_name,\n            zone.name as zone_name,\n            region.name as region_name,\n            cws.id as cws_id,\n            cws.name as \"Major Watershed\",\n            mws.name as \"Micro Watershed\",\n            ST_AsGeoJSON(kebele.geom) as kebele_location,\n            ST_AsGeoJSON(woreda.geom) as woreda_location,\n            ST_AsGeoJSON(zone.geom) as zone_location,\n            ST_AsGeoJSON(region.geom) as region_location,\n            ST_AsGeoJSON(mws.geom) as microwatershed_location,\n            ST_AsGeoJSON(cws.geom) as watershed_location,\n            ST_Area(mws.geom)/10000 as microwatershed_area,\n            ST_Area(cws.geom)/10000 as majorwatershed_area,\n            'PSNP PW' As record_type\n            from kebeles as kebele \n            full join microwatersheds as mws on kebele.parent_id = mws.id \n            full join watersheds as cws on mws.parent_id = cws.id \n            full join woredas as woreda on woreda.id = kebele.parent_id \n            full join zones as zone on zone.id = woreda.parent_id \n            full join regions as region on region.id = zone.parent_id\n    "));
                     return [4 /*yield*/, __await(cursor.read(1))];
                 case 2:
                     rows = _a.sent();
@@ -84,3 +85,88 @@ function admin_location_info_extraction() {
     });
 }
 exports.admin_location_info_extraction = admin_location_info_extraction;
+//psnp_pw_major_watershed
+//Major watershed info
+function extractMajorWatershed() {
+    return __asyncGenerator(this, arguments, function extractMajorWatershed_1() {
+        var client_2, cursor, rows, rec, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 8, , 9]);
+                    return [4 /*yield*/, __await(psnp_pw_services_database_1.default.connect())];
+                case 1:
+                    client_2 = _a.sent();
+                    cursor = client_2.query(new Cursor("\n    select \n      watershed.id as id,\n      watershed.id as cws_id,\n      watershed.name as Major_watershed , \n      ST_AsGeoJSON(watershed.geom) as location,\n      ST_Area(watershed.geom) as area , \n      region.name as region_name ,\n      zone.name as zone_name , \n      woreda.name as woreda_name\n      from watersheds as watershed \n      full join woredas as woreda on woreda.id = watershed.parent_id \n      full join zones as zone on zone.id = woreda.parent_id\n      full join regions as region on region.id = zone.parent_id limit 1\n    "));
+                    return [4 /*yield*/, __await(cursor.read(1))];
+                case 2:
+                    rows = _a.sent();
+                    _a.label = 3;
+                case 3:
+                    if (!rows.length) return [3 /*break*/, 7];
+                    rec = rows[0];
+                    return [4 /*yield*/, __await(rec)];
+                case 4: return [4 /*yield*/, _a.sent()];
+                case 5:
+                    _a.sent();
+                    return [4 /*yield*/, __await(cursor.read(1))];
+                case 6:
+                    rows = _a.sent();
+                    return [3 /*break*/, 3];
+                case 7:
+                    cursor.close(function () {
+                        client_2.release();
+                    });
+                    return [3 /*break*/, 9];
+                case 8:
+                    error_2 = _a.sent();
+                    throw new etl_exception_1.default(error_2.message, etl_exception_1.etlExceptionType.EXTRACTION);
+                case 9: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.extractMajorWatershed = extractMajorWatershed;
+//psnp_pw_micro_watershed
+//Micro watershed
+function extractMicrowatshed() {
+    return __asyncGenerator(this, arguments, function extractMicrowatshed_1() {
+        var client_3, cursor, rows, rec, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 8, , 9]);
+                    return [4 /*yield*/, __await(psnp_pw_services_database_1.default.connect())];
+                case 1:
+                    client_3 = _a.sent();
+                    cursor = client_3.query(new Cursor("\n      select\n            mws.id as id,\n            mws.id as mws_id,\n            kebele.name as kebele_name,\n            woreda.name as woreda_name,\n            zone.name as zone_name,\n            region.name as region_name,\n            cws.id as cws_id,\n            cws.name as \"Major Watershed\",\n            mws.name as \"Micro Watershed\",\n            ST_AsGeoJSON(kebele.geom) as kebele_location,\n            ST_AsGeoJSON(woreda.geom) as woreda_location,\n            ST_AsGeoJSON(zone.geom) as zone_location,\n            ST_AsGeoJSON(region.geom) as region_location,\n            ST_AsGeoJSON(mws.geom) as microwatershed_location,\n            ST_AsGeoJSON(cws.geom) as watershed_location,\n            ST_Area(mws.geom)/10000 as microwatershed_area,\n            ST_Area(cws.geom)/10000 as majorwatershed_area,\n            'PSNP PW' As record_type\n            from kebeles as kebele \n            full join microwatersheds as mws on kebele.parent_id = mws.id \n            full join watersheds as cws on mws.parent_id = cws.id \n            full join woredas as woreda on woreda.id = kebele.parent_id \n            full join zones as zone on zone.id = woreda.parent_id \n            full join regions as region on region.id = zone.parent_id\n    "));
+                    return [4 /*yield*/, __await(cursor.read(1))];
+                case 2:
+                    rows = _a.sent();
+                    _a.label = 3;
+                case 3:
+                    if (!rows.length) return [3 /*break*/, 7];
+                    rec = rows[0];
+                    return [4 /*yield*/, __await(rec)];
+                case 4: return [4 /*yield*/, _a.sent()];
+                case 5:
+                    _a.sent();
+                    return [4 /*yield*/, __await(cursor.read(1))];
+                case 6:
+                    rows = _a.sent();
+                    return [3 /*break*/, 3];
+                case 7:
+                    cursor.close(function () {
+                        client_3.release();
+                    });
+                    return [3 /*break*/, 9];
+                case 8:
+                    error_3 = _a.sent();
+                    console.log(error_3.message);
+                    throw new etl_exception_1.default(error_3.message, etl_exception_1.etlExceptionType.EXTRACTION);
+                case 9: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.extractMicrowatshed = extractMicrowatshed;
