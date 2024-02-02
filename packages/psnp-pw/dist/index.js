@@ -59,15 +59,14 @@ var OPERATION_TYPE;
 })(OPERATION_TYPE || (exports.OPERATION_TYPE = OPERATION_TYPE = {}));
 function main(optType) {
     var _this = this;
-    console.log("====== im called =====");
     return function () { return __awaiter(_this, void 0, void 0, function () {
-        var count, _a, _loop_1, _b, _c, _d, e_1_1, _loop_2, _e, _f, _g, e_2_1, _loop_3, _h, _j, _k, e_3_1, _loop_4, _l, _m, _o, e_4_1, error_1;
+        var count, _a, _loop_1, _b, _c, _d, e_1_1, _loop_2, _e, _f, _g, e_2_1, _loop_3, _h, _j, _k, e_3_1, _l, _m, _o, activity, record, e_4_1, error_1;
         var _this = this;
         var _p, e_1, _q, _r, _s, e_2, _t, _u, _v, e_3, _w, _x, _y, e_4, _z, _0;
         return __generator(this, function (_1) {
             switch (_1.label) {
                 case 0:
-                    _1.trys.push([0, 51, , 52]);
+                    _1.trys.push([0, 52, , 53]);
                     count = 0;
                     _a = optType;
                     switch (_a) {
@@ -76,7 +75,7 @@ function main(optType) {
                         case OPERATION_TYPE.MICRO_WATERSHED: return [3 /*break*/, 25];
                         case OPERATION_TYPE.ACTIVITIES: return [3 /*break*/, 37];
                     }
-                    return [3 /*break*/, 49];
+                    return [3 /*break*/, 50];
                 case 1:
                     _1.trys.push([1, 6, 7, 12]);
                     _loop_1 = function () {
@@ -124,7 +123,7 @@ function main(optType) {
                     if (e_1) throw e_1.error;
                     return [7 /*endfinally*/];
                 case 11: return [7 /*endfinally*/];
-                case 12: return [3 /*break*/, 50];
+                case 12: return [3 /*break*/, 51];
                 case 13:
                     _1.trys.push([13, 18, 19, 24]);
                     _loop_2 = function () {
@@ -172,7 +171,7 @@ function main(optType) {
                     if (e_2) throw e_2.error;
                     return [7 /*endfinally*/];
                 case 23: return [7 /*endfinally*/];
-                case 24: return [3 /*break*/, 50];
+                case 24: return [3 /*break*/, 51];
                 case 25:
                     _1.trys.push([25, 30, 31, 36]);
                     _loop_3 = function () {
@@ -220,65 +219,57 @@ function main(optType) {
                     if (e_3) throw e_3.error;
                     return [7 /*endfinally*/];
                 case 35: return [7 /*endfinally*/];
-                case 36: return [3 /*break*/, 50];
+                case 36: return [3 /*break*/, 51];
                 case 37:
-                    _1.trys.push([37, 42, 43, 48]);
-                    _loop_4 = function () {
-                        _0 = _o.value;
-                        _l = false;
-                        var activity = _0;
-                        var record = (0, pnsp_pw_services_transform_activities_1.default)(activity);
-                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_swc_treatment_result_scheduler_test", record.id)];
-                                    case 1:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); }, count * 3000);
-                    };
+                    _1.trys.push([37, 43, 44, 49]);
                     _l = true, _m = __asyncValues((0, psnp_pw_services_extract_activites_1.extract_activites_info)());
                     _1.label = 38;
                 case 38: return [4 /*yield*/, _m.next()];
                 case 39:
-                    if (!(_o = _1.sent(), _y = _o.done, !_y)) return [3 /*break*/, 41];
-                    _loop_4();
-                    _1.label = 40;
+                    if (!(_o = _1.sent(), _y = _o.done, !_y)) return [3 /*break*/, 42];
+                    _0 = _o.value;
+                    _l = false;
+                    activity = _0;
+                    record = (0, pnsp_pw_services_transform_activities_1.default)(activity);
+                    console.log("==== in here ===");
+                    return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_swc_treatment_result_scheduler_test", record.id)];
                 case 40:
+                    _1.sent();
+                    _1.label = 41;
+                case 41:
                     _l = true;
                     return [3 /*break*/, 38];
-                case 41: return [3 /*break*/, 48];
-                case 42:
+                case 42: return [3 /*break*/, 49];
+                case 43:
                     e_4_1 = _1.sent();
                     e_4 = { error: e_4_1 };
-                    return [3 /*break*/, 48];
-                case 43:
-                    _1.trys.push([43, , 46, 47]);
-                    if (!(!_l && !_y && (_z = _m.return))) return [3 /*break*/, 45];
-                    return [4 /*yield*/, _z.call(_m)];
+                    return [3 /*break*/, 49];
                 case 44:
+                    _1.trys.push([44, , 47, 48]);
+                    if (!(!_l && !_y && (_z = _m.return))) return [3 /*break*/, 46];
+                    return [4 /*yield*/, _z.call(_m)];
+                case 45:
                     _1.sent();
-                    _1.label = 45;
-                case 45: return [3 /*break*/, 47];
-                case 46:
+                    _1.label = 46;
+                case 46: return [3 /*break*/, 48];
+                case 47:
                     if (e_4) throw e_4.error;
                     return [7 /*endfinally*/];
-                case 47: return [7 /*endfinally*/];
-                case 48: return [3 /*break*/, 50];
-                case 49:
+                case 48: return [7 /*endfinally*/];
+                case 49: return [3 /*break*/, 51];
+                case 50:
                     console.log("Please specify a proper OPERATION_TYPE");
-                    _1.label = 50;
-                case 50: return [3 /*break*/, 52];
-                case 51:
+                    _1.label = 51;
+                case 51: return [3 /*break*/, 53];
+                case 52:
                     error_1 = _1.sent();
+                    console.log("==== i was caught =====");
                     if (error_1 instanceof etl_exception_1.default)
                         throw error_1;
                     else
                         throw new etl_exception_1.default(error_1.message, etl_exception_1.etlExceptionType.UNKNOWN);
-                    return [3 /*break*/, 52];
-                case 52: return [2 /*return*/];
+                    return [3 /*break*/, 53];
+                case 53: return [2 /*return*/];
             }
         });
     }); };

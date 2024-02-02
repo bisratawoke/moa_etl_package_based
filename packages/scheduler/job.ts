@@ -41,7 +41,7 @@ export default function jobber(
         });
       }
       setTimeout(async () => {
-        await jobber(indexName, job);
+        await jobber(indexName, job, retryInterval)();
       }, retryInterval);
     }
   };

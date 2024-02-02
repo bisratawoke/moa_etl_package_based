@@ -20,7 +20,6 @@ export enum OPERATION_TYPE {
 }
 
 export default function main(optType: OPERATION_TYPE) {
-  console.log("====== im called =====");
   return async () => {
     try {
       let count = 0;
@@ -64,19 +63,20 @@ export default function main(optType: OPERATION_TYPE) {
         case OPERATION_TYPE.ACTIVITIES:
           for await (const activity of extract_activites_info()) {
             let record = actTransformer(activity);
-            setTimeout(async () => {
-              await insertIntoElastic(
-                record,
-                "psnp_swc_treatment_result_scheduler_test",
-                record.id
-              );
-            }, count * 3000);
+
+            console.log("==== in here ===");
+            await insertIntoElastic(
+              record,
+              "psnp_swc_treatment_result_scheduler_test",
+              record.id
+            );
           }
           break;
         default:
           console.log("Please specify a proper OPERATION_TYPE");
       }
     } catch (error) {
+      console.log("==== i was caught =====");
       if (error instanceof etlExceptions) throw error;
       else throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
     }
