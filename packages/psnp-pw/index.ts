@@ -71,6 +71,7 @@ export default function main(optType: OPERATION_TYPE) {
       }
     } catch (error) {
       console.log("==== i was caught =====");
+      console.log(error);
       if (error instanceof etlExceptions) throw error;
       else throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
     }

@@ -227,6 +227,7 @@ function main(optType) {
                 case 55:
                     error_1 = _1.sent();
                     console.log("==== i was caught =====");
+                    console.log(error_1);
                     if (error_1 instanceof etl_exception_1.default)
                         throw error_1;
                     else
