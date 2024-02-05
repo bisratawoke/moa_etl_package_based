@@ -49,7 +49,13 @@ function insertIntoElastic(obj, indexname, id) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    throw new Error("i throw it insertIntoElastic...thats me");
+                    indexName = indexname;
+                    return [4 /*yield*/, axios_1.default.post("".concat(moa_config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(id ? id : uuidv4()), obj, {
+                            auth: {
+                                username: moa_config_1.default.ELASTIC_USERNAME,
+                                password: moa_config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
                 case 1:
                     result = _a.sent();
                     console.log(result.status);
@@ -57,6 +63,7 @@ function insertIntoElastic(obj, indexname, id) {
                 case 2:
                     error_1 = _a.sent();
                     console.log("== in here ==");
+                    console.log(error_1);
                     exp = new etl_exception_1.default(error_1.message, 
                     // JSON.stringify(error.response.data),
                     etl_exception_1.etlExceptionType.LOADING);
