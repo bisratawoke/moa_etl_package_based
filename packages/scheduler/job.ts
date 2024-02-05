@@ -15,30 +15,31 @@ export default function jobber(
 ): () => Promise<void> {
   return async () => {
     try {
-      await notifier.notify({
-        index: indexName,
-        extraction_status: EXTRACTION_STATUS.IN_PROGRESS,
-        extraction_date: new Date(),
-        number_of_extracted_records: 0,
-        method: EXTRACTION_METHOD.SYSTEMATIC,
-      });
+      // await notifier.notify({
+      //   index: indexName,
+      //   extraction_status: EXTRACTION_STATUS.IN_PROGRESS,
+      //   extraction_date: new Date(),
+      //   number_of_extracted_records: 0,
+      //   method: EXTRACTION_METHOD.SYSTEMATIC,
+      // });
       await job();
-      await notifier.notify({
-        index: indexName,
-        extraction_status: EXTRACTION_STATUS.COMPLETED,
-        extraction_date: new Date(),
-        number_of_extracted_records: 0,
-        method: EXTRACTION_METHOD.SYSTEMATIC,
-      });
+      // await notifier.notify({
+      //   index: indexName,
+      //   extraction_status: EXTRACTION_STATUS.COMPLETED,
+      //   extraction_date: new Date(),
+      //   number_of_extracted_records: 0,
+      //   method: EXTRACTION_METHOD.SYSTEMATIC,
+      // });
     } catch (error) {
       if (error instanceof etlExceptions) {
-        await notifier.notify({
-          index: indexName,
-          extraction_status: EXTRACTION_STATUS.FAILED,
-          extraction_date: new Date(),
-          number_of_extracted_records: 0,
-          method: EXTRACTION_METHOD.SYSTEMATIC,
-        });
+        console.log(error);
+        // await notifier.notify({
+        //   index: indexName,
+        //   extraction_status: EXTRACTION_STATUS.FAILED,
+        //   extraction_date: new Date(),
+        //   number_of_extracted_records: 0,
+        //   method: EXTRACTION_METHOD.SYSTEMATIC,
+        // });
       }
       setTimeout(async () => {
         await jobber(indexName, job, retryInterval)();
