@@ -68,7 +68,8 @@ export async function* extractMajorWatershed() {
       ST_Area(watershed.geom) as area , 
       region.name as region_name ,
       zone.name as zone_name , 
-      woreda.name as woreda_name
+      woreda.name as woreda_name,
+      'PSNP PW' as record_type
       from watersheds as watershed 
       full join woredas as woreda on woreda.id = watershed.parent_id 
       full join zones as zone on zone.id = woreda.parent_id
