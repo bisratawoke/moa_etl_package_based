@@ -72,7 +72,7 @@ export async function* extractMajorWatershed() {
       from watersheds as watershed 
       full join woredas as woreda on woreda.id = watershed.parent_id 
       full join zones as zone on zone.id = woreda.parent_id
-      full join regions as region on region.id = zone.parent_id limit 1
+      full join regions as region on region.id = zone.parent_id
     `)
     );
     let rows = await cursor.read(1);

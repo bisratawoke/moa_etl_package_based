@@ -97,7 +97,7 @@ function extractMajorWatershed() {
                     return [4 /*yield*/, __await(psnp_pw_services_database_1.default.connect())];
                 case 1:
                     client_2 = _a.sent();
-                    cursor = client_2.query(new Cursor("\n    select \n      watershed.id as id,\n      watershed.id as cws_id,\n      watershed.name as Major_watershed , \n      ST_AsGeoJSON(watershed.geom) as location,\n      ST_Area(watershed.geom) as area , \n      region.name as region_name ,\n      zone.name as zone_name , \n      woreda.name as woreda_name\n      from watersheds as watershed \n      full join woredas as woreda on woreda.id = watershed.parent_id \n      full join zones as zone on zone.id = woreda.parent_id\n      full join regions as region on region.id = zone.parent_id limit 1\n    "));
+                    cursor = client_2.query(new Cursor("\n    select \n      watershed.id as id,\n      watershed.id as cws_id,\n      watershed.name as Major_watershed , \n      ST_AsGeoJSON(watershed.geom) as location,\n      ST_Area(watershed.geom) as area , \n      region.name as region_name ,\n      zone.name as zone_name , \n      woreda.name as woreda_name\n      from watersheds as watershed \n      full join woredas as woreda on woreda.id = watershed.parent_id \n      full join zones as zone on zone.id = woreda.parent_id\n      full join regions as region on region.id = zone.parent_id\n    "));
                     return [4 /*yield*/, __await(cursor.read(1))];
                 case 2:
                     rows = _a.sent();
