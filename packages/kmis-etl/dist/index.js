@@ -63,6 +63,7 @@ function insertIntoElastic(obj, indexname, id) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     indexName = indexname;
+                    console.log("==== in insertIntoElastic ===");
                     return [4 /*yield*/, axios_1.default.post("".concat(elasticUrl, "/").concat(indexName, "/_doc/").concat(id ? id : uuidv4()), obj, {
                             auth: {
                                 username: username,
@@ -81,6 +82,28 @@ function insertIntoElastic(obj, indexname, id) {
             }
         });
     });
+}
+function ethiopianToGregorian(ethiopianYear) {
+    // The Ethiopian calendar is about 7-8 years behind the Gregorian calendar
+    var gregorianOffset = 7;
+    // Calculate the Gregorian year by adding the offset
+    var gregorianYear = ethiopianYear + gregorianOffset;
+    return gregorianYear;
+}
+function ethiopianQuarterToGregorian(ethiopianYear, ethiopianQuarter) {
+    // The Ethiopian calendar is about 7-8 years behind the Gregorian calendar
+    var gregorianOffset = 7;
+    // Calculate the Gregorian year by adding the offset
+    var gregorianYear = ethiopianYear + gregorianOffset;
+    // Calculate the Gregorian quarter
+    var gregorianQuarter = ((ethiopianQuarter + 3) % 4) + 1;
+    return {
+        gregorianYear: gregorianYear,
+        gregorianQuarter: gregorianQuarter,
+    };
+}
+function dateTransformer(record) {
+    return __assign(__assign({}, record), { year: Number(ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear), string_year: String(ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear), quarter: record.quarter, eth_quarter: record.quarter, eth_year: Number(record.eth_year) });
 }
 function hectarOfAreaClosureWithinEtlCalendar() {
     return __awaiter(this, void 0, void 0, function () {
@@ -102,10 +125,11 @@ function hectarOfAreaClosureWithinEtlCalendar() {
                     console.log("=====finished fetching data from server =====");
                     console.log(response.data._embedded);
                     response.data._embedded.woreda_quarterly_indicators_project_aggregated.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
-                        var payload;
+                        var dateAddedRecord, payload;
                         var _this = this;
                         return __generator(this, function (_a) {
-                            payload = __assign(__assign({}, rec), { record_type: "SLMP", area: parseFloat(rec.value), year: Number(rec.year), string_year: String(rec.year) });
+                            dateAddedRecord = dateTransformer(rec);
+                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", area: parseFloat(rec.value) });
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
@@ -153,11 +177,11 @@ function insertNumberOfWoredasWithEth() {
                 case 2:
                     response = _a.sent();
                     response.data._embedded.region_mid_end_indicators_region_project_aggregated.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
-                        var payload;
+                        var dateAddedRecord, payload;
                         var _this = this;
                         return __generator(this, function (_a) {
-                            console.log(rec);
-                            payload = __assign(__assign({}, rec), { value: parseFloat(rec.value), record_type: "SLMP", year: Number(rec.year), string_year: String(rec.year) });
+                            dateAddedRecord = dateTransformer(rec);
+                            payload = __assign(__assign({}, dateAddedRecord), { value: parseFloat(rec.value), record_type: "SLMP" });
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
@@ -200,11 +224,12 @@ function insertCommunityWaterShedsCoopWithEthCalendar() {
                 case 2:
                     dataFromKmisApi = _a.sent();
                     dataFromKmisApi.data._embedded.woreda_quarterly_indicators_project_aggregated.forEach(function (rec, idx) { return __awaiter(_this, void 0, void 0, function () {
-                        var payload_1;
+                        var dateAddedRecord, payload_1;
                         var _this = this;
                         return __generator(this, function (_a) {
                             try {
-                                payload_1 = __assign(__assign({}, rec), { record_type: "SLMP", result: String(rec.value), year: Number(rec.year), string_year: String(rec.year), quarter: rec.quarter });
+                                dateAddedRecord = dateTransformer(rec);
+                                payload_1 = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", result: String(rec.value), quarter: rec.quarter });
                                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
@@ -249,11 +274,12 @@ function lswi() {
                 case 2:
                     dataFromKmisApi = _a.sent();
                     dataFromKmisApi.data._embedded.mws_mid_end_indicators_mws_project_aggregated.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
-                        var result, data;
+                        var dateAddedRecord, result, data;
                         var _this = this;
                         return __generator(this, function (_a) {
+                            dateAddedRecord = dateTransformer(rec);
                             result = rec.numerator / rec.denominator;
-                            data = __assign(__assign({}, rec), { record_type: "SLMP", result: parseFloat(result), value: parseFloat(rec.value), year: Number(rec.year), string_year: rec.year });
+                            data = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", result: parseFloat(result), value: parseFloat(rec.value) });
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
@@ -294,10 +320,11 @@ function insertMajorWatershed() {
                 case 2:
                     response = _a.sent();
                     response.data._embedded.cws_basic.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
-                        var payload;
+                        var dateAddedRecord, payload;
                         var _this = this;
                         return __generator(this, function (_a) {
-                            payload = __assign(__assign({}, rec), { record_type: "SLMP" });
+                            dateAddedRecord = dateTransformer(rec);
+                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP" });
                             //smlp_major_watershed_schedular_test
                             //smlp_major_watershed
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
@@ -367,7 +394,6 @@ function main() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 6, , 7]);
-                    console.log("======== in main ===========");
                     return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
                 case 1:
                     _a.sent();

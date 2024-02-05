@@ -12,6 +12,7 @@ async function insertIntoElastic(obj: any, indexname: any, id?: any) {
   try {
     let indexName = indexname;
 
+    console.log("==== in insertIntoElastic ===");
     const result = await axios.post(
       `${elasticUrl}/${indexName}/_doc/${id ? id : uuidv4()}`,
       obj,
@@ -29,6 +30,48 @@ async function insertIntoElastic(obj: any, indexname: any, id?: any) {
   }
 }
 
+function ethiopianToGregorian(ethiopianYear) {
+  // The Ethiopian calendar is about 7-8 years behind the Gregorian calendar
+  const gregorianOffset = 7;
+
+  // Calculate the Gregorian year by adding the offset
+  const gregorianYear = ethiopianYear + gregorianOffset;
+
+  return gregorianYear;
+}
+
+function ethiopianQuarterToGregorian(
+  ethiopianYear: any,
+  ethiopianQuarter: any
+) {
+  // The Ethiopian calendar is about 7-8 years behind the Gregorian calendar
+  const gregorianOffset = 7;
+
+  // Calculate the Gregorian year by adding the offset
+  const gregorianYear = ethiopianYear + gregorianOffset;
+
+  // Calculate the Gregorian quarter
+  const gregorianQuarter = ((ethiopianQuarter + 3) % 4) + 1;
+
+  return {
+    gregorianYear,
+    gregorianQuarter,
+  };
+}
+function dateTransformer(record: Record<string, any>) {
+  return {
+    ...record,
+    year: Number(
+      ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear
+    ),
+    string_year: String(
+      ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear
+    ),
+    quarter: record.quarter,
+    eth_quarter: record.quarter,
+    eth_year: Number(record.eth_year),
+  };
+}
 async function hectarOfAreaClosureWithinEtlCalendar() {
   try {
     const result = await removePreviousData(
@@ -45,12 +88,11 @@ async function hectarOfAreaClosureWithinEtlCalendar() {
 
     response.data._embedded.woreda_quarterly_indicators_project_aggregated.forEach(
       async (rec: any, indx: any) => {
-        let payload = {
-          ...rec,
+        let dateAddedRecord = dateTransformer(rec);
+        let payload: any = {
+          ...dateAddedRecord,
           record_type: "SLMP",
           area: parseFloat(rec.value),
-          year: Number(rec.year),
-          string_year: String(rec.year),
         };
 
         setTimeout(async () => {
@@ -83,13 +125,12 @@ async function insertNumberOfWoredasWithEth() {
 
     response.data._embedded.region_mid_end_indicators_region_project_aggregated.forEach(
       async (rec: any, indx: any) => {
-        console.log(rec);
+        let dateAddedRecord = dateTransformer(rec);
+
         let payload = {
-          ...rec,
+          ...dateAddedRecord,
           value: parseFloat(rec.value),
           record_type: "SLMP",
-          year: Number(rec.year),
-          string_year: String(rec.year),
         };
 
         setTimeout(async () => {
@@ -121,12 +162,12 @@ async function insertCommunityWaterShedsCoopWithEthCalendar() {
     dataFromKmisApi.data._embedded.woreda_quarterly_indicators_project_aggregated.forEach(
       async (rec: any, idx: any) => {
         try {
+          let dateAddedRecord = dateTransformer(rec);
+
           const payload = {
-            ...rec,
+            ...dateAddedRecord,
             record_type: "SLMP",
             result: String(rec.value),
-            year: Number(rec.year),
-            string_year: String(rec.year),
             quarter: rec.quarter,
           };
           setTimeout(async () => {
@@ -158,14 +199,14 @@ async function lswi() {
     );
     dataFromKmisApi.data._embedded.mws_mid_end_indicators_mws_project_aggregated.forEach(
       async (rec: any, indx: any) => {
+        let dateAddedRecord = dateTransformer(rec);
+
         let result: any = rec.numerator / rec.denominator;
         let data: any = {
-          ...rec,
+          ...dateAddedRecord,
           record_type: "SLMP",
           result: parseFloat(result),
           value: parseFloat(rec.value),
-          year: Number(rec.year),
-          string_year: rec.year,
         };
 
         setTimeout(async () => {
@@ -194,8 +235,10 @@ async function insertMajorWatershed() {
       "http://slmpkmis.gov.et/api-slm-vis/public/cws_basic"
     );
     response.data._embedded.cws_basic.forEach(async (rec: any, indx: any) => {
+      let dateAddedRecord: any = dateTransformer(rec);
+
       let payload = {
-        ...rec,
+        ...dateAddedRecord,
         record_type: "SLMP",
       };
 
@@ -248,7 +291,6 @@ async function removePreviousData(indexName: string) {
 
 export default async function main() {
   try {
-    console.log("======== in main ===========");
     await hectarOfAreaClosureWithinEtlCalendar();
     await lswi();
     await insertNumberOfWoredasWithEth();
