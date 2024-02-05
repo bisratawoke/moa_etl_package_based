@@ -10,7 +10,7 @@ import config from "moa_config";
 //kmsi schedules
 schedule.scheduleJob(
   config.KMIS_API_ETL_FREQUENCY,
-  jobber("kmis etl", kmis, config.KMIS_API_ETL_FREQUENCY)
+  jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
 );
 
 //psnp pw schedules
@@ -46,6 +46,13 @@ schedule.scheduleJob(
     config.PSNP_PW_DB_ETL_RETRY_RATE
   )
 );
+
+//calm etl
+schedule.scheduleJob(
+  config.CALM_DB_ETL_FREQUENCY,
+  jobber("calm", calm, config.CALM_DB_ETL_RETRY_RATE)
+);
+
 //12:25
 // schedule.scheduleJob(
 //   "1/ * * * *",

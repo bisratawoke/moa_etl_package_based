@@ -95,13 +95,31 @@ function ethiopianQuarterToGregorian(ethiopianYear, ethiopianQuarter) {
     var gregorianOffset = 7;
     // Calculate the Gregorian year by adding the offset
     var gregorianYear = ethiopianYear + gregorianOffset;
-    // Calculate the Gregorian quarter
-    var gregorianQuarter = ((ethiopianQuarter + 3) % 4) + 1;
+    // Adjust the Gregorian year and quarter based on the Ethiopian quarter
+    if (ethiopianQuarter > 1) {
+        gregorianYear += 1;
+    }
+    var gregorianQuarter = ((ethiopianQuarter + 2) % 4) + 1;
     return {
         gregorianYear: gregorianYear,
         gregorianQuarter: gregorianQuarter,
     };
 }
+// function ethiopianQuarterToGregorian(
+//   ethiopianYear: any,
+//   ethiopianQuarter: any
+// ) {
+//   // The Ethiopian calendar is about 7-8 years behind the Gregorian calendar
+//   const gregorianOffset = 7;
+//   // Calculate the Gregorian year by adding the offset
+//   const gregorianYear = ethiopianYear + gregorianOffset;
+//   // Calculate the Gregorian quarter
+//   const gregorianQuarter = ((ethiopianQuarter + 3) % 4) + 1;
+//   return {
+//     gregorianYear,
+//     gregorianQuarter,
+//   };
+// }
 function dateTransformer(record) {
     return __assign(__assign({}, record), { year: Number(ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear), string_year: String(ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear), quarter: record.quarter, eth_quarter: record.quarter, eth_year: Number(record.eth_year) });
 }
