@@ -42,6 +42,7 @@ schedule.scheduleJob(
     config.PSNP_PW_DB_ETL_RETRY_RATE
   )
 );
+//12:25
 // schedule.scheduleJob(
 //   "1/ * * * *",
 //   jobber("nrlias_data", nrlais_parcel_elt(OPERATION_TYPE.ETL), 3600000)

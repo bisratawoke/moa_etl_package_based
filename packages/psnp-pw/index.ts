@@ -26,38 +26,32 @@ export default function main(optType: OPERATION_TYPE) {
       switch (optType) {
         case OPERATION_TYPE.LOCATION:
           for await (const location of admin_location_info_extraction()) {
-            setTimeout(async () => {
-              let record: any = adminLocationTransformer(location);
-              await insertIntoElastic(
-                record,
-                "psnp_pw_admin_location",
-                record.id
-              );
-            }, count * 3000);
+            let record: any = adminLocationTransformer(location);
+            await insertIntoElastic(
+              record,
+              "psnp_pw_admin_location",
+              record.id
+            );
           }
           break;
         case OPERATION_TYPE.MAJOR_WATERSHED:
           for await (const location of extractMajorWatershed()) {
-            setTimeout(async () => {
-              let record: any = majorWatershedTransformer(location);
-              await insertIntoElastic(
-                record,
-                "psnp_pw_major_watershed",
-                record.id
-              );
-            }, count * 3000);
+            let record: any = majorWatershedTransformer(location);
+            await insertIntoElastic(
+              record,
+              "psnp_pw_major_watershed",
+              record.id
+            );
           }
           break;
         case OPERATION_TYPE.MICRO_WATERSHED:
           for await (const location of extractMicrowatshed()) {
-            setTimeout(async () => {
-              let record = microwatshedTransformer(location);
-              await insertIntoElastic(
-                record,
-                "psnp_pw_micro_watershed",
-                record.id
-              );
-            }, count * 3000);
+            let record = microwatshedTransformer(location);
+            await insertIntoElastic(
+              record,
+              "psnp_pw_micro_watershed",
+              record.id
+            );
           }
           break;
         case OPERATION_TYPE.ACTIVITIES:
