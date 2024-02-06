@@ -48,6 +48,7 @@ function sync() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    console.log("==== i am runnint ===");
                     pool = new Pool({
                         host: moa_config_1.default.NRLAIS_DB_HOST,
                         port: moa_config_1.default.NRLAIS_DB_PORT,
