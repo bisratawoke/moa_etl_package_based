@@ -5,6 +5,20 @@ const axios = require("axios");
 import config from "moa_config";
 import { transformer, insertIntoElastic, indexName } from "./utils";
 
+async function conn(pool: any) {
+  try {
+    console.log("====== in connection pool =====");
+    pool.query("select 1", (err: any, result: any) => {
+      if (err) console.log(err);
+      else {
+        console.log(result);
+      }
+    });
+  } catch (error) {
+    console.log("=== in connection pool error ===");
+    console.error(error);
+  }
+}
 export default async function sync() {
   console.log("==== i am runnint ===");
   const pool = new Pool({
@@ -14,6 +28,8 @@ export default async function sync() {
     user: config.NRLAIS_DB_USER,
     database: config.NRLAIS_DB_NAME,
   });
+  await conn(pool);
+
   const client = await pool.connect();
   const cursor = client.query(
     new Cursor(
