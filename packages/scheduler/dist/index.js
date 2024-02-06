@@ -48,7 +48,7 @@ var moa_config_1 = require("moa_config");
 //   jobber("calm", calm, config.CALM_DB_ETL_RETRY_RATE)
 // );
 //12:25
-schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlias_data", (0, nrlais_1.nrlais_parcel_elt)(nrlais_1.OPERATION_TYPE.ETL), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
+schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlias_data", (0, nrlais_1.nrlais_parcel_elt)(nrlais_1.OPERATION_TYPE.SYNC), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
 // schedule.scheduleJob(
 //   "54 10 * * *",
 //   jobber("small_holder_irrigation", irrigation, 3600000)

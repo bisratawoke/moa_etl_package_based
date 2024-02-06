@@ -59,7 +59,7 @@ schedule.scheduleJob(
   config.NRLAIS_DB_ETL_FREQUENCY,
   jobber(
     "nrlias_data",
-    nrlais_parcel_elt(OPERATION_TYPE.ETL),
+    nrlais_parcel_elt(OPERATION_TYPE.SYNC),
     config.NRLAIS_DB_ETL_RETRY_RATE
   )
 );
