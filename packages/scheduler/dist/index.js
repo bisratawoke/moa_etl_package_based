@@ -6,7 +6,7 @@ var calm_1 = require("calm");
 var psnp_pw_1 = require("psnp-pw");
 var job_1 = require("./job");
 var moa_config_1 = require("moa_config");
-//kmsi schedules
+//kmis schedules
 schedule.scheduleJob(moa_config_1.default.KMIS_API_ETL_FREQUENCY, (0, job_1.default)("kmis etl", kmis_1.default, moa_config_1.default.KMIS_API_ETL_RETRY_RATE));
 //psnp pw schedules
 schedule.scheduleJob(moa_config_1.default.PSNP_PW_DB_ETL_FREQUENCY, (0, job_1.default)("psnp pw activities etl", (0, psnp_pw_1.default)(psnp_pw_1.OPERATION_TYPE.ACTIVITIES), moa_config_1.default.PSNP_PW_DB_ETL_RETRY_RATE));

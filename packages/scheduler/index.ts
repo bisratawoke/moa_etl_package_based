@@ -7,7 +7,7 @@ import psnp_etl, { OPERATION_TYPE as PSNP_OP_TYPE } from "psnp-pw";
 import jobber from "./job";
 import config from "moa_config";
 
-//kmsi schedules
+//kmis schedules
 schedule.scheduleJob(
   config.KMIS_API_ETL_FREQUENCY,
   jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
@@ -38,6 +38,7 @@ schedule.scheduleJob(
     config.PSNP_PW_DB_ETL_RETRY_RATE
   )
 );
+
 schedule.scheduleJob(
   config.PSNP_PW_DB_ETL_FREQUENCY,
   jobber(
