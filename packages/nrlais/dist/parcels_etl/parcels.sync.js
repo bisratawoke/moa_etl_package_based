@@ -70,6 +70,13 @@ function sync() {
             switch (_a.label) {
                 case 0:
                     console.log("==== i am runnint ===");
+                    console.log({
+                        host: moa_config_1.default.NRLAIS_DB_HOST,
+                        port: moa_config_1.default.NRLAIS_DB_PORT,
+                        password: moa_config_1.default.NRLAIS_DB_PASSWORD,
+                        user: moa_config_1.default.NRLAIS_DB_USER,
+                        database: moa_config_1.default.NRLAIS_DB_NAME,
+                    });
                     pool = new Pool({
                         host: moa_config_1.default.NRLAIS_DB_HOST,
                         port: moa_config_1.default.NRLAIS_DB_PORT,
