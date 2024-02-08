@@ -173,6 +173,7 @@ const transformer = async (record: any) =>
             //   kebele_name: record.kebele_name,
             // });
             // console.log(record["info"]);
+            // if(result[0].)
             await insertIntoElastic("transaction_houshold_information", {
               ...result[0],
               region_name: record.region_name,

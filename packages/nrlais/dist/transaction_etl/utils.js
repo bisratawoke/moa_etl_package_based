@@ -64,10 +64,11 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
-                            _b.trys.push([0, 2, , 3]);
+                            _b.trys.push([0, 4, , 5]);
                             console.log("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"));
                             console.log(rec);
                             delete rec.tx_data;
+                            if (!rec.mreg_familyrole) return [3 /*break*/, 2];
                             return [4 /*yield*/, axios_2.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), rec, {
                                     auth: {
                                         username: config_1.default.ELASTIC_USERNAME,
@@ -79,14 +80,18 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                             console.log(result.status);
                             return [3 /*break*/, 3];
                         case 2:
+                            console.log("mreg_familyrole does not exist");
+                            _b.label = 3;
+                        case 3: return [3 /*break*/, 5];
+                        case 4:
                             error_1 = _b.sent();
                             if (error_1 instanceof axios_1.AxiosError) {
                                 console.log(error_1.message);
                                 console.log((_a = error_1.response) === null || _a === void 0 ? void 0 : _a.data);
                             }
                             resolve(true);
-                            return [3 /*break*/, 3];
-                        case 3: return [2 /*return*/];
+                            return [3 /*break*/, 5];
+                        case 5: return [2 /*return*/];
                     }
                 });
             }); })];

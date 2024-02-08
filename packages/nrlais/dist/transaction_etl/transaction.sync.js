@@ -235,6 +235,7 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                             //   kebele_name: record.kebele_name,
                             // });
                             // console.log(record["info"]);
+                            // if(result[0].)
                             return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information", __assign(__assign(__assign({}, result[0]), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
                         case 20:
                             // console.log({
@@ -245,6 +246,7 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                             //   kebele_name: record.kebele_name,
                             // });
                             // console.log(record["info"]);
+                            // if(result[0].)
                             _b.sent();
                             return [3 /*break*/, 27];
                         case 21:

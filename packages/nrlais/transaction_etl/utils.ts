@@ -16,17 +16,21 @@ export const insertIntoElastic = async (
       console.log(`${config.ELASTIC_URL}/${indexName}/_doc`);
       console.log(rec);
       delete rec.tx_data;
-      const result = await axios.post(
-        `${config.ELASTIC_URL}/${indexName}/_doc`,
-        rec,
-        {
-          auth: {
-            username: config.ELASTIC_USERNAME,
-            password: config.ELASTIC_PASSWORD,
-          },
-        }
-      );
-      console.log(result.status);
+      if (rec.mreg_familyrole) {
+        const result = await axios.post(
+          `${config.ELASTIC_URL}/${indexName}/_doc`,
+          rec,
+          {
+            auth: {
+              username: config.ELASTIC_USERNAME,
+              password: config.ELASTIC_PASSWORD,
+            },
+          }
+        );
+        console.log(result.status);
+      } else {
+        console.log("mreg_familyrole does not exist");
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.message);
