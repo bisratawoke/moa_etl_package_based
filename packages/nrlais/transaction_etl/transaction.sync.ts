@@ -307,6 +307,7 @@ export default async function sync() {
     // if (rec["info"].length > 0) console.log(rec);
 
     // await insertIntoElastic(indexName, rec);
+
     rows = await cursor.read(1);
   }
   cursor.close(() => {

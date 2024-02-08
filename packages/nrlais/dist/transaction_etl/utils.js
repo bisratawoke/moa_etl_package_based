@@ -49,6 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = void 0;
 var axios_1 = require("axios");
+var axios_2 = require("axios");
 var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
 var fs = require("fs");
@@ -59,25 +60,30 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
                 var result, error_1;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
                         case 0:
-                            _a.trys.push([0, 2, , 3]);
+                            _b.trys.push([0, 2, , 3]);
                             console.log("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"));
                             console.log(rec);
-                            return [4 /*yield*/, axios_1.default.post("http://".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), rec, {
+                            delete rec.tx_data;
+                            return [4 /*yield*/, axios_2.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), rec, {
                                     auth: {
                                         username: config_1.default.ELASTIC_USERNAME,
                                         password: config_1.default.ELASTIC_PASSWORD,
                                     },
                                 })];
                         case 1:
-                            result = _a.sent();
+                            result = _b.sent();
                             console.log(result.status);
-                            resolve(true);
                             return [3 /*break*/, 3];
                         case 2:
-                            error_1 = _a.sent();
+                            error_1 = _b.sent();
+                            if (error_1 instanceof axios_1.AxiosError) {
+                                console.log(error_1.message);
+                                console.log((_a = error_1.response) === null || _a === void 0 ? void 0 : _a.data);
+                            }
                             resolve(true);
                             return [3 /*break*/, 3];
                         case 3: return [2 /*return*/];
@@ -156,7 +162,7 @@ function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/elastic/gateway/").concat(indexName, "/_search"), {
+                    return [4 /*yield*/, axios_2.default.post("".concat(config_1.default.ELASTIC_URL, "/elastic/gateway/").concat(indexName, "/_search"), {
                             aggs: {
                                 max_created_at: {
                                     max: {

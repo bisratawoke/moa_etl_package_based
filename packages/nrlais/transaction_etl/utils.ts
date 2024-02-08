@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import axios from "axios";
 import config from "config";
 import etlExceptions, { etlExceptionType } from "etl-exception";
@@ -14,8 +15,9 @@ export const insertIntoElastic = async (
     try {
       console.log(`${config.ELASTIC_URL}/${indexName}/_doc`);
       console.log(rec);
+      delete rec.tx_data;
       const result = await axios.post(
-        `http://${config.ELASTIC_URL}/${indexName}/_doc`,
+        `${config.ELASTIC_URL}/${indexName}/_doc`,
         rec,
         {
           auth: {
@@ -25,8 +27,11 @@ export const insertIntoElastic = async (
         }
       );
       console.log(result.status);
-      resolve(true);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error.message);
+        console.log(error.response?.data);
+      }
       resolve(true);
     }
   });
