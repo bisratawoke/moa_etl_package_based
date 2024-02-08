@@ -2,11 +2,18 @@ const schedule = require("node-schedule");
 import kmis from "kmis";
 import irrigation from "irrigation";
 import calm from "calm";
-import { OPERATION_TYPE, nrlais_parcel_elt } from "nrlais";
+import {
+  OPERATION_TYPE,
+  nrlais_parcel_elt,
+  nrlais_transaction_elt,
+} from "nrlais";
 import psnp_etl, { OPERATION_TYPE as PSNP_OP_TYPE } from "psnp-pw";
 import jobber from "./job";
 import config from "moa_config";
 
+(async () => {
+  await nrlais_transaction_elt()();
+})();
 // //kmis schedules
 // schedule.scheduleJob(
 //   config.KMIS_API_ETL_FREQUENCY,
@@ -55,14 +62,15 @@ import config from "moa_config";
 // );
 
 //12:25
-schedule.scheduleJob(
-  config.NRLAIS_DB_ETL_FREQUENCY,
-  jobber(
-    "nrlias_data",
-    nrlais_parcel_elt(OPERATION_TYPE.SYNC),
-    config.NRLAIS_DB_ETL_RETRY_RATE
-  )
-);
+// schedule.scheduleJob(
+//   config.NRLAIS_DB_ETL_FREQUENCY,
+//   jobber(
+//     "nrlias_data",
+//     nrlais_parcel_elt(OPERATION_TYPE.SYNC),
+//     config.NRLAIS_DB_ETL_RETRY_RATE
+//   )
+// );
+//12:35:00
 // schedule.scheduleJob(
 //   "54 10 * * *",
 //   jobber("small_holder_irrigation", irrigation, 3600000)

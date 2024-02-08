@@ -46,7 +46,10 @@ export default async function sync() {
   );
   let rows = await cursor.read(1);
   while (rows.length) {
+    console.log(rows[0].created_at);
+    console.log(rows[0].updated_at);
     const rec = await transformer(rows[0]);
+    console.log(rec);
     await insertIntoElastic(indexName, rec);
     rows = await cursor.read(1);
   }

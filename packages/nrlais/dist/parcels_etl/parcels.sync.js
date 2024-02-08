@@ -99,9 +99,12 @@ function sync() {
                     _a.label = 4;
                 case 4:
                     if (!rows.length) return [3 /*break*/, 8];
+                    console.log(rows[0].created_at);
+                    console.log(rows[0].updated_at);
                     return [4 /*yield*/, (0, utils_1.transformer)(rows[0])];
                 case 5:
                     rec = _a.sent();
+                    console.log(rec);
                     return [4 /*yield*/, (0, utils_1.insertIntoElastic)(utils_1.indexName, rec)];
                 case 6:
                     _a.sent();

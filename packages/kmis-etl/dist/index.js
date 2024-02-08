@@ -121,50 +121,39 @@ function ethiopianQuarterToGregorian(ethiopianYear, ethiopianQuarter) {
 //   };
 // }
 function dateTransformer(record) {
-    return __assign(__assign({}, record), { year: Number(ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear), string_year: String(ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear), quarter: record.quarter, eth_quarter: record.quarter, eth_year: Number(record.eth_year) });
+    return __assign(__assign({}, record), { year: Number(ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear), string_year: String(ethiopianQuarterToGregorian(record.year, record.quarter).gregorianYear), quarter: record.quarter, eth_quarter: record.quarter, eth_year: Number(record.year) });
 }
 function hectarOfAreaClosureWithinEtlCalendar() {
     return __awaiter(this, void 0, void 0, function () {
-        var result, response, error_2, exp;
+        var response, error_2, exp;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, removePreviousData("slm_hectar_of_area_closure_testing_scheduler"
-                        // "slm_hectar_of_area_closure_in_eth_calendar"
-                        )];
-                case 1:
-                    result = _a.sent();
+                    _a.trys.push([0, 2, , 3]);
+                    // const result = await removePreviousData(
+                    //   "slm_hectar_of_area_closure_testing_scheduler"
+                    //   // "slm_hectar_of_area_closure_in_eth_calendar"
+                    // );
                     console.log("=====finished removing previous data =====");
                     return [4 /*yield*/, axios_1.default.get("http://slmpkmis.gov.et/api-slm-vis/public/woreda-quarterly-indicators-project-aggregated?indicator_code=IR3")];
-                case 2:
+                case 1:
                     response = _a.sent();
                     console.log("=====finished fetching data from server =====");
                     console.log(response.data._embedded);
                     response.data._embedded.woreda_quarterly_indicators_project_aggregated.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
                         var dateAddedRecord, payload;
-                        var _this = this;
                         return __generator(this, function (_a) {
                             dateAddedRecord = dateTransformer(rec);
                             payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", area: parseFloat(rec.value) });
-                            setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "slm_hectar_of_area_closure_testing_scheduler"
-                                            // "slm_hectar_of_area_closure_in_eth_calendar"
-                                            )];
-                                        case 1:
-                                            _a.sent();
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); }, 2000 * indx);
+                            if (parseInt(payload.string_year) > parseInt("2022")) {
+                                console.log(payload);
+                            }
                             return [2 /*return*/];
                         });
                     }); });
-                    return [3 /*break*/, 4];
-                case 3:
+                    return [3 /*break*/, 3];
+                case 2:
                     error_2 = _a.sent();
                     if (error_2 instanceof etl_exception_1.default)
                         throw error_2;
@@ -172,8 +161,8 @@ function hectarOfAreaClosureWithinEtlCalendar() {
                         exp = new etl_exception_1.default(error_2.message, etl_exception_1.etlExceptionType.LOADING);
                         throw exp;
                     }
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
@@ -411,34 +400,32 @@ function main() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 6, , 7]);
+                    _a.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
                 case 1:
                     _a.sent();
-                    return [4 /*yield*/, lswi()];
+                    return [3 /*break*/, 3];
                 case 2:
-                    _a.sent();
-                    return [4 /*yield*/, insertNumberOfWoredasWithEth()];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, insertMajorWatershed()];
-                case 5:
-                    _a.sent();
-                    return [3 /*break*/, 7];
-                case 6:
                     error_8 = _a.sent();
                     if (error_8 instanceof etl_exception_1.default)
                         throw error_8;
                     else {
                         throw new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     }
-                    return [3 /*break*/, 7];
-                case 7: return [2 /*return*/];
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
 }
 exports.default = main;
+(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, main()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); })();

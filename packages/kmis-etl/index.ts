@@ -87,15 +87,15 @@ function dateTransformer(record: Record<string, any>) {
     ),
     quarter: record.quarter,
     eth_quarter: record.quarter,
-    eth_year: Number(record.eth_year),
+    eth_year: Number(record.year),
   };
 }
 async function hectarOfAreaClosureWithinEtlCalendar() {
   try {
-    const result = await removePreviousData(
-      "slm_hectar_of_area_closure_testing_scheduler"
-      // "slm_hectar_of_area_closure_in_eth_calendar"
-    );
+    // const result = await removePreviousData(
+    //   "slm_hectar_of_area_closure_testing_scheduler"
+    //   // "slm_hectar_of_area_closure_in_eth_calendar"
+    // );
 
     console.log("=====finished removing previous data =====");
     const response = await axios.get(
@@ -113,13 +113,16 @@ async function hectarOfAreaClosureWithinEtlCalendar() {
           area: parseFloat(rec.value),
         };
 
-        setTimeout(async () => {
-          await insertIntoElastic(
-            payload,
-            "slm_hectar_of_area_closure_testing_scheduler"
-            // "slm_hectar_of_area_closure_in_eth_calendar"
-          );
-        }, 2000 * indx);
+        if (parseInt(payload.string_year) > parseInt("2022")) {
+          console.log(payload);
+        }
+        // setTimeout(async () => {
+        //   await insertIntoElastic(
+        //     payload,
+        //     "slm_hectar_of_area_closure_testing_scheduler"
+        //     // "slm_hectar_of_area_closure_in_eth_calendar"
+        //   );
+        // }, 2000 * indx);
       }
     );
   } catch (error: any) {
@@ -310,10 +313,10 @@ async function removePreviousData(indexName: string) {
 export default async function main() {
   try {
     await hectarOfAreaClosureWithinEtlCalendar();
-    await lswi();
-    await insertNumberOfWoredasWithEth();
-    await insertCommunityWaterShedsCoopWithEthCalendar();
-    await insertMajorWatershed();
+    // await lswi();
+    // await insertNumberOfWoredasWithEth();
+    // await insertCommunityWaterShedsCoopWithEthCalendar();
+    // await insertMajorWatershed();
   } catch (error) {
     if (error instanceof etlExceptions) throw error;
     else {
@@ -321,3 +324,7 @@ export default async function main() {
     }
   }
 }
+
+(async () => {
+  await main();
+})();
