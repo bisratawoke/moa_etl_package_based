@@ -303,7 +303,8 @@ export default async function sync() {
   let count = 0;
   while (rows.length) {
     count += 1;
-    const rec: any = await transformer(rows[0]);
+    console.log(count);
+    await transformer(rows[0]);
 
     rows = await cursor.read(1);
   }

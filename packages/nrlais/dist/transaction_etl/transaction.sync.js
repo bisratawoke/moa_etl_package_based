@@ -288,7 +288,7 @@ function conn(pool) {
 }
 function sync() {
     return __awaiter(this, void 0, void 0, function () {
-        var client, cursor, rows, count, rec;
+        var client, cursor, rows, count;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -317,9 +317,10 @@ function sync() {
                 case 4:
                     if (!rows.length) return [3 /*break*/, 7];
                     count += 1;
+                    console.log(count);
                     return [4 /*yield*/, transformer(rows[0])];
                 case 5:
-                    rec = _a.sent();
+                    _a.sent();
                     return [4 /*yield*/, cursor.read(1)];
                 case 6:
                     rows = _a.sent();
