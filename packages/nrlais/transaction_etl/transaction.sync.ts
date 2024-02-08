@@ -160,54 +160,54 @@ const transformer = async (record: any) =>
           case 14:
             record.transaction_type = "Boundary Correction";
             break;
-          case 20:
-            record.transaction_type = "Register Mortgage";
-            // console.log(record.tx_data.data);
+          // case 20:
+          //   record.transaction_type = "Register Mortgage";
+          //   // console.log(record.tx_data.data);
 
-            result = registerMorgageTransform(record.tx_data.data);
-            // console.log({
-            //   ...result[0],
-            //   region_name: record.region_name,
-            //   zone_name: record.zone_name,
-            //   woreda_name: record.woreda_name,
-            //   kebele_name: record.kebele_name,
-            // });
-            // console.log(record["info"]);
-            // if(result[0].)
-            await insertIntoElastic("transaction_houshold_information", {
-              ...result[0],
-              region_name: record.region_name,
-              zone_name: record.zone_name,
-              woreda_name: record.woreda_name,
-              kebele_name: record.kebele_name,
-              ...record,
-            });
+          //   result = registerMorgageTransform(record.tx_data.data);
+          //   // console.log({
+          //   //   ...result[0],
+          //   //   region_name: record.region_name,
+          //   //   zone_name: record.zone_name,
+          //   //   woreda_name: record.woreda_name,
+          //   //   kebele_name: record.kebele_name,
+          //   // });
+          //   // console.log(record["info"]);
+          //   // if(result[0].)
+          //   await insertIntoElastic("transaction_houshold_information", {
+          //     ...result[0],
+          //     region_name: record.region_name,
+          //     zone_name: record.zone_name,
+          //     woreda_name: record.woreda_name,
+          //     kebele_name: record.kebele_name,
+          //     ...record,
+          //   });
 
-            break;
+          //   break;
           case 21:
             record.transaction_type = "Modify Mortgage";
             break;
-          case 22:
-            record.transaction_type = "Cancel Mortgage";
+          // case 22:
+          //   record.transaction_type = "Cancel Mortgage";
 
-            result = cancelMorgageTransform(record.tx_data.data);
-            // console.log({
-            //   ...result[0],
-            //   region_name: record.region_name,
-            //   zone_name: record.zone_name,
-            //   woreda_name: record.woreda_name,
-            //   kebele_name: record.kebele_name,
-            // });
-            await insertIntoElastic("transaction_houshold_information", {
-              ...result[0],
-              region_name: record.region_name,
-              zone_name: record.zone_name,
-              woreda_name: record.woreda_name,
-              kebele_name: record.kebele_name,
-              ...record,
-            });
+          //   result = cancelMorgageTransform(record.tx_data.data);
+          //   // console.log({
+          //   //   ...result[0],
+          //   //   region_name: record.region_name,
+          //   //   zone_name: record.zone_name,
+          //   //   woreda_name: record.woreda_name,
+          //   //   kebele_name: record.kebele_name,
+          //   // });
+          //   await insertIntoElastic("transaction_houshold_information", {
+          //     ...result[0],
+          //     region_name: record.region_name,
+          //     zone_name: record.zone_name,
+          //     woreda_name: record.woreda_name,
+          //     kebele_name: record.kebele_name,
+          //     ...record,
+          //   });
 
-            break;
+          //   break;
           case 25:
             record.transaction_type = "Marriage";
 
@@ -304,10 +304,6 @@ export default async function sync() {
   while (rows.length) {
     count += 1;
     const rec: any = await transformer(rows[0]);
-
-    // if (rec["info"].length > 0) console.log(rec);
-
-    // await insertIntoElastic(indexName, rec);
 
     rows = await cursor.read(1);
   }

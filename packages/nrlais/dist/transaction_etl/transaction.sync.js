@@ -68,9 +68,9 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
-                            _b.trys.push([0, 29, , 30]);
+                            _b.trys.push([0, 25, , 26]);
                             result = null;
-                            if (!(!Number.isNaN(record.transactiontype) && record.tx_data != null)) return [3 /*break*/, 28];
+                            if (!(!Number.isNaN(record.transactiontype) && record.tx_data != null)) return [3 /*break*/, 24];
                             _a = record.transactiontype;
                             switch (_a) {
                                 case 26: return [3 /*break*/, 1];
@@ -87,12 +87,10 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                                 case 12: return [3 /*break*/, 16];
                                 case 13: return [3 /*break*/, 17];
                                 case 14: return [3 /*break*/, 18];
-                                case 20: return [3 /*break*/, 19];
-                                case 21: return [3 /*break*/, 21];
-                                case 22: return [3 /*break*/, 22];
-                                case 25: return [3 /*break*/, 24];
+                                case 21: return [3 /*break*/, 19];
+                                case 25: return [3 /*break*/, 20];
                             }
-                            return [3 /*break*/, 26];
+                            return [3 /*break*/, 22];
                         case 1:
                             record.transaction_type = "Inheritance with will";
                             console.log("========= start   =============");
@@ -114,7 +112,7 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                             //   kebele_name: record.kebele_name,
                             // };
                             _b.sent();
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 3:
                             record.transaction_type = "Inheritance without will";
                             result = (0, transformer_1.InheritanceWithWillTransformer)(record.tx_data.data);
@@ -137,13 +135,13 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                             // });
                             // console.log(record["info"]);
                             _b.sent();
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 5:
                             record.transaction_type = "Divorce";
                             // console.log(record.tx_data.data);
                             // record["info"] = divorceTransformer(record.tx_data.data);
                             // console.log(record["info"]);
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 6:
                             record.transaction_type = "Gift";
                             console.log("========= start ==========");
@@ -171,13 +169,13 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                             _b.sent();
                             console.log("========= end ==========");
                             // console.log(record["info"]);
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 8:
                             record.transaction_type = "Exchange";
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 9:
                             record.transaction_type = "Expropriation";
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 10:
                             record.transaction_type = "Reallocation";
                             result = (0, transformer_1.reallocationTransformer)(record.tx_data.data);
@@ -198,82 +196,35 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                             //   kebele_name: record.kebele_name,
                             // });
                             _b.sent();
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 12:
                             // at
                             record.transaction_type = "Special case";
                             result = (0, transformer_1.specialCaseTransformer)(record.tx_data.data);
                             console.log(result);
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 13:
                             record.transaction_type = "Rent/Lease";
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 14:
                             record.transaction_type = "Servitude/Easement";
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 15:
                             record.transaction_type = "Restrictive Interest";
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 16:
                             record.transaction_type = "Parcel split";
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 17:
                             record.transaction_type = "Parcel Consolidation/Merge";
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 18:
                             record.transaction_type = "Boundary Correction";
-                            return [3 /*break*/, 27];
+                            return [3 /*break*/, 23];
                         case 19:
-                            record.transaction_type = "Register Mortgage";
-                            // console.log(record.tx_data.data);
-                            result = (0, transformer_1.registerMorgageTransform)(record.tx_data.data);
-                            // console.log({
-                            //   ...result[0],
-                            //   region_name: record.region_name,
-                            //   zone_name: record.zone_name,
-                            //   woreda_name: record.woreda_name,
-                            //   kebele_name: record.kebele_name,
-                            // });
-                            // console.log(record["info"]);
-                            // if(result[0].)
-                            return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information", __assign(__assign(__assign({}, result[0]), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
-                        case 20:
-                            // console.log({
-                            //   ...result[0],
-                            //   region_name: record.region_name,
-                            //   zone_name: record.zone_name,
-                            //   woreda_name: record.woreda_name,
-                            //   kebele_name: record.kebele_name,
-                            // });
-                            // console.log(record["info"]);
-                            // if(result[0].)
-                            _b.sent();
-                            return [3 /*break*/, 27];
-                        case 21:
                             record.transaction_type = "Modify Mortgage";
-                            return [3 /*break*/, 27];
-                        case 22:
-                            record.transaction_type = "Cancel Mortgage";
-                            result = (0, transformer_1.cancelMorgageTransform)(record.tx_data.data);
-                            // console.log({
-                            //   ...result[0],
-                            //   region_name: record.region_name,
-                            //   zone_name: record.zone_name,
-                            //   woreda_name: record.woreda_name,
-                            //   kebele_name: record.kebele_name,
-                            // });
-                            return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information", __assign(__assign(__assign({}, result[0]), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
-                        case 23:
-                            // console.log({
-                            //   ...result[0],
-                            //   region_name: record.region_name,
-                            //   zone_name: record.zone_name,
-                            //   woreda_name: record.woreda_name,
-                            //   kebele_name: record.kebele_name,
-                            // });
-                            _b.sent();
-                            return [3 /*break*/, 27];
-                        case 24:
+                            return [3 /*break*/, 23];
+                        case 20:
                             record.transaction_type = "Marriage";
                             result = (0, transformer_1.marrageTransformer)(record.tx_data.data);
                             // console.log({
@@ -285,7 +236,7 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                             // });
                             // console.log(record["info"]);
                             return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information", __assign(__assign(__assign({}, result[0]), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
-                        case 25:
+                        case 21:
                             // console.log({
                             //   ...result[0],
                             //   region_name: record.region_name,
@@ -295,20 +246,20 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                             // });
                             // console.log(record["info"]);
                             _b.sent();
-                            return [3 /*break*/, 27];
-                        case 26:
+                            return [3 /*break*/, 23];
+                        case 22:
                             record.transaction_type = "Initial";
-                            return [3 /*break*/, 27];
-                        case 27:
+                            return [3 /*break*/, 23];
+                        case 23:
                             resovle(result);
-                            _b.label = 28;
-                        case 28: return [3 /*break*/, 30];
-                        case 29:
+                            _b.label = 24;
+                        case 24: return [3 /*break*/, 26];
+                        case 25:
                             error_1 = _b.sent();
                             console.log(error_1);
                             console.log("skipped");
-                            return [3 /*break*/, 30];
-                        case 30: return [2 /*return*/];
+                            return [3 /*break*/, 26];
+                        case 26: return [2 /*return*/];
                     }
                 });
             }); })];
@@ -371,8 +322,6 @@ function sync() {
                     rec = _a.sent();
                     return [4 /*yield*/, cursor.read(1)];
                 case 6:
-                    // if (rec["info"].length > 0) console.log(rec);
-                    // await insertIntoElastic(indexName, rec);
                     rows = _a.sent();
                     return [3 /*break*/, 4];
                 case 7:
