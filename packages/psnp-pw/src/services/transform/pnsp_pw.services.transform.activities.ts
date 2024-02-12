@@ -2,7 +2,7 @@ export default function actTransformer(
   record: Record<string, any>
 ): Record<string, any> {
   console.log("====== in transformer ====");
-  console.log(record.unit);
+  console.log(record.unit.toLowerCase());
   console.log("====== out transformer ====");
   return {
     ...record,

@@ -1,0 +1,24 @@
+- physical
+slmp_2001_2015_swc_treatments_result,
+mass_mobilization_physical_swc_treatment_report,
+calm_soil_water_conservation_treatments,
+pasidp_physical_data_report
+
+-biological
+
+*slmp_2001_2015_swc_treatments_result,
+
+psnp_pw_biological_treatments_all,
+mlm_biological_swc_treatment_result,
+pasidp_biological_data_with_year,
+calm_soil_water_conservation_treatments_result
+
+
+- physical
+
+*slmp_2001_2015_swc_treatments_result,
+
+psnp_swc_treatment_result_scheduler_test,
+mass_mobilization_physical_swc_treatment_report,
+calm_soil_water_conservation_treatments_result,
+pasidp_physical_data_report,

@@ -62,9 +62,9 @@ var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
 var fs = require("fs");
 var path = require("path");
-exports.indexName = "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
 // export const indexName =
-//   "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
+//   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
+exports.indexName = "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
 function getMaxDate() {
     return __awaiter(this, void 0, void 0, function () {
         var payload, res, error_1;

@@ -3,10 +3,10 @@ import config from "config";
 import etlExceptions, { etlExceptionType } from "etl-exception";
 import * as fs from "fs";
 import * as path from "path";
-export const indexName =
-  "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
 // export const indexName =
-//   "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
+//   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
+export const indexName =
+  "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
 
 export async function getMaxDate() {
   try {
