@@ -56,27 +56,66 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.indexName = void 0;
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.getMaxDate = exports.indexName = void 0;
 var axios_1 = require("axios");
 var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
 var fs = require("fs");
 var path = require("path");
 exports.indexName = "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
+// export const indexName =
+//   "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
+function getMaxDate() {
+    return __awaiter(this, void 0, void 0, function () {
+        var payload, res, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    payload = {
+                        aggs: {
+                            max_date: {
+                                max: {
+                                    field: "date",
+                                },
+                            },
+                        },
+                    };
+                    return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(exports.indexName, "/_search"), payload, {
+                            auth: {
+                                username: config_1.default.ELASTIC_USERNAME,
+                                password: config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 1:
+                    res = _a.sent();
+                    return [2 /*return*/, res.data.aggregations.max_date];
+                case 2:
+                    error_1 = _a.sent();
+                    console.log("============ in get max date =================");
+                    console.log(error_1);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getMaxDate = getMaxDate;
 var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
-                var res, payload, result, payload, result, error_1;
+                var res, payload, result, payload, result, error_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             _a.trys.push([0, 6, , 7]);
+                            console.log("======== in insertIntoElastic ====");
                             return [4 /*yield*/, doesParcelExist(rec.id)];
                         case 1:
                             res = _a.sent();
                             if (!res) return [3 /*break*/, 3];
                             payload = __assign(__assign({}, res), { holders: __spreadArray(__spreadArray([], res.holders, true), [rec.gender_name], false) });
-                            return [4 /*yield*/, axios_1.default.post("http://".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(payload.id), payload, {
+                            return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(payload.id), payload, {
                                     auth: {
                                         username: config_1.default.ELASTIC_USERNAME,
                                         password: config_1.default.ELASTIC_PASSWORD,
@@ -88,7 +127,7 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                             return [3 /*break*/, 5];
                         case 3:
                             payload = __assign(__assign({}, rec), { holders: [rec.gender_name] });
-                            return [4 /*yield*/, axios_1.default.post("http://".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(rec.id), payload, {
+                            return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(rec.id), payload, {
                                     auth: {
                                         username: config_1.default.ELASTIC_USERNAME,
                                         password: config_1.default.ELASTIC_PASSWORD,
@@ -100,7 +139,7 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                             _a.label = 5;
                         case 5: return [3 /*break*/, 7];
                         case 6:
-                            error_1 = _a.sent();
+                            error_2 = _a.sent();
                             resolve(true);
                             return [3 /*break*/, 7];
                         case 7: return [2 /*return*/];
@@ -165,7 +204,7 @@ var transformer = function (record) {
 exports.transformer = transformer;
 function doesParcelExist(parcel_id) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_2;
+        var response, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -180,7 +219,7 @@ function doesParcelExist(parcel_id) {
                     response = _a.sent();
                     return [2 /*return*/, { source: response.data._source, found: response.data.found }];
                 case 2:
-                    error_2 = _a.sent();
+                    error_3 = _a.sent();
                     return [2 /*return*/, null];
                 case 3: return [2 /*return*/];
             }
@@ -198,7 +237,7 @@ function updateConfig(data) {
 exports.updateConfig = updateConfig;
 function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_3;
+        var response, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -229,11 +268,11 @@ function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
                             updated_at: response.data._source.updated,
                         }];
                 case 2:
-                    error_3 = _a.sent();
-                    if (error_3 instanceof etl_exception_1.default)
-                        throw error_3;
+                    error_4 = _a.sent();
+                    if (error_4 instanceof etl_exception_1.default)
+                        throw error_4;
                     else
-                        throw new etl_exception_1.default(error_3.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                        throw new etl_exception_1.default(error_4.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

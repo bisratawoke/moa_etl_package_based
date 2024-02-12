@@ -302,13 +302,17 @@ export default async function sync() {
   let rows = await cursor.read(1);
   let count = 0;
   while (rows.length) {
-    count += 1;
-    console.log(count);
-    await transformer(rows[0]);
+    try {
+      count += 1;
+      console.log(count);
+      await transformer(rows[0]);
 
-    rows = await cursor.read(1);
+      rows = await cursor.read(1);
+    } catch (error) {
+      console.log(error);
+      cursor.close(() => {
+        client.release();
+      });
+    }
   }
-  cursor.close(() => {
-    client.release();
-  });
 }

@@ -78,9 +78,11 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                         case 1:
                             result = _b.sent();
                             console.log(result.status);
+                            resolve(true);
                             return [3 /*break*/, 3];
                         case 2:
                             console.log("mreg_familyrole does not exist");
+                            resolve(true);
                             _b.label = 3;
                         case 3: return [3 /*break*/, 5];
                         case 4:

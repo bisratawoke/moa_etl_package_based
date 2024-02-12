@@ -5,13 +5,43 @@ import * as fs from "fs";
 import * as path from "path";
 export const indexName =
   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
+// export const indexName =
+//   "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
 
+export async function getMaxDate() {
+  try {
+    let payload = {
+      aggs: {
+        max_date: {
+          max: {
+            field: "date",
+          },
+        },
+      },
+    };
+    const res = await axios.post(
+      `${config.ELASTIC_URL}/${indexName}/_search`,
+      payload,
+      {
+        auth: {
+          username: config.ELASTIC_USERNAME,
+          password: config.ELASTIC_PASSWORD,
+        },
+      }
+    );
+    return res.data.aggregations.max_date;
+  } catch (error) {
+    console.log("============ in get max date =================");
+    console.log(error);
+  }
+}
 export const insertIntoElastic = async (
   indexName: string,
   rec: Record<string, any>
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log("======== in insertIntoElastic ====");
       let res: any = await doesParcelExist(rec.id);
       if (res) {
         let payload = {
@@ -19,7 +49,7 @@ export const insertIntoElastic = async (
           holders: [...res.holders, rec.gender_name],
         };
         const result = await axios.post(
-          `http://${config.ELASTIC_URL}/${indexName}/_doc/${payload.id}`,
+          `${config.ELASTIC_URL}/${indexName}/_doc/${payload.id}`,
           payload,
           {
             auth: {
@@ -35,7 +65,7 @@ export const insertIntoElastic = async (
           holders: [rec.gender_name],
         };
         const result = await axios.post(
-          `http://${config.ELASTIC_URL}/${indexName}/_doc/${rec.id}`,
+          `${config.ELASTIC_URL}/${indexName}/_doc/${rec.id}`,
           payload,
           {
             auth: {

@@ -12,6 +12,11 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 function actTransformer(record) {
-    return __assign(__assign({}, record), { location: JSON.parse(record.location), Unit: record.unit ? record.unit.toLowerCase() : "" });
+    console.log("====== in transformer ====");
+    console.log(record.unit);
+    console.log("====== out transformer ====");
+    return __assign(__assign({}, record), { location: JSON.parse(record.location), Unit: record.unit ? record.unit.toLowerCase() : "", area: record.unit && record.unit.toLowerCase() == "ha"
+            ? record.area / 10000
+            : record.area });
 }
 exports.default = actTransformer;

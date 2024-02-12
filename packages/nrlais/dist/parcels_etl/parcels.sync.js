@@ -104,7 +104,6 @@ function sync() {
                     return [4 /*yield*/, (0, utils_1.transformer)(rows[0])];
                 case 5:
                     rec = _a.sent();
-                    console.log(rec);
                     return [4 /*yield*/, (0, utils_1.insertIntoElastic)(utils_1.indexName, rec)];
                 case 6:
                     _a.sent();
@@ -113,6 +112,7 @@ function sync() {
                     rows = _a.sent();
                     return [3 /*break*/, 4];
                 case 8:
+                    console.log("===== im done ======");
                     cursor.close(function () {
                         client.release();
                     });

@@ -288,7 +288,7 @@ function conn(pool) {
 }
 function sync() {
     return __awaiter(this, void 0, void 0, function () {
-        var client, cursor, rows, count;
+        var client, cursor, rows, count, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -315,21 +315,28 @@ function sync() {
                     count = 0;
                     _a.label = 4;
                 case 4:
-                    if (!rows.length) return [3 /*break*/, 7];
+                    if (!rows.length) return [3 /*break*/, 10];
+                    _a.label = 5;
+                case 5:
+                    _a.trys.push([5, 8, , 9]);
                     count += 1;
                     console.log(count);
                     return [4 /*yield*/, transformer(rows[0])];
-                case 5:
+                case 6:
                     _a.sent();
                     return [4 /*yield*/, cursor.read(1)];
-                case 6:
-                    rows = _a.sent();
-                    return [3 /*break*/, 4];
                 case 7:
+                    rows = _a.sent();
+                    return [3 /*break*/, 9];
+                case 8:
+                    error_2 = _a.sent();
+                    console.log(error_2);
                     cursor.close(function () {
                         client.release();
                     });
-                    return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [3 /*break*/, 4];
+                case 10: return [2 /*return*/];
             }
         });
     });

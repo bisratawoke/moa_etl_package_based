@@ -28,8 +28,10 @@ export const insertIntoElastic = async (
           }
         );
         console.log(result.status);
+        resolve(true);
       } else {
         console.log("mreg_familyrole does not exist");
+        resolve(true);
       }
     } catch (error) {
       if (error instanceof AxiosError) {

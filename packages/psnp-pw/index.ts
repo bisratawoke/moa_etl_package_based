@@ -55,15 +55,17 @@ export default function main(optType: OPERATION_TYPE) {
           }
           break;
         case OPERATION_TYPE.ACTIVITIES:
+          console.log("====== in activities ======");
           for await (const activity of extract_activites_info()) {
             let record = actTransformer(activity);
-
-            console.log("==== in here ===");
-            await insertIntoElastic(
-              record,
-              "psnp_swc_treatment_result_scheduler_test",
-              record.id
-            );
+            record.Unit.toLowerCase() == "ha"
+              ? console.log(record)
+              : console.log("yo");
+            // await insertIntoElastic(
+            //   record,
+            //   "psnp_swc_treatment_result_scheduler_test",
+            //   record.id
+            // );
           }
           break;
         default:

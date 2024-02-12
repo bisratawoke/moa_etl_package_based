@@ -184,24 +184,26 @@ function main(optType) {
                 case 38: return [7 /*endfinally*/];
                 case 39: return [3 /*break*/, 54];
                 case 40:
-                    _1.trys.push([40, 46, 47, 52]);
-                    _l = true, _m = __asyncValues((0, psnp_pw_services_extract_activites_1.extract_activites_info)());
+                    console.log("====== in activities ======");
                     _1.label = 41;
-                case 41: return [4 /*yield*/, _m.next()];
-                case 42:
+                case 41:
+                    _1.trys.push([41, 46, 47, 52]);
+                    _l = true, _m = __asyncValues((0, psnp_pw_services_extract_activites_1.extract_activites_info)());
+                    _1.label = 42;
+                case 42: return [4 /*yield*/, _m.next()];
+                case 43:
                     if (!(_o = _1.sent(), _y = _o.done, !_y)) return [3 /*break*/, 45];
                     _0 = _o.value;
                     _l = false;
                     activity = _0;
                     record = (0, pnsp_pw_services_transform_activities_1.default)(activity);
-                    console.log("==== in here ===");
-                    return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_swc_treatment_result_scheduler_test", record.id)];
-                case 43:
-                    _1.sent();
+                    record.Unit.toLowerCase() == "ha"
+                        ? console.log(record)
+                        : console.log("yo");
                     _1.label = 44;
                 case 44:
                     _l = true;
-                    return [3 /*break*/, 41];
+                    return [3 /*break*/, 42];
                 case 45: return [3 /*break*/, 52];
                 case 46:
                     e_4_1 = _1.sent();
