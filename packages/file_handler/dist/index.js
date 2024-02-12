@@ -8,10 +8,8 @@ var app = express();
 app.use(cors());
 app.use(express.static("./packages/file_handler/dist/uploads"));
 function replaceNonAlphabeticCharactersWithUnderscore(str) {
-    // Replace spaces, hyphens, and any non-alphabetic characters with underscores
     return str.replace(/[^a-zA-Z]/g, "_");
 }
-// Set up multer to handle file uploads
 var storage = multer.diskStorage({
     destination: "./packages/file_handler/dist/uploads", // specify the destination folder
     filename: function (req, file, cb) {
@@ -21,8 +19,6 @@ var storage = multer.diskStorage({
     },
 });
 var upload = multer({ storage: storage });
-// Serve files from the public directory
-// Set up a route handler to handle file uploads
 app.post("/file/upload", upload.single("file"), function (req, res) {
     console.log(console.log(req.file));
     res.json({ filename: req.file.filename });

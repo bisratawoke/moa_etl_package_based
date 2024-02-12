@@ -19,10 +19,10 @@ schedule.scheduleJob(
     config.NRLAIS_DB_ETL_RETRY_RATE
   )
 );
-schedule.scheduleJob(
-  config.KMIS_API_ETL_FREQUENCY,
-  jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
-);
+// schedule.scheduleJob(
+//   config.KMIS_API_ETL_FREQUENCY,
+//   jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
+// );
 // (async () => {
 //   await nrlais_transaction_elt()();
 // })();

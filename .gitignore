@@ -15,6 +15,9 @@ packages/config/prodConfig.ts
 packages/config/dist/devConfig.json
 packages/config/dist/prodConfig.json
 
+# uploaded files
+packages/file_handler/dist/uploads
+
 # docker compose files used for development
 packages/nrlais/docker-compose.yml
 packages/psnp-pw/docker-compose.yml

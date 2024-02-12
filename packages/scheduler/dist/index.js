@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var schedule = require("node-schedule");
-var kmis_1 = require("kmis");
 var nrlais_1 = require("nrlais");
 var job_1 = require("./job");
 var moa_config_1 = require("moa_config");
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlias_data", (0, nrlais_1.nrlais_parcel_elt)(nrlais_1.OPERATION_TYPE.SYNC), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
-schedule.scheduleJob(moa_config_1.default.KMIS_API_ETL_FREQUENCY, (0, job_1.default)("kmis etl", kmis_1.default, moa_config_1.default.KMIS_API_ETL_RETRY_RATE));
+// schedule.scheduleJob(
+//   config.KMIS_API_ETL_FREQUENCY,
+//   jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
+// );
 // (async () => {
 //   await nrlais_transaction_elt()();
 // })();
