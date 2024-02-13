@@ -10,6 +10,7 @@ export function nrlais_parcel_elt(opType: OPERATION_TYPE): any {
   return async () => {
     try {
       if (opType == OPERATION_TYPE.SYNC) {
+        console.log("======= in sync ==");
         await sync();
       } else if (opType == OPERATION_TYPE.ETL) {
         await etl();

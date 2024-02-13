@@ -53,6 +53,7 @@ function nrlais_parcel_elt(opType) {
                 case 0:
                     _a.trys.push([0, 6, , 7]);
                     if (!(opType == OPERATION_TYPE.SYNC)) return [3 /*break*/, 2];
+                    console.log("======= in sync ==");
                     return [4 /*yield*/, (0, parcels_sync_1.default)()];
                 case 1:
                     _a.sent();

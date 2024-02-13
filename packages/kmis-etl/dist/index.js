@@ -400,29 +400,20 @@ function main() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 5, , 6]);
+                    _a.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
                 case 1:
                     _a.sent();
-                    return [4 /*yield*/, lswi()];
+                    return [3 /*break*/, 3];
                 case 2:
-                    _a.sent();
-                    return [4 /*yield*/, insertNumberOfWoredasWithEth()];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
-                case 4:
-                    _a.sent();
-                    return [3 /*break*/, 6];
-                case 5:
                     error_8 = _a.sent();
                     if (error_8 instanceof etl_exception_1.default)
                         throw error_8;
                     else {
                         throw new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     }
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
