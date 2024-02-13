@@ -182,10 +182,10 @@ export default async function initialEtl() {
             record.woreda_name.replace(/\//g, "")
           )}`;
           console.log(record, id);
-          // records.push(record);
-          // setTimeout(async () => {
-          //   await insertIntoElastic(record, id);
-          // }, 300 * x);
+          records.push(record);
+          setTimeout(async () => {
+            await insertIntoElastic(record, id);
+          }, 300 * x);
         }
         let new_date = addOneWeek(date);
         updateConfigFile({ date: new_date });

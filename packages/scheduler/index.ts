@@ -11,6 +11,10 @@ import psnp_etl, { OPERATION_TYPE as PSNP_OP_TYPE } from "psnp-pw";
 import jobber from "./job";
 import config from "moa_config";
 
+schedule.scheduleJob(
+  config.CALM_DB_ETL_FREQUENCY,
+  jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
+);
 // schedule.scheduleJob(
 //   config.NRLAIS_DB_ETL_FREQUENCY,
 //   jobber(
@@ -66,9 +70,6 @@ import config from "moa_config";
 
 // //calm etl
 
-(async () => {
-  await calm();
-})();
 // schedule.scheduleJob(
 //   config.CALM_DB_ETL_FREQUENCY,
 //   jobber("calm", calm, config.CALM_DB_ETL_RETRY_RATE)
