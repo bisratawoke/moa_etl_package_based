@@ -180,16 +180,17 @@ export default async function initialEtl() {
           let id = `${String(record.date)}_${String(
             record.woreda_name.replace(/\//g, "")
           )}`;
-          records.push(record);
-          setTimeout(async () => {
-            await insertIntoElastic(record, id);
-          }, 300 * x);
+          console.log(record, id);
+          // records.push(record);
+          // setTimeout(async () => {
+          //   await insertIntoElastic(record, id);
+          // }, 300 * x);
         }
         let new_date = addOneWeek(date);
         updateConfigFile({ date: new_date });
 
         await updateCsvFile(records);
-        await etl();
+        // await etl();
       }
     }
   );

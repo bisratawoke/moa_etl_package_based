@@ -242,19 +242,18 @@ function initialEtl() {
         return __generator(this, function (_a) {
             date = "2021-12-23";
             connection.query("select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '2021-12-23')  group by woredas.woreda_name,zones.zone_name , regions.region_name;", function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
-                var records, _loop_2, x, new_date;
-                var _this = this;
+                var records, x, woreda, record, id, new_date;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             if (!err) return [3 /*break*/, 1];
                             console.log(err);
-                            return [3 /*break*/, 4];
+                            return [3 /*break*/, 3];
                         case 1:
                             records = [];
-                            _loop_2 = function (x) {
-                                var woreda = results[x];
-                                var record = {
+                            for (x = 0; x < results.length; x++) {
+                                woreda = results[x];
+                                record = {
                                     woreda_name: woreda.woreda_name,
                                     zone_name: woreda.zone_name,
                                     region_name: woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
@@ -269,32 +268,20 @@ function initialEtl() {
                                     day: date.split("-")[2],
                                     text_date: date.split("-")[2],
                                 };
-                                var id = "".concat(String(record.date), "_").concat(String(record.woreda_name.replace(/\//g, "")));
-                                records.push(record);
-                                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0: return [4 /*yield*/, insertIntoElastic(record, id)];
-                                            case 1:
-                                                _a.sent();
-                                                return [2 /*return*/];
-                                        }
-                                    });
-                                }); }, 300 * x);
-                            };
-                            for (x = 0; x < results.length; x++) {
-                                _loop_2(x);
+                                id = "".concat(String(record.date), "_").concat(String(record.woreda_name.replace(/\//g, "")));
+                                console.log(record, id);
+                                // records.push(record);
+                                // setTimeout(async () => {
+                                //   await insertIntoElastic(record, id);
+                                // }, 300 * x);
                             }
                             new_date = addOneWeek(date);
                             updateConfigFile({ date: new_date });
                             return [4 /*yield*/, updateCsvFile(records)];
                         case 2:
                             _a.sent();
-                            return [4 /*yield*/, etl()];
-                        case 3:
-                            _a.sent();
-                            _a.label = 4;
-                        case 4: return [2 /*return*/];
+                            _a.label = 3;
+                        case 3: return [2 /*return*/];
                     }
                 });
             }); });
