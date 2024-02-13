@@ -65,10 +65,14 @@ import config from "moa_config";
 // );
 
 // //calm etl
-schedule.scheduleJob(
-  config.CALM_DB_ETL_FREQUENCY,
-  jobber("calm", calm, config.CALM_DB_ETL_RETRY_RATE)
-);
+
+(async () => {
+  await calm();
+})();
+// schedule.scheduleJob(
+//   config.CALM_DB_ETL_FREQUENCY,
+//   jobber("calm", calm, config.CALM_DB_ETL_RETRY_RATE)
+// );
 
 //12:25
 
