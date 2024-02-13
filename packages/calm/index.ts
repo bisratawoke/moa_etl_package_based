@@ -6,6 +6,7 @@ import config from "config";
 
 const connection = mysql.createConnection({
   host: config.CALM_MYSQL_HOST,
+  port: config.CALM_MYSQL_PORT,
   user: config.CALM_MYSQL_USER,
   password: config.CALM_MYSQL_PASSWORD,
   database: config.CALM_MYSQL_DB,

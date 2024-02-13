@@ -43,6 +43,7 @@ var createCsvWriter = require("csv-writer").createObjectCsvWriter;
 var config_1 = require("config");
 var connection = mysql.createConnection({
     host: config_1.default.CALM_MYSQL_HOST,
+    port: config_1.default.CALM_MYSQL_PORT,
     user: config_1.default.CALM_MYSQL_USER,
     password: config_1.default.CALM_MYSQL_PASSWORD,
     database: config_1.default.CALM_MYSQL_DB,
