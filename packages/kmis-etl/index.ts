@@ -92,10 +92,10 @@ function dateTransformer(record: Record<string, any>) {
 }
 async function hectarOfAreaClosureWithinEtlCalendar() {
   try {
-    // const result = await removePreviousData(
-    //   "slm_hectar_of_area_closure_testing_scheduler"
-    //   // "slm_hectar_of_area_closure_in_eth_calendar"
-    // );
+    const result = await removePreviousData(
+      "slm_hectar_of_area_closure_testing_scheduler"
+      // "slm_hectar_of_area_closure_in_eth_calendar"
+    );
 
     console.log("=====finished removing previous data =====");
     const response = await axios.get(
@@ -116,13 +116,13 @@ async function hectarOfAreaClosureWithinEtlCalendar() {
         if (parseInt(payload.string_year) > parseInt("2022")) {
           console.log(payload);
         }
-        // setTimeout(async () => {
-        //   await insertIntoElastic(
-        //     payload,
-        //     "slm_hectar_of_area_closure_testing_scheduler"
-        //     // "slm_hectar_of_area_closure_in_eth_calendar"
-        //   );
-        // }, 2000 * indx);
+        setTimeout(async () => {
+          await insertIntoElastic(
+            payload,
+            "slm_hectar_of_area_closure_testing_scheduler"
+            // "slm_hectar_of_area_closure_in_eth_calendar"
+          );
+        }, 2000 * indx);
       }
     );
   } catch (error: any) {
