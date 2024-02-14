@@ -61,11 +61,11 @@ export default function main(optType: OPERATION_TYPE) {
             record.Unit.toLowerCase() == "ha"
               ? console.log(record)
               : console.log("yo");
-            // await insertIntoElastic(
-            //   record,
-            //   "psnp_swc_treatment_result_scheduler_test",
-            //   record.id
-            // );
+            await insertIntoElastic(
+              record,
+              "psnp_swc_treatment_result_scheduler_test",
+              record.id
+            );
           }
           break;
         default:

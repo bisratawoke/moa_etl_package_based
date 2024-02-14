@@ -191,7 +191,7 @@ export default async function initialEtl() {
         updateConfigFile({ date: new_date });
 
         await updateCsvFile(records);
-        // await etl();
+        await etl();
       }
     }
   );

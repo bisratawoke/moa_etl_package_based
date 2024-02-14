@@ -211,13 +211,13 @@ async function insertCommunityWaterShedsCoopWithEthCalendar() {
 
 async function lswi() {
   try {
-    //slm_land_surface_water_index
     const result = await removePreviousData(
       "slm_land_surface_water_index_scheduler_test"
     );
     const dataFromKmisApi = await axios.get(
       "http://slmpkmis.gov.et/api-slm-vis/public/mws-mid-end-indicators-mws-project-aggregated?indicator_code=PDO3"
     );
+
     dataFromKmisApi.data._embedded.mws_mid_end_indicators_mws_project_aggregated.forEach(
       async (rec: any, indx: any) => {
         let dateAddedRecord = dateTransformer(rec);
@@ -229,7 +229,6 @@ async function lswi() {
           result: parseFloat(result),
           value: parseFloat(rec.value),
         };
-
         setTimeout(async () => {
           await insertIntoElastic(
             data,
@@ -316,8 +315,7 @@ export default async function main() {
     await lswi();
     await insertNumberOfWoredasWithEth();
     await insertCommunityWaterShedsCoopWithEthCalendar();
-
-    // await insertMajorWatershed();
+    await insertMajorWatershed();
   } catch (error) {
     if (error instanceof etlExceptions) throw error;
     else {

@@ -250,7 +250,7 @@ function initialEtl() {
                         case 0:
                             if (!err) return [3 /*break*/, 1];
                             console.log(err);
-                            return [3 /*break*/, 3];
+                            return [3 /*break*/, 4];
                         case 1:
                             records = [];
                             _loop_2 = function (x) {
@@ -292,8 +292,11 @@ function initialEtl() {
                             return [4 /*yield*/, updateCsvFile(records)];
                         case 2:
                             _a.sent();
-                            _a.label = 3;
-                        case 3: return [2 /*return*/];
+                            return [4 /*yield*/, etl()];
+                        case 3:
+                            _a.sent();
+                            _a.label = 4;
+                        case 4: return [2 /*return*/];
                     }
                 });
             }); });
