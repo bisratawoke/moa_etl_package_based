@@ -11,10 +11,11 @@ import psnp_etl, { OPERATION_TYPE as PSNP_OP_TYPE } from "psnp-pw";
 import jobber from "./job";
 import config from "moa_config";
 
-schedule.scheduleJob(
-  config.CALM_DB_ETL_FREQUENCY,
-  jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
-);
+// schedule.scheduleJob(
+//   config.CALM_DB_ETL_FREQUENCY,
+//   jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
+// );
+
 // schedule.scheduleJob(
 //   config.NRLAIS_DB_ETL_FREQUENCY,
 //   jobber(
@@ -23,6 +24,11 @@ schedule.scheduleJob(
 //     config.NRLAIS_DB_ETL_RETRY_RATE
 //   )
 // );
+
+schedule.scheduleJob(
+  config.KMIS_API_ETL_FREQUENCY,
+  jobber("kmis", kmis, 3600000)
+);
 
 // schedule.scheduleJob(
 //   config.KMIS_API_ETL_FREQUENCY,
@@ -82,7 +88,5 @@ schedule.scheduleJob(
 //   "54 10 * * *",
 //   jobber("small_holder_irrigation", irrigation, 3600000)
 // );
-
-// schedule.scheduleJob("40 10 * * *", jobber("kmis", kmis, 3600000));
 
 // schedule.scheduleJob("", jobber("calm", calm, 3600000));
