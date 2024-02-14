@@ -99,11 +99,9 @@ var Notifier = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
-                        console.log("=============== in send email =================");
                         return [4 /*yield*/, this.getEmailCred()];
                     case 1:
                         _a = _b.sent(), email = _a.email, password = _a.password;
-                        console.log(email, password);
                         mailTransporter = nodemailer.createTransport({
                             service: "hotmail",
                             auth: {

@@ -1,6 +1,5 @@
 import axios from "axios";
 const nodemailer = require("nodemailer");
-import config from "moa_config";
 
 export interface IElasticConfig {
   host: string;
@@ -55,9 +54,7 @@ export default class Notifier {
 
   private async sendEmail(message: IMessage) {
     try {
-      console.log("=============== in send email =================");
       const { email, password } = await this.getEmailCred();
-      console.log(email, password);
       let mailTransporter = nodemailer.createTransport({
         service: "hotmail",
         auth: {

@@ -273,24 +273,22 @@ function main() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    console.log(elasticUrl);
-                    console.log(irrigationBaseUrl);
-                    console.log();
-                    console.log("==== in irrigation etl ====");
+                    _a.trys.push([0, 3, , 4]);
                     return [4 /*yield*/, getIrrigationFromApi()];
                 case 1:
                     baseData = _a.sent();
-                    console.log(baseData);
-                    return [3 /*break*/, 3];
+                    return [4 /*yield*/, sync(baseData)];
                 case 2:
+                    _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
                     error_3 = _a.sent();
                     if (error_3 instanceof etl_exception_1.default)
                         throw error_3;
                     else
                         throw new etl_exception_1.default(error_3.message, etl_exception_1.etlExceptionType.EXTRACTION);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });

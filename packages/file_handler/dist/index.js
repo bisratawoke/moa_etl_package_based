@@ -1,7 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var multer = require("multer");
+var config = require("config");
 var cors = require("cors");
 var path = require("path");
 var app = express();
@@ -11,11 +10,11 @@ function replaceNonAlphabeticCharactersWithUnderscore(str) {
     return str.replace(/[^a-zA-Z]/g, "_");
 }
 var storage = multer.diskStorage({
-    destination: "./packages/file_handler/dist/uploads", // specify the destination folder
+    destination: "./packages/file_handler/dist/uploads",
     filename: function (req, file, cb) {
         var ext = path.extname(file.originalname);
         var replacedString = replaceNonAlphabeticCharactersWithUnderscore(file.originalname);
-        cb(null, "".concat(replacedString).concat(ext)); // use the original file name
+        cb(null, "".concat(replacedString).concat(ext));
     },
 });
 var upload = multer({ storage: storage });

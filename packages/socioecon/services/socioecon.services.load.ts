@@ -9,14 +9,14 @@ export async function insertIntoElastic(
   try {
     const headers: any = {
       auth: {
-        username: process.env.elastic_username,
-        password: process.env.elastic_password,
+        username: config.ELASTIC_USERNAME,
+        password: config.ELASTIC_PASSWORD,
       },
     };
 
     console.log(`${config.ELASTIC_URL}/${indexName}/_doc/${id}`);
     const result = await axios.post(
-      `${process.env.elastic_url}/${indexName}/_doc/${id}`,
+      `${config.ELASTIC_URL}/${indexName}/_doc/${id}`,
       rec,
       headers
     );

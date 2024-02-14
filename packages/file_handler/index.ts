@@ -1,7 +1,6 @@
 const express = require("express");
-
 const multer = require("multer");
-import config from "config";
+const config = require("config");
 const cors = require("cors");
 const path = require("path");
 const app = express();
@@ -12,13 +11,13 @@ function replaceNonAlphabeticCharactersWithUnderscore(str) {
   return str.replace(/[^a-zA-Z]/g, "_");
 }
 const storage = multer.diskStorage({
-  destination: "./packages/file_handler/dist/uploads", // specify the destination folder
+  destination: "./packages/file_handler/dist/uploads",
   filename: function (req, file, cb) {
     let ext = path.extname(file.originalname);
     let replacedString = replaceNonAlphabeticCharactersWithUnderscore(
       file.originalname
     );
-    cb(null, `${replacedString}${ext}`); // use the original file name
+    cb(null, `${replacedString}${ext}`);
   },
 });
 const upload = multer({ storage: storage });

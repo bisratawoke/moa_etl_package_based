@@ -213,13 +213,8 @@ function getFemaleHeadedBeneficiaries(data: any) {
 
 export default async function main() {
   try {
-    console.log(elasticUrl);
-    console.log(irrigationBaseUrl);
-    console.log();
-    console.log("==== in irrigation etl ====");
     const baseData = await getIrrigationFromApi();
-    console.log(baseData);
-    // await sync(baseData);
+    await sync(baseData);
   } catch (error: any) {
     if (error instanceof etlExceptions) throw error;
     else throw new etlExceptions(error.message, etlExceptionType.EXTRACTION);

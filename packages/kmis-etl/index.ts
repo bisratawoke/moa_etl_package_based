@@ -312,10 +312,20 @@ async function removePreviousData(indexName: string) {
 export default async function main() {
   try {
     await hectarOfAreaClosureWithinEtlCalendar();
-    await lswi();
-    await insertNumberOfWoredasWithEth();
-    await insertCommunityWaterShedsCoopWithEthCalendar();
-    await insertMajorWatershed();
+    setTimeout(async () => {
+      await lswi();
+    }, 5000);
+    setTimeout(async () => {
+      await insertNumberOfWoredasWithEth();
+    }, 8000);
+
+    setTimeout(async () => {
+      await insertCommunityWaterShedsCoopWithEthCalendar();
+    }, 10000);
+    // setTimeout(async() => {
+
+    //   await insertMajorWatershed();
+    // },20000)
   } catch (error) {
     if (error instanceof etlExceptions) throw error;
     else {

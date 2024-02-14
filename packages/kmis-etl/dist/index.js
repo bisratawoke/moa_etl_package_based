@@ -411,35 +411,54 @@ function removePreviousData(indexName) {
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var error_8;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 6, , 7]);
+                    _a.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
                 case 1:
                     _a.sent();
-                    return [4 /*yield*/, lswi()];
+                    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, lswi()];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 5000);
+                    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, insertNumberOfWoredasWithEth()];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 8000);
+                    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 10000);
+                    return [3 /*break*/, 3];
                 case 2:
-                    _a.sent();
-                    return [4 /*yield*/, insertNumberOfWoredasWithEth()];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, insertMajorWatershed()];
-                case 5:
-                    _a.sent();
-                    return [3 /*break*/, 7];
-                case 6:
                     error_8 = _a.sent();
                     if (error_8 instanceof etl_exception_1.default)
                         throw error_8;
                     else {
                         throw new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     }
-                    return [3 /*break*/, 7];
-                case 7: return [2 /*return*/];
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });

@@ -15,7 +15,20 @@ const connection = mysql.createConnection({
 async function etl() {
   const { date } = readConfigFile();
   connection.query(
-    `select  woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '${date}')  group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
+    `select  
+        woredas.woreda_name , 
+        zones.zone_name , 
+        regions.region_name ,
+        sum(demarcated) as demarcated ,
+        sum(digitized) as digitized ,
+        sum(certificates_approved) as certificates_approved , 
+        sum(certificates_printed) as certificates_printed , 
+        sum(certificates_collected) as certificates_collected 
+        from weekly_progress_details 
+        inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code 
+        inner join zones on woredas.zone_id = zones.id 
+        inner join regions on zones.region_id = regions.id 
+        where weekly_progress_id in (select id from weekly_progresses where  report_to = '${date}')  group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
     async (err: any, results: any, fields: any) => {
       if (err) {
         console.log(err);
