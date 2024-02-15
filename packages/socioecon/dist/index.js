@@ -54,12 +54,12 @@ var socioecon_services_transform_1 = require("./services/socioecon.services.tran
 var socioecon_services_load_1 = require("./services/socioecon.services.load");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var db_config, db_conn, pds_member_1, _loop_1, x, err_1;
+        var db_config, db_conn, pds_member_1, pw_member_1, pds_cash_transfer_1, pw_cash_transfer_1, _loop_1, x, _loop_2, x, _loop_3, x, _loop_4, x, err_1;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
+                    _a.trys.push([0, 6, , 7]);
                     db_config = {
                         server: String(moa_config_1.default.PSNP_MIS_HOST),
                         database: String(moa_config_1.default.PSNP_MIS_DATABASE),
@@ -76,6 +76,15 @@ function main() {
                     return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pds_member)(db_conn)];
                 case 2:
                     pds_member_1 = _a.sent();
+                    return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pw_member)(db_conn)];
+                case 3:
+                    pw_member_1 = _a.sent();
+                    return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pds_total_cash_transfer)(db_conn)];
+                case 4:
+                    pds_cash_transfer_1 = _a.sent();
+                    return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pw_total_cash_transfer)(db_conn)];
+                case 5:
+                    pw_cash_transfer_1 = _a.sent();
                     _loop_1 = function (x) {
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                             var payload;
@@ -92,19 +101,78 @@ function main() {
                             });
                         }); }, moa_config_1.default.PSNP_MIS_ETL_FREQUENCY * x);
                     };
-                    // const pw_member = await extract_pw_member(db_conn);
-                    // const pds_cash_transfer = await extract_pds_total_cash_transfer(db_conn);
-                    // const pw_cash_transfer = await extract_pw_total_cash_transfer(db_conn);
                     for (x = 0; x < pds_member_1.length; x++) {
                         _loop_1(x);
                     }
-                    return [3 /*break*/, 4];
-                case 3:
+                    _loop_2 = function (x) {
+                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var payload;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        payload = __assign(__assign(__assign({}, pw_member_1[x]), { project_name: "PW" }), (0, socioecon_services_transform_1.timeInfo)(pw_member_1[x].RegistrationDate));
+                                        return [4 /*yield*/, (0, socioecon_services_load_1.insertIntoElastic)("socioconomic_clients", payload, payload.Id)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, 300 * x);
+                    };
+                    for (x = 0; x < pw_member_1.length; x++) {
+                        _loop_2(x);
+                    }
+                    _loop_3 = function (x) {
+                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var payload;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        payload = __assign(__assign(__assign({}, pds_cash_transfer_1[x]), { project_name: "PDS" }), (0, socioecon_services_transform_1.timeInfo)(pds_cash_transfer_1[x].CreatedDate));
+                                        console.log(payload);
+                                        return [4 /*yield*/, (0, socioecon_services_load_1.insertIntoElastic)(
+                                            // "socioeconomic_cash_transfer_with_gender_info",
+                                            "socioeconomic_cash_transfer_with_gender_and_quarter", 
+                                            // "socioeconomic_cash_transfer",
+                                            payload, payload.Id)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, 800 * x);
+                    };
+                    for (x = 0; x < pds_cash_transfer_1.length; x++) {
+                        _loop_3(x);
+                    }
+                    _loop_4 = function (x) {
+                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var payload;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        payload = __assign(__assign(__assign({}, pw_cash_transfer_1[x]), { project_name: "PW" }), (0, socioecon_services_transform_1.timeInfo)(pw_cash_transfer_1[x].CreatedDate));
+                                        console.log(payload);
+                                        return [4 /*yield*/, (0, socioecon_services_load_1.insertIntoElastic)("socioeconomic_cash_transfer_with_gender_and_quarter", 
+                                            // "socioeconomic_cash_transfer",
+                                            payload, payload.Id)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, 800 * x);
+                    };
+                    for (x = 0; x < pw_cash_transfer_1.length; x++) {
+                        _loop_4(x);
+                    }
+                    return [3 /*break*/, 7];
+                case 6:
                     err_1 = _a.sent();
                     console.log(err_1);
                     process.exit(-1);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     });
