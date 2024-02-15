@@ -83,6 +83,7 @@ function main() {
                                 switch (_a.label) {
                                     case 0:
                                         payload = __assign(__assign(__assign({}, pds_member_1[x]), { project_name: "PDS" }), (0, socioecon_services_transform_1.timeInfo)(pds_member_1[x].RegistrationDate));
+                                        console.log(payload);
                                         return [4 /*yield*/, (0, socioecon_services_load_1.insertIntoElastic)("socioconomic_clients", payload, payload.Id)];
                                     case 1:
                                         _a.sent();

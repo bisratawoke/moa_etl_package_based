@@ -34,6 +34,7 @@ export default async function main() {
           project_name: "PDS",
           ...timeInfo(pds_member[x].RegistrationDate),
         };
+        console.log(payload);
         await insertIntoElastic("socioconomic_clients", payload, payload.Id);
       }, config.PSNP_MIS_ETL_FREQUENCY * x);
     }

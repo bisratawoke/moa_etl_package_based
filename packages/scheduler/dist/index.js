@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var schedule = require("node-schedule");
-var kmis_1 = require("kmis");
-var job_1 = require("./job");
-var moa_config_1 = require("moa_config");
 // kmis schedules
-schedule.scheduleJob(moa_config_1.default.KMIS_API_ETL_FREQUENCY, (0, job_1.default)("kmis etl", kmis_1.default, moa_config_1.default.KMIS_API_ETL_RETRY_RATE));
+// schedule.scheduleJob(
+//   config.KMIS_API_ETL_FREQUENCY,
+//   jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
+// );
 // // calm etl schedule
 // schedule.scheduleJob(
 //   config.CALM_DB_ETL_FREQUENCY,

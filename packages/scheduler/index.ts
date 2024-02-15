@@ -12,10 +12,10 @@ import jobber from "./job";
 import config from "moa_config";
 
 // kmis schedules
-schedule.scheduleJob(
-  config.KMIS_API_ETL_FREQUENCY,
-  jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
-);
+// schedule.scheduleJob(
+//   config.KMIS_API_ETL_FREQUENCY,
+//   jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
+// );
 
 // // calm etl schedule
 // schedule.scheduleJob(
