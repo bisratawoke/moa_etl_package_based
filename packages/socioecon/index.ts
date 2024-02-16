@@ -22,33 +22,33 @@ export default async function main() {
     };
     console.log(db_config);
     const db_conn = await sql.connect(db_config);
-    const pds_member = await extract_pds_member(db_conn);
-    // const pw_member = await extract_pw_member(db_conn);
+    // const pds_member = await extract_pds_member(db_conn);
+    const pw_member = await extract_pw_member(db_conn);
     // const pds_cash_transfer = await extract_pds_total_cash_transfer(db_conn);
     // const pw_cash_transfer = await extract_pw_total_cash_transfer(db_conn);
 
-    for (let x = 0; x < pds_member.length; x++) {
-      setTimeout(async () => {
-        const payload = {
-          ...pds_member[x],
-          project_name: "PDS",
-          ...timeInfo(pds_member[x].RegistrationDate),
-        };
-        console.log(payload);
-        await insertIntoElastic("socioconomic_clients", payload, payload.Id);
-      }, x);
-    }
-
-    // for (let x = 0; x < pw_member.length; x++) {
+    // for (let x = 0; x < pds_member.length; x++) {
     //   setTimeout(async () => {
     //     const payload = {
-    //       ...pw_member[x],
-    //       project_name: "PW",
-    //       ...timeInfo(pw_member[x].RegistrationDate),
+    //       ...pds_member[x],
+    //       project_name: "PDS",
+    //       ...timeInfo(pds_member[x].RegistrationDate),
     //     };
+    //     console.log(payload);
     //     await insertIntoElastic("socioconomic_clients", payload, payload.Id);
-    //   }, 300 * x);
+    //   }, x);
     // }
+
+    for (let x = 0; x < pw_member.length; x++) {
+      setTimeout(async () => {
+        const payload = {
+          ...pw_member[x],
+          project_name: "PW",
+          ...timeInfo(pw_member[x].RegistrationDate),
+        };
+        await insertIntoElastic("socioconomic_clients", payload, payload.Id);
+      }, 300 * x);
+    }
 
     // for (let x = 0; x < pds_cash_transfer.length; x++) {
     //   setTimeout(async () => {

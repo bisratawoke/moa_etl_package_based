@@ -54,7 +54,7 @@ var socioecon_services_transform_1 = require("./services/socioecon.services.tran
 var socioecon_services_load_1 = require("./services/socioecon.services.load");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var db_config, db_conn, pds_member_1, _loop_1, x, err_1;
+        var db_config, db_conn, pw_member_1, _loop_1, x, err_1;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -73,29 +73,38 @@ function main() {
                     return [4 /*yield*/, sql.connect(db_config)];
                 case 1:
                     db_conn = _a.sent();
-                    return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pds_member)(db_conn)];
+                    return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pw_member)(db_conn)];
                 case 2:
-                    pds_member_1 = _a.sent();
+                    pw_member_1 = _a.sent();
                     _loop_1 = function (x) {
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                             var payload;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        payload = __assign(__assign(__assign({}, pds_member_1[x]), { project_name: "PDS" }), (0, socioecon_services_transform_1.timeInfo)(pds_member_1[x].RegistrationDate));
-                                        console.log(payload);
+                                        payload = __assign(__assign(__assign({}, pw_member_1[x]), { project_name: "PW" }), (0, socioecon_services_transform_1.timeInfo)(pw_member_1[x].RegistrationDate));
                                         return [4 /*yield*/, (0, socioecon_services_load_1.insertIntoElastic)("socioconomic_clients", payload, payload.Id)];
                                     case 1:
                                         _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
-                        }); }, x);
+                        }); }, 300 * x);
                     };
-                    // const pw_member = await extract_pw_member(db_conn);
                     // const pds_cash_transfer = await extract_pds_total_cash_transfer(db_conn);
                     // const pw_cash_transfer = await extract_pw_total_cash_transfer(db_conn);
-                    for (x = 0; x < pds_member_1.length; x++) {
+                    // for (let x = 0; x < pds_member.length; x++) {
+                    //   setTimeout(async () => {
+                    //     const payload = {
+                    //       ...pds_member[x],
+                    //       project_name: "PDS",
+                    //       ...timeInfo(pds_member[x].RegistrationDate),
+                    //     };
+                    //     console.log(payload);
+                    //     await insertIntoElastic("socioconomic_clients", payload, payload.Id);
+                    //   }, x);
+                    // }
+                    for (x = 0; x < pw_member_1.length; x++) {
                         _loop_1(x);
                     }
                     return [3 /*break*/, 4];
