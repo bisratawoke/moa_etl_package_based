@@ -1,8 +1,10 @@
-
 export async function extract_pds_member(db_conn: any) {
   const result = await db_conn.request().query(
     `SELECT
-  kebele_location.Name_Eng as kebele_name , woreda_location.Name_Eng as woreda_name , zone_location.Name_Eng as zone_name ,  region_location.Name_Eng as region_name,
+  kebele_location.Name_Eng as kebele_name ,
+  woreda_location.Name_Eng as woreda_name , 
+  zone_location.Name_Eng as zone_name ,  
+  region_location.Name_Eng as region_name,
   H.Id,
   H.HouseHoldIdNumber,
   H.MaleMemberSize,
@@ -35,24 +37,24 @@ export async function extract_pds_member(db_conn: any) {
   HM.BeneficiaryTypeId,
   BT.Description_Eng beneficiary_type,
   HM.BankAccountNo
-FROM Registration.Households H
-INNER JOIN Registration.HouseholdMembers HM ON HM.HouseholdId = H.Id
-INNER JOIN Config.Genders G ON G.Id = HM.GenderId
-LEFT JOIN Config.BeneficiaryTypes BT ON BT.Id = HM.BeneficiaryTypeId
-INNER JOIN Config.HouseholdStatuses HS ON HS.Id = H.HouseholdStatusId
-INNER JOIN Config.ProgramComponents P ON P.Id = H.HouseholdProgramId
-inner join Registration.HouseholdAddresses as RH on RH.HouseholdId = H.Id
-inner join Maintenance.AdminLocations as AdminLocation on RH.AdminLocationId = AdminLocation.Id
-inner join Config.AdminLocationTypes as AdminLocationTypes on AdminLocation.AdminLocTypeId = AdminLocationTypes.Id 
-inner join Maintenance.AdminLocations as kebele_location on AdminLocation.ParentAdminLocationId = kebele_location.Id
-inner join Config.AdminLocationTypes as kebele_config on kebele_config.Id = kebele_location.AdminLocTypeId
-inner join Maintenance.AdminLocations as woreda_location on kebele_location.ParentAdminLocationId = woreda_location.Id
-inner join Config.AdminLocationTypes as woreda_config on woreda_config.Id = woreda_location.AdminLocTypeId
-inner join Maintenance.AdminLocations as zone_location on woreda_location.ParentAdminLocationId = zone_location.Id
-inner join Config.AdminLocationTypes as zone_config on zone_config.Id = zone_location.AdminLocTypeId
-inner join Maintenance.AdminLocations as region_location on zone_location.ParentAdminLocationId = region_location.Id
-inner join Config.AdminLocationTypes as region_config on region_config.Id = region_location.AdminLocTypeId
-WHERE H.HouseholdProgramId = 1 AND H.Status <> 0 AND HM.IsHouseholdHead = 1`
+  FROM Registration.Households H
+  INNER JOIN Registration.HouseholdMembers HM ON HM.HouseholdId = H.Id
+  INNER JOIN Config.Genders G ON G.Id = HM.GenderId
+  LEFT JOIN Config.BeneficiaryTypes BT ON BT.Id = HM.BeneficiaryTypeId
+  INNER JOIN Config.HouseholdStatuses HS ON HS.Id = H.HouseholdStatusId
+  INNER JOIN Config.ProgramComponents P ON P.Id = H.HouseholdProgramId
+  inner join Registration.HouseholdAddresses as RH on RH.HouseholdId = H.Id
+  inner join Maintenance.AdminLocations as AdminLocation on RH.AdminLocationId = AdminLocation.Id
+  inner join Config.AdminLocationTypes as AdminLocationTypes on AdminLocation.AdminLocTypeId = AdminLocationTypes.Id 
+  inner join Maintenance.AdminLocations as kebele_location on AdminLocation.ParentAdminLocationId = kebele_location.Id
+  inner join Config.AdminLocationTypes as kebele_config on kebele_config.Id = kebele_location.AdminLocTypeId
+  inner join Maintenance.AdminLocations as woreda_location on kebele_location.ParentAdminLocationId = woreda_location.Id
+  inner join Config.AdminLocationTypes as woreda_config on woreda_config.Id = woreda_location.AdminLocTypeId
+  inner join Maintenance.AdminLocations as zone_location on woreda_location.ParentAdminLocationId = zone_location.Id
+  inner join Config.AdminLocationTypes as zone_config on zone_config.Id = zone_location.AdminLocTypeId
+  inner join Maintenance.AdminLocations as region_location on zone_location.ParentAdminLocationId = region_location.Id
+  inner join Config.AdminLocationTypes as region_config on region_config.Id = region_location.AdminLocTypeId
+  WHERE H.HouseholdProgramId = 1 AND H.Status <> 0 AND HM.IsHouseholdHead = 1`
   );
 
   return result.recordset;
