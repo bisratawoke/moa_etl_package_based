@@ -52,7 +52,6 @@ function insertIntoElastic(indexName, rec, id) {
                             password: config_1.default.ELASTIC_PASSWORD,
                         },
                     };
-                    console.log("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(id));
                     return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(id), rec, headers)];
                 case 1:
                     result = _a.sent();

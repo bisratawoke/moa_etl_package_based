@@ -14,7 +14,6 @@ export async function insertIntoElastic(
       },
     };
 
-    console.log(`${config.ELASTIC_URL}/${indexName}/_doc/${id}`);
     const result = await axios.post(
       `${config.ELASTIC_URL}/${indexName}/_doc/${id}`,
       rec,

@@ -69,7 +69,6 @@ function main() {
                             trustServerCertificate: true,
                         },
                     };
-                    console.log(db_config);
                     return [4 /*yield*/, sql.connect(db_config)];
                 case 1:
                     db_conn = _a.sent();

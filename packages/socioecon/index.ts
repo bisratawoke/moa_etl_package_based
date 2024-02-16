@@ -20,7 +20,6 @@ export default async function main() {
         trustServerCertificate: true,
       },
     };
-    console.log(db_config);
     const db_conn = await sql.connect(db_config);
     // const pds_member = await extract_pds_member(db_conn);
     const pw_member = await extract_pw_member(db_conn);
