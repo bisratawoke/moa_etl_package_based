@@ -206,6 +206,7 @@ function addOneWeek(inputDate) {
 function readConfigFile() {
     return JSON.parse(Buffer.from(fs.readFileSync("./config.json")).toString());
 }
+//calm_mis_parcel_info
 function insertIntoElastic(rec, id) {
     return __awaiter(this, void 0, void 0, function () {
         var INDEX_NAME, headers, result, error_1;

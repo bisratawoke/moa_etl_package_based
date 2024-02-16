@@ -138,6 +138,7 @@ function readConfigFile() {
   return JSON.parse(Buffer.from(fs.readFileSync("./config.json")).toString());
 }
 
+//calm_mis_parcel_info
 async function insertIntoElastic(rec: any, id: any) {
   try {
     let INDEX_NAME = "calm_mis_parcel_info_by_status";
