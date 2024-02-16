@@ -56,7 +56,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.getMaxDate = exports.indexName = void 0;
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertIntoElasticNotDuplication = exports.getMaxDate = exports.indexName = void 0;
 var axios_1 = require("axios");
 var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
@@ -102,10 +102,40 @@ function getMaxDate() {
     });
 }
 exports.getMaxDate = getMaxDate;
+var insertIntoElasticNotDuplication = function (indexName, rec) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
+                var result, error_2;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), rec, {
+                                    auth: {
+                                        username: config_1.default.ELASTIC_USERNAME,
+                                        password: config_1.default.ELASTIC_PASSWORD,
+                                    },
+                                })];
+                        case 1:
+                            result = _a.sent();
+                            resolve(true);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            error_2 = _a.sent();
+                            console.log("========= error while inserting elastic ===== ");
+                            resolve(true);
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); })];
+    });
+}); };
+exports.insertIntoElasticNotDuplication = insertIntoElasticNotDuplication;
 var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
-                var res, payload, result, payload, result, error_2;
+                var res, payload, result, payload, result, error_3;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -140,7 +170,7 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                             _a.label = 5;
                         case 5: return [3 /*break*/, 7];
                         case 6:
-                            error_2 = _a.sent();
+                            error_3 = _a.sent();
                             resolve(true);
                             return [3 /*break*/, 7];
                         case 7: return [2 /*return*/];
@@ -205,7 +235,7 @@ var transformer = function (record) {
 exports.transformer = transformer;
 function doesParcelExist(parcel_id) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_3;
+        var response, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -220,7 +250,7 @@ function doesParcelExist(parcel_id) {
                     response = _a.sent();
                     return [2 /*return*/, { source: response.data._source, found: response.data.found }];
                 case 2:
-                    error_3 = _a.sent();
+                    error_4 = _a.sent();
                     return [2 /*return*/, null];
                 case 3: return [2 /*return*/];
             }
@@ -238,7 +268,7 @@ function updateConfig(data) {
 exports.updateConfig = updateConfig;
 function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_4;
+        var response, error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -269,11 +299,11 @@ function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
                             updated_at: response.data._source.updated,
                         }];
                 case 2:
-                    error_4 = _a.sent();
-                    if (error_4 instanceof etl_exception_1.default)
-                        throw error_4;
+                    error_5 = _a.sent();
+                    if (error_5 instanceof etl_exception_1.default)
+                        throw error_5;
                     else
-                        throw new etl_exception_1.default(error_4.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                        throw new etl_exception_1.default(error_5.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

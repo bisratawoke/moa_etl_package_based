@@ -37,6 +37,29 @@ export async function getMaxDate() {
   }
 }
 
+export const insertIntoElasticNotDuplication = async (
+  indexName: string,
+  rec: Record<string, any>
+) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await axios.post(
+        `${config.ELASTIC_URL}/${indexName}/_doc`,
+        rec,
+        {
+          auth: {
+            username: config.ELASTIC_USERNAME,
+            password: config.ELASTIC_PASSWORD,
+          },
+        }
+      );
+      resolve(true);
+    } catch (error) {
+      console.log("========= error while inserting elastic ===== ");
+      resolve(true);
+    }
+  });
+};
 export const insertIntoElastic = async (
   indexName: string,
   rec: Record<string, any>
