@@ -36,7 +36,7 @@ export default async function main() {
         };
         console.log(payload);
         await insertIntoElastic("socioconomic_clients", payload, payload.Id);
-      }, 100 * x);
+      }, x);
     }
 
     // for (let x = 0; x < pw_member.length; x++) {

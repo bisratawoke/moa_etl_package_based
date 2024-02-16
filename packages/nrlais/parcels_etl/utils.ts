@@ -3,6 +3,7 @@ import config from "config";
 import etlExceptions, { etlExceptionType } from "etl-exception";
 import * as fs from "fs";
 import * as path from "path";
+//nrlais_land_admin_system_parcels_weekly_extracted_data_information
 // export const indexName =
 //   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
 export const indexName =
@@ -35,6 +36,7 @@ export async function getMaxDate() {
     console.log(error);
   }
 }
+
 export const insertIntoElastic = async (
   indexName: string,
   rec: Record<string, any>

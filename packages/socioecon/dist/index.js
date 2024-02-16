@@ -90,7 +90,7 @@ function main() {
                                         return [2 /*return*/];
                                 }
                             });
-                        }); }, 100 * x);
+                        }); }, x);
                     };
                     // const pw_member = await extract_pw_member(db_conn);
                     // const pds_cash_transfer = await extract_pds_total_cash_transfer(db_conn);

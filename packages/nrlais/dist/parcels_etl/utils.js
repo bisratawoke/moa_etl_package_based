@@ -62,6 +62,7 @@ var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
 var fs = require("fs");
 var path = require("path");
+//nrlais_land_admin_system_parcels_weekly_extracted_data_information
 // export const indexName =
 //   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
 exports.indexName = "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
