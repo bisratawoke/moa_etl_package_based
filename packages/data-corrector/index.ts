@@ -139,7 +139,7 @@ async function main(indexName) {
 
     result.hits.hits.forEach(async (rec, indx) => {
       if (rec._source.old_year) {
-        console.log("no old year");
+        console.log("old year exists");
         // let payload = {
         //   ...rec._source,
         //   old_year: rec._source.year,
@@ -150,9 +150,15 @@ async function main(indexName) {
       } else {
         // console.log("===== no old year ======");
         // console.log(rec._source.year);
-        console.log("old year exists");
+        console.log("no old year");
         // console.log(payload);
-
+        let payload = {
+          ...rec._source,
+          old_year: rec._source.year,
+          year: ethiopianToGregorian(rec._source.year),
+          string_year: String(ethiopianToGregorian(rec._source.year)),
+        };
+        console.log(payload);
         // setTimeout(async () => {
         //   await updateIndex(payload, rec._id, indexName);
         // }, indx * 300);

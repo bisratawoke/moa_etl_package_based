@@ -258,9 +258,10 @@ function main(indexName) {
                     // console.log(result);
                     console.log("".concat(result.hits.hits.length, " ").concat(count));
                     result.hits.hits.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
+                        var payload;
                         return __generator(this, function (_a) {
                             if (rec._source.old_year) {
-                                console.log("no old year");
+                                console.log("old year exists");
                                 // let payload = {
                                 //   ...rec._source,
                                 //   old_year: rec._source.year,
@@ -272,8 +273,9 @@ function main(indexName) {
                             else {
                                 // console.log("===== no old year ======");
                                 // console.log(rec._source.year);
-                                console.log("old year exists");
-                                // console.log(payload);
+                                console.log("no old year");
+                                payload = __assign(__assign({}, rec._source), { old_year: rec._source.year, year: ethiopianToGregorian(rec._source.year), string_year: String(ethiopianToGregorian(rec._source.year)) });
+                                console.log(payload);
                                 // setTimeout(async () => {
                                 //   await updateIndex(payload, rec._id, indexName);
                                 // }, indx * 300);
