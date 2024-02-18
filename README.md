@@ -2,16 +2,23 @@
 
 This project utilizes Elasticsearch, Kibana, and Node.js. Follow the instructions below to set up the development environment.
 
-//pasidp_biological_data_with_year, pasidp_all_national_info_with_year, pasidp_physical_data_report
-//swc_bio_phy_treatment_result
+//fix
+
+- meret_swc_result
+- slmp_2001_2015_swc_treatments_result
+- meret_swc_result
+- mass_mobilization_physical_swc_treatment_report
 
 ## has Unit keyword
+
 - psnp_swc_treatment_result_scheduler_test
 - calm_soil_water_conservation_treatments_result
 - pasidp_physical_data_report
 - meret_swc_result
 - slmp_2001_2015_swc_treatments_result
+
 ## Unit is keyword
+
 - mass_mobilization_physical_swc_treatment_report
 
 ## Prerequisites
