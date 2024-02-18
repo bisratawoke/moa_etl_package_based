@@ -159,9 +159,9 @@ async function main(indexName) {
           string_year: String(ethiopianToGregorian(rec._source.year)),
         };
         console.log(payload);
-        // setTimeout(async () => {
-        //   await updateIndex(payload, rec._id, indexName);
-        // }, indx * 300);
+        setTimeout(async () => {
+          await updateIndex(payload, rec._id, indexName);
+        }, indx * 300);
       }
 
       // setTimeout(async () => {

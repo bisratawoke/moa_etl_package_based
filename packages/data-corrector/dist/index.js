@@ -258,7 +258,8 @@ function main(indexName) {
                     // console.log(result);
                     console.log("".concat(result.hits.hits.length, " ").concat(count));
                     result.hits.hits.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
-                        var payload;
+                        var payload_1;
+                        var _this = this;
                         return __generator(this, function (_a) {
                             if (rec._source.old_year) {
                                 console.log("old year exists");
@@ -274,11 +275,18 @@ function main(indexName) {
                                 // console.log("===== no old year ======");
                                 // console.log(rec._source.year);
                                 console.log("no old year");
-                                payload = __assign(__assign({}, rec._source), { old_year: rec._source.year, year: ethiopianToGregorian(rec._source.year), string_year: String(ethiopianToGregorian(rec._source.year)) });
-                                console.log(payload);
-                                // setTimeout(async () => {
-                                //   await updateIndex(payload, rec._id, indexName);
-                                // }, indx * 300);
+                                payload_1 = __assign(__assign({}, rec._source), { old_year: rec._source.year, year: ethiopianToGregorian(rec._source.year), string_year: String(ethiopianToGregorian(rec._source.year)) });
+                                console.log(payload_1);
+                                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4 /*yield*/, updateIndex(payload_1, rec._id, indexName)];
+                                            case 1:
+                                                _a.sent();
+                                                return [2 /*return*/];
+                                        }
+                                    });
+                                }); }, indx * 300);
                             }
                             return [2 /*return*/];
                         });
