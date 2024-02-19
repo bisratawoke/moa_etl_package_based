@@ -351,7 +351,9 @@ function insertMicroWatershed() {
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "microwatersheds_information_slmp", payload.id)];
+                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "microwatersheds_information_slmp", 
+                                            // payload.id
+                                            indx)];
                                         case 1:
                                             _a.sent();
                                             return [2 /*return*/];
@@ -398,7 +400,9 @@ function insertMajorWatershed() {
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "smlp_major_watershed_schedular_test", payload.id)];
+                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "smlp_major_watershed_schedular_test", indx
+                                            // payload.id
+                                            )];
                                         case 1:
                                             _a.sent();
                                             return [2 /*return*/];

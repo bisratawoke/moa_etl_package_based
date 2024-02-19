@@ -268,7 +268,8 @@ async function insertMicroWatershed() {
         await insertIntoElastic(
           payload,
           "microwatersheds_information_slmp",
-          payload.id
+          // payload.id
+          indx
         );
       }, 300 * indx);
     });
@@ -294,6 +295,7 @@ async function insertMajorWatershed() {
       let payload = {
         ...dateAddedRecord,
         record_type: "SLMP",
+        // cws_id: String(indx)
       };
 
       //smlp_major_watershed_schedular_test
@@ -302,7 +304,8 @@ async function insertMajorWatershed() {
         await insertIntoElastic(
           payload,
           "smlp_major_watershed_schedular_test",
-          payload.id
+          indx
+          // payload.id
         );
       }, 300 * indx);
     });
