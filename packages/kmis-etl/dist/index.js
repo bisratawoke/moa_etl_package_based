@@ -345,7 +345,7 @@ function insertMicroWatershed() {
                         var _this = this;
                         return __generator(this, function (_a) {
                             dateAddedRecord = dateTransformer(rec);
-                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", "Micro Watershed": rec._source.mws_name, "Major Watershed": rec._source.cws_name });
+                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", "Micro Watershed": rec.mws_name, "Major Watershed": rec.cws_name });
                             //smlp_major_watershed_schedular_test
                             //smlp_major_watershed
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
