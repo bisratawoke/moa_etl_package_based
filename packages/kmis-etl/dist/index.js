@@ -340,7 +340,7 @@ function insertMicroWatershed() {
                     return [4 /*yield*/, axios_1.default.get("http://slmpkmis.gov.et/api-slm-vis/public/mws_basic")];
                 case 2:
                     response = _a.sent();
-                    response.data._embedded.cws_basic.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
+                    response.data._embedded.mws_basic.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
                         var dateAddedRecord, payload;
                         var _this = this;
                         return __generator(this, function (_a) {

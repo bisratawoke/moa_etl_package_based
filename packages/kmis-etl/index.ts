@@ -252,7 +252,7 @@ async function insertMicroWatershed() {
     const response = await axios.get(
       "http://slmpkmis.gov.et/api-slm-vis/public/mws_basic"
     );
-    response.data._embedded.cws_basic.forEach(async (rec: any, indx: any) => {
+    response.data._embedded.mws_basic.forEach(async (rec: any, indx: any) => {
       let dateAddedRecord: any = dateTransformer(rec);
 
       let payload = {
