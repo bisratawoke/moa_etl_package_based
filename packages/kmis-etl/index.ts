@@ -258,6 +258,8 @@ async function insertMicroWatershed() {
       let payload = {
         ...dateAddedRecord,
         record_type: "SLMP",
+        "Micro Watershed": rec._source.mws_name,
+        "Major Watershed": rec._source.cws_name,
       };
 
       //smlp_major_watershed_schedular_test
