@@ -345,7 +345,7 @@ function insertMicroWatershed() {
                         var _this = this;
                         return __generator(this, function (_a) {
                             dateAddedRecord = dateTransformer(rec);
-                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", "Micro Watershed": rec.mws_name, "Major Watershed": rec.cws_name });
+                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", "Micro Watershed": "".concat(rec.mws_name, "-").concat(indx), "Major Watershed": rec.cws_name });
                             //smlp_major_watershed_schedular_test
                             //smlp_major_watershed
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
@@ -465,23 +465,35 @@ function main() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
+                    _a.trys.push([0, 7, , 8]);
                     return [4 /*yield*/, insertMajorWatershed()];
                 case 1:
                     _a.sent();
                     return [4 /*yield*/, insertMicroWatershed()];
                 case 2:
                     _a.sent();
-                    return [3 /*break*/, 4];
+                    return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
                 case 3:
+                    _a.sent();
+                    return [4 /*yield*/, lswi()];
+                case 4:
+                    _a.sent();
+                    return [4 /*yield*/, insertNumberOfWoredasWithEth()];
+                case 5:
+                    _a.sent();
+                    return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
+                case 6:
+                    _a.sent();
+                    return [3 /*break*/, 8];
+                case 7:
                     error_9 = _a.sent();
                     if (error_9 instanceof etl_exception_1.default)
                         throw error_9;
                     else {
                         throw new etl_exception_1.default(error_9.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     }
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
             }
         });
     });

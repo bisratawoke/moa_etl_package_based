@@ -258,7 +258,7 @@ async function insertMicroWatershed() {
       let payload = {
         ...dateAddedRecord,
         record_type: "SLMP",
-        "Micro Watershed": rec.mws_name,
+        "Micro Watershed": `${rec.mws_name}-${indx}`,
         "Major Watershed": rec.cws_name,
       };
 
@@ -350,11 +350,11 @@ export default async function main() {
   try {
     await insertMajorWatershed();
     await insertMicroWatershed();
-    // await hectarOfAreaClosureWithinEtlCalendar();
-    // await lswi();
-    // await insertNumberOfWoredasWithEth();
+    await hectarOfAreaClosureWithinEtlCalendar();
+    await lswi();
+    await insertNumberOfWoredasWithEth();
 
-    // await insertCommunityWaterShedsCoopWithEthCalendar();
+    await insertCommunityWaterShedsCoopWithEthCalendar();
     // await insertMajorWatershed();
     // await insertMicroWatershed();
   } catch (error) {
