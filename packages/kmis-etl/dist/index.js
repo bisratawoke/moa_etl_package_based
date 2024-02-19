@@ -394,7 +394,7 @@ function insertMajorWatershed() {
                         var _this = this;
                         return __generator(this, function (_a) {
                             dateAddedRecord = dateTransformer(rec);
-                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP" });
+                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP", cws_id: String(indx) });
                             //smlp_major_watershed_schedular_test
                             //smlp_major_watershed
                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {

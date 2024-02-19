@@ -295,7 +295,7 @@ async function insertMajorWatershed() {
       let payload = {
         ...dateAddedRecord,
         record_type: "SLMP",
-        // cws_id: String(indx)
+        cws_id: String(indx),
       };
 
       //smlp_major_watershed_schedular_test
