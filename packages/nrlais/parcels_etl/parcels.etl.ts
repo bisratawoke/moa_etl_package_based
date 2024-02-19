@@ -31,6 +31,14 @@ import { getMaxDate } from "./utils";
 from nrlais_inventory.t_acm_mortgage  as t_acm_mort left join nrlais_inventory.t_acm_mortgage_restriction as t_acm_mort_res on  t_acm_mort.uid = t_acm_mort_res.mortgage_uid inner join nrlais_inventory.t_restrictions as t_res on t_acm_mort_res.restriction_uid = t_res.uid inner join nrlais_inventory.t_party as tpartyres on t_res.partyuid = tpartyres.uid inner join nrlais_inventory.t_parcels as t_parcel on t_res.parceluid = t_parcel.uid inner join nrlais_inventory.t_rights as t_rights on t_parcel.uid = t_rights.parceluid inner join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid inner join nrlais_sys.t_regions as t_region on t_region.csaregionid = t_parcel.csaregionid inner join nrlais_sys.t_zones as t_zone on t_zone.nrlais_zoneid = t_parcel.nrlais_zoneid inner join nrlais_sys.t_woredas as t_woreda on t_woreda.nrlais_woredaid = t_parcel.nrlais_woredaid inner join nrlais_sys.t_kebeles as t_kebele on t_kebele.nrlais_kebeleid = t_parcel.nrlais_kebeleid inner join nrlais_sys.t_cl_familyrole as familyrole on familyrole.codeid = t_party.mreg_familyrole inner join nrlais_sys.t_cl_partytype as respartytype on tpartyres.partytype = respartytype.codeid inner join nrlais_sys.t_cl_partytype as partytype on t_party.partytype = partytype.codeid
 
  */
+
+function getMaxCreatedAtAndUpdatedAt() {
+  try {
+    const 
+  } catch (error) {
+    throw error
+  }
+}
 export default async function etl() {
   try {
     const pool = new Pool({

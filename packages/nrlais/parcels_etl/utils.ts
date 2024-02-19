@@ -13,13 +13,19 @@ export async function getMaxDate() {
   try {
     let payload = {
       aggs: {
-        max_date: {
+        max_creadted_at: {
           max: {
-            field: "date",
+            field: "updated_at",
+          },
+        },
+        max_updated_at: {
+          max: {
+            field: "updated_at",
           },
         },
       },
     };
+
     const res = await axios.post(
       `${config.ELASTIC_URL}/${indexName}/_search`,
       payload,

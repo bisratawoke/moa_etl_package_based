@@ -246,6 +246,38 @@ async function lswi() {
   }
 }
 
+async function insertMicroWatershed() {
+  try {
+    const result = await removePreviousData("microwatersheds_information_slmp");
+    const response = await axios.get(
+      "http://slmpkmis.gov.et/api-slm-vis/public/mws_basic"
+    );
+    response.data._embedded.cws_basic.forEach(async (rec: any, indx: any) => {
+      let dateAddedRecord: any = dateTransformer(rec);
+
+      let payload = {
+        ...dateAddedRecord,
+        record_type: "SLMP",
+      };
+
+      //smlp_major_watershed_schedular_test
+      //smlp_major_watershed
+      setTimeout(async () => {
+        await insertIntoElastic(
+          payload,
+          "microwatersheds_information_slmp",
+          payload.id
+        );
+      }, 300 * indx);
+    });
+  } catch (error: any) {
+    if (error instanceof etlExceptions) throw error;
+
+    const exp = new etlExceptions(error.message, etlExceptionType.LOADING);
+    throw exp;
+  }
+}
+
 async function insertMajorWatershed() {
   try {
     const result = await removePreviousData(
@@ -311,21 +343,15 @@ async function removePreviousData(indexName: string) {
 
 export default async function main() {
   try {
-    await hectarOfAreaClosureWithinEtlCalendar();
-    setTimeout(async () => {
-      await lswi();
-    }, 5000);
-    setTimeout(async () => {
-      await insertNumberOfWoredasWithEth();
-    }, 8000);
+    await insertMajorWatershed();
+    await insertMicroWatershed();
+    // await hectarOfAreaClosureWithinEtlCalendar();
+    // await lswi();
+    // await insertNumberOfWoredasWithEth();
 
-    setTimeout(async () => {
-      await insertCommunityWaterShedsCoopWithEthCalendar();
-    }, 10000);
-    // setTimeout(async() => {
-
-    //   await insertMajorWatershed();
-    // },20000)
+    // await insertCommunityWaterShedsCoopWithEthCalendar();
+    // await insertMajorWatershed();
+    // await insertMicroWatershed();
   } catch (error) {
     if (error instanceof etlExceptions) throw error;
     else {
@@ -333,3 +359,7 @@ export default async function main() {
     }
   }
 }
+
+(async () => {
+  await main();
+})();

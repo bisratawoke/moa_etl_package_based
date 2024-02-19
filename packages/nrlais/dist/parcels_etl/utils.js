@@ -75,9 +75,14 @@ function getMaxDate() {
                     _a.trys.push([0, 2, , 3]);
                     payload = {
                         aggs: {
-                            max_date: {
+                            max_creadted_at: {
                                 max: {
-                                    field: "date",
+                                    field: "updated_at",
+                                },
+                            },
+                            max_updated_at: {
+                                max: {
+                                    field: "updated_at",
                                 },
                             },
                         },

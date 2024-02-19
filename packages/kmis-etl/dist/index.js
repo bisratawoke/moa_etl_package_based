@@ -326,9 +326,56 @@ function lswi() {
         });
     });
 }
-function insertMajorWatershed() {
+function insertMicroWatershed() {
     return __awaiter(this, void 0, void 0, function () {
         var result, response, error_6, exp;
+        var _this = this;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, removePreviousData("microwatersheds_information_slmp")];
+                case 1:
+                    result = _a.sent();
+                    return [4 /*yield*/, axios_1.default.get("http://slmpkmis.gov.et/api-slm-vis/public/mws_basic")];
+                case 2:
+                    response = _a.sent();
+                    response.data._embedded.cws_basic.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
+                        var dateAddedRecord, payload;
+                        var _this = this;
+                        return __generator(this, function (_a) {
+                            dateAddedRecord = dateTransformer(rec);
+                            payload = __assign(__assign({}, dateAddedRecord), { record_type: "SLMP" });
+                            //smlp_major_watershed_schedular_test
+                            //smlp_major_watershed
+                            setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0: return [4 /*yield*/, insertIntoElastic(payload, "microwatersheds_information_slmp", payload.id)];
+                                        case 1:
+                                            _a.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); }, 300 * indx);
+                            return [2 /*return*/];
+                        });
+                    }); });
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_6 = _a.sent();
+                    if (error_6 instanceof etl_exception_1.default)
+                        throw error_6;
+                    exp = new etl_exception_1.default(error_6.message, etl_exception_1.etlExceptionType.LOADING);
+                    throw exp;
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+function insertMajorWatershed() {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, response, error_7, exp;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -363,10 +410,10 @@ function insertMajorWatershed() {
                     }); });
                     return [3 /*break*/, 4];
                 case 3:
-                    error_6 = _a.sent();
-                    if (error_6 instanceof etl_exception_1.default)
-                        throw error_6;
-                    exp = new etl_exception_1.default(error_6.message, etl_exception_1.etlExceptionType.LOADING);
+                    error_7 = _a.sent();
+                    if (error_7 instanceof etl_exception_1.default)
+                        throw error_7;
+                    exp = new etl_exception_1.default(error_7.message, etl_exception_1.etlExceptionType.LOADING);
                     throw exp;
                 case 4: return [2 /*return*/];
             }
@@ -375,7 +422,7 @@ function insertMajorWatershed() {
 }
 function removePreviousData(indexName) {
     return __awaiter(this, void 0, void 0, function () {
-        var opts, response, error_7, exp;
+        var opts, response, error_8, exp;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -398,10 +445,10 @@ function removePreviousData(indexName) {
                     response = _a.sent();
                     return [3 /*break*/, 3];
                 case 2:
-                    error_7 = _a.sent();
-                    if (error_7 instanceof etl_exception_1.default)
-                        throw error_7;
-                    exp = new etl_exception_1.default(error_7.message, etl_exception_1.etlExceptionType.LOADING);
+                    error_8 = _a.sent();
+                    if (error_8 instanceof etl_exception_1.default)
+                        throw error_8;
+                    exp = new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.LOADING);
                     throw exp;
                 case 3: return [2 /*return*/];
             }
@@ -410,57 +457,39 @@ function removePreviousData(indexName) {
 }
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var error_8;
-        var _this = this;
+        var error_9;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, insertMajorWatershed()];
                 case 1:
                     _a.sent();
-                    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, lswi()];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); }, 5000);
-                    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, insertNumberOfWoredasWithEth()];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); }, 8000);
-                    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); }, 10000);
-                    return [3 /*break*/, 3];
+                    return [4 /*yield*/, insertMicroWatershed()];
                 case 2:
-                    error_8 = _a.sent();
-                    if (error_8 instanceof etl_exception_1.default)
-                        throw error_8;
+                    _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_9 = _a.sent();
+                    if (error_9 instanceof etl_exception_1.default)
+                        throw error_9;
                     else {
-                        throw new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                        throw new etl_exception_1.default(error_9.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     }
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
 }
 exports.default = main;
+(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, main()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); })();
