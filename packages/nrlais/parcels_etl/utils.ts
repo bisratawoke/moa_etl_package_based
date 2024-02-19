@@ -13,9 +13,9 @@ export async function getMaxDate() {
   try {
     let payload = {
       aggs: {
-        max_creadted_at: {
+        max_created_at: {
           max: {
-            field: "updated_at",
+            field: "created_at",
           },
         },
         max_updated_at: {
@@ -36,7 +36,10 @@ export async function getMaxDate() {
         },
       }
     );
-    return res.data.aggregations.max_date;
+    return {
+      max_created_at: res.data.aggregations.max_created_at,
+      max_updated_at: res.data.aggregations.max_updated_at,
+    };
   } catch (error) {
     console.log("============ in get max date =================");
     console.log(error);

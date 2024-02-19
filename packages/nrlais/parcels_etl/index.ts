@@ -22,3 +22,7 @@ export function nrlais_parcel_elt(opType: OPERATION_TYPE): any {
     }
   };
 }
+
+(async () => {
+  await nrlais_parcel_elt(OPERATION_TYPE.ETL);
+})();

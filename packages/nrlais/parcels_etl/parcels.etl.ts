@@ -32,13 +32,13 @@ from nrlais_inventory.t_acm_mortgage  as t_acm_mort left join nrlais_inventory.t
 
  */
 
-function getMaxCreatedAtAndUpdatedAt() {
-  try {
-    const 
-  } catch (error) {
-    throw error
-  }
-}
+// function getMaxCreatedAtAndUpdatedAt() {
+//   try {
+//     const
+//   } catch (error) {
+//     throw error
+//   }
+// }
 export default async function etl() {
   try {
     const pool = new Pool({
@@ -49,44 +49,44 @@ export default async function etl() {
       database: env.NRLAIS_DB_NAME,
     });
 
+    /**
+     *  t_parcels.syscreatedate as created_at, t_parcels.syslastmoddate as updated_at, 
+       t_parcels.uid as id, ST_AsText(ST_Transform(t_parcels.geometry,4326)) as location,
+        t_parcels.syscreatedate as date ,
+        t_party.gender as gender, 
+        t_party.partytype ,
+        t_rights.partyuid ,
+         t_reg.csaregionnameeng as region_name , 
+          t_zone.csazonenameeng as zone_name ,
+           t_woreda.woredanameeng as woreda_name  ,
+            t_kebeles.kebelenameeng as kebele_name  , 
+            t_holdings.holdingtype ,
+             t_parcels.areageom  
+     */
+
     const client = await pool.connect();
     let max_query_result = await getMaxDate();
     console.log(max_query_result);
     client.query(
-      `select t_parcels.syscreatedate as created_at, t_parcels.syslastmoddate as updated_at, t_parcels.uid as id, ST_AsText(ST_Transform(t_parcels.geometry,4326)) as location, t_parcels.syscreatedate as date ,t_party.gender as gender, t_party.partytype ,t_rights.partyuid , t_reg.csaregionnameeng as region_name ,  t_zone.csazonenameeng as zone_name , t_woreda.woredanameeng as woreda_name  , t_kebeles.kebelenameeng as kebele_name  , t_holdings.holdingtype , t_parcels.areageom  from nrlais_inventory.t_parcels as t_parcels left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid  left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid left join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid where t_parcels.syscreatedate > '${max_query_result.value_as_string}' or t_parcels.syslastmoddate > '${max_query_result.value_as_string}'`,
+      `select
+      count(*)
+      from nrlais_inventory.t_parcels as t_parcels left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid  left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid left join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid where t_parcels.syscreatedate = '${max_query_result?.max_created_at.value_as_string}' or t_parcels.syslastmoddate = '${max_query_result?.max_updated_at.value_as_string}'`,
       async (err: any, result: any) => {
         if (err) {
           console.log(err);
           console.log(err.message);
           throw new etlExceptions(err.message, etlExceptionType.EXTRACTION);
         } else {
-          console.log(result.rows.length);
+          console.log(result.rows);
         }
       }
     );
-    // let config = readConfig();
-    // client.query(
-    //   `select * from account where created_at > '${config.created_at}' or updated_at > '${config.updated_at}'`,
-    //   async (err: any, result: any) => {
-    //     if (err) {
-    //       throw new etlExceptions(err.message, etlExceptionType.EXTRACTION);
-    //     } else {
-    //       for (let x = 0; x < result.rows.length; x++) {
-    //         /**
-    //          * TODO: transform , check if record already exists , insert record
-    //          *
-    //          */
-    //         console.log(result.rows[x]);
-    //       }
-
-    //       let max_created_at_updated_at =
-    //         await getMaxCreatedAtAndUpdatedAtFromIndex(indexName);
-    //       updateConfig(max_created_at_updated_at);
-    //     }
-    //   }
-    // );
   } catch (error) {
     if (error instanceof etlExceptions) throw error;
     else throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
   }
 }
+
+(async () => {
+  await etl();
+})();

@@ -75,9 +75,9 @@ function getMaxDate() {
                     _a.trys.push([0, 2, , 3]);
                     payload = {
                         aggs: {
-                            max_creadted_at: {
+                            max_created_at: {
                                 max: {
-                                    field: "updated_at",
+                                    field: "created_at",
                                 },
                             },
                             max_updated_at: {
@@ -95,7 +95,10 @@ function getMaxDate() {
                         })];
                 case 1:
                     res = _a.sent();
-                    return [2 /*return*/, res.data.aggregations.max_date];
+                    return [2 /*return*/, {
+                            max_created_at: res.data.aggregations.max_created_at,
+                            max_updated_at: res.data.aggregations.max_updated_at,
+                        }];
                 case 2:
                     error_1 = _a.sent();
                     console.log("============ in get max date =================");
