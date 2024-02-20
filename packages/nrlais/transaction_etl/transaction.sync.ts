@@ -365,7 +365,7 @@ GROUP BY
           let id = `${rec["nrlais_kebeleid"]}_${rec["transactiontype"]}_${rec["year"]}`;
           let payload = {
             ...rec,
-            string_year: rec["year"],
+            string_year: String(rec["year"]),
             transaction_type: rec["trtype"],
             application_status: rec["trstatus"],
             result: Number(rec["no_trans"]),
