@@ -47,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.transactionWithoutGenderInfo = void 0;
 var Pool = require("pg").Pool;
 var Cursor = require("pg-cursor");
 var fs = require("fs");
@@ -306,7 +307,7 @@ function sync() {
                     return [4 /*yield*/, pool.connect()];
                 case 2:
                     client = _a.sent();
-                    cursor = client.query(new Cursor("select\t\n        t_transactiontype.en as transaction_type,\n        t_transaction.uid as id ,\n        t_regions.csaregionnameeng as region_name, \n        t_kebeles.kebelenameeng as kebele_name , \n        t_woredas.woredanameeng as woreda_name ,\n        t_zones.csazonenameeng as zone_name, \n        transactiontype , \n        t_transaction_data.tx_data as tx_data , \n        t_transaction.syscreatedate as date  \n        from nrlais_inventory.t_transaction as t_transaction  \n        left join nrlais_sys.t_cl_transactiontype as t_transactiontype on t_transaction.transactiontype =  t_transactiontype.codeid \n        left join nrlais_sys.t_regions as t_regions on t_transaction.csaregionid = t_regions.csaregionid \n        left join nrlais_sys.t_zones as t_zones on t_transaction.nrlais_zoneid = t_zones.csazoneid \n        left join nrlais_sys.t_woredas as t_woredas on t_transaction.nrlais_woredaid = t_woredas.woredaid \n        left join nrlais_sys.t_kebeles as t_kebeles on t_transaction.nrlais_kebeleid = t_kebeles.kebeleid \n        left join nrlais_inventory.t_transaction_data as t_transaction_data on t_transaction.uid = t_transaction_data.tx_uid \n        where transactiontype != 100 \n        and transactiontype != 15\n        and transactiontype != 18 \n        and tx_data is not null\n               \n\t\t")
+                    cursor = client.query(new Cursor("select\t\n        t_transactiontype.en as transaction_type,\n        t_transaction.uid as id ,\n        t_regions.csaregionnameeng as region_name, \n        t_kebeles.kebelenameeng as kebele_name , \n        t_woredas.woredanameeng as woreda_name ,\n        t_zones.csazonenameeng as zone_name, \n        transactiontype , \n        t_transaction_data.tx_data as tx_data , \n        t_transaction.syscreatedate as date  \n        from nrlais_inventory.t_transaction as t_transaction  \n        left join nrlais_sys.t_cl_transactiontype as t_transactiontype on t_transaction.transactiontype =  t_transactiontype.codeid \n        left join nrlais_sys.t_regions as t_regions on t_transaction.csaregionid = t_regions.csaregionid \n        left join nrlais_sys.t_zones as t_zones on t_transaction.nrlais_zoneid = t_zones.csazoneid \n        left join nrlais_sys.t_woredas as t_woredas on t_transaction.nrlais_woredaid = t_woredas.woredaid \n        left join nrlais_sys.t_kebeles as t_kebeles on t_transaction.nrlais_kebeleid = t_kebeles.kebeleid \n        left join nrlais_inventory.t_transaction_data as t_transaction_data on t_transaction.uid = t_transaction_data.tx_uid \n        where transactiontype != 100 \n        and transactiontype != 15\n        and transactiontype != 18 \n        and tx_data is not null          \n\t\t")
                     // "select t_parcels.uid as id , t_parcels.syscreatedate as date ,t_party.gender as gender, t_party.partytype ,t_rights.partyuid , t_reg.csaregionnameeng as region_name ,  t_zone.csazonenameeng as zone_name , t_woreda.woredanameeng as woreda_name , t_kebeles.kebelenameeng as kebele_name , t_holdings.holdingtype , t_parcels.areageom  from nrlais_inventory.t_parcels as t_parcels left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid  left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid left join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid"
                     );
                     return [4 /*yield*/, cursor.read(1)];
@@ -342,3 +343,60 @@ function sync() {
     });
 }
 exports.default = sync;
+function transactionWithoutGenderInfo() {
+    return __awaiter(this, void 0, void 0, function () {
+        var client_1, cursor, rows, error_3, error_4;
+        var _this = this;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 9, , 10]);
+                    return [4 /*yield*/, pool.connect()];
+                case 1:
+                    client_1 = _a.sent();
+                    cursor = client_1.query(new Cursor("\n    SELECT \n    tr.csaregionid,\n    r.csaregionnameeng as region_name,\n    tr.nrlais_zoneid,\n    z.csazonenameeng as zone_name,\n    tr.nrlais_woredaid,\n    w.woredanameeng as woreda_name,\n    tr.nrlais_kebeleid,\n    k.kebelenameeng as kebele_name,\n    DATE_PART('year', tr.syscreatedate::date) as year,\n    tr.transactiontype,\n    trt.en as trtype,\n    trs.en as trstatus,\n    COUNT(tr.transactiontype) as no_trans\nFROM nrlais_inventory.t_transaction tr\nLEFT JOIN nrlais_sys.t_cl_transactiontype trt ON tr.transactiontype=trt.codeid  \nLEFT JOIN nrlais_sys.t_cl_txstatus trs ON tr.txstatus=trs.codeid\nLEFT JOIN nrlais_sys.t_regions r ON tr.csaregionid=r.csaregionid\nLEFT JOIN nrlais_sys.t_zones z ON tr.nrlais_zoneid=z.nrlais_zoneid\nLEFT JOIN nrlais_sys.t_woredas w ON tr.nrlais_woredaid=w.nrlais_woredaid\nLEFT JOIN nrlais_sys.t_kebeles k ON tr.nrlais_kebeleid=k.nrlais_kebeleid\nwhere tr.transactiontype != 100\nGROUP BY \n    tr.csaregionid, \n    region_name, \n    tr.nrlais_zoneid,\n    zone_name, \n    tr.nrlais_woredaid,\n    woreda_name, \n    tr.nrlais_kebeleid,\n    kebele_name, \n    year, \n    tr.transactiontype, \n    trtype, \n    trstatus;"));
+                    return [4 /*yield*/, cursor.read(1)];
+                case 2:
+                    rows = _a.sent();
+                    _a.label = 3;
+                case 3:
+                    if (!rows.length) return [3 /*break*/, 8];
+                    _a.label = 4;
+                case 4:
+                    _a.trys.push([4, 6, , 7]);
+                    rows.forEach(function (rec) { return __awaiter(_this, void 0, void 0, function () {
+                        var id, payload;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    id = "".concat(rec["nrlais_kebeleid"], "_").concat(rec["transactiontype"], "_").concat(rec["year"]);
+                                    payload = __assign(__assign({}, rec), { string_year: rec["year"], transaction_type: rec["trtype"], application_status: rec["trstatus"], result: Number(rec["no_trans"]), area: Number(rec["no_trans"]), id: id });
+                                    return [4 /*yield*/, (0, utils_1.insertWithOutGender)("nrlais_transaction_party_with_out_gender_information", payload, id)];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    return [4 /*yield*/, cursor.read(1)];
+                case 5:
+                    rows = _a.sent();
+                    return [3 /*break*/, 7];
+                case 6:
+                    error_3 = _a.sent();
+                    console.log(error_3);
+                    cursor.close(function () {
+                        client_1.release();
+                    });
+                    return [3 /*break*/, 7];
+                case 7: return [3 /*break*/, 3];
+                case 8: return [3 /*break*/, 10];
+                case 9:
+                    error_4 = _a.sent();
+                    return [3 /*break*/, 10];
+                case 10: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.transactionWithoutGenderInfo = transactionWithoutGenderInfo;

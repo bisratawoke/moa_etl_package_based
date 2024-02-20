@@ -36,27 +36,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nrlais_transaction_elt = void 0;
+exports.nrlais_transaction_elt = exports.TRANSACTION_OPERATION_TYPE = void 0;
 var transaction_sync_1 = require("./transaction.sync");
-function nrlais_transaction_elt() {
+var TRANSACTION_OPERATION_TYPE;
+(function (TRANSACTION_OPERATION_TYPE) {
+    TRANSACTION_OPERATION_TYPE[TRANSACTION_OPERATION_TYPE["WITHGENDER_INFO"] = 0] = "WITHGENDER_INFO";
+    TRANSACTION_OPERATION_TYPE[TRANSACTION_OPERATION_TYPE["WITHOUT_GENGER_INFO"] = 1] = "WITHOUT_GENGER_INFO";
+})(TRANSACTION_OPERATION_TYPE || (exports.TRANSACTION_OPERATION_TYPE = TRANSACTION_OPERATION_TYPE = {}));
+function nrlais_transaction_elt(opType) {
     var _this = this;
     return function () { return __awaiter(_this, void 0, void 0, function () {
         var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _a.trys.push([0, 6, , 7]);
+                    if (!(opType == TRANSACTION_OPERATION_TYPE.WITHGENDER_INFO)) return [3 /*break*/, 2];
                     return [4 /*yield*/, (0, transaction_sync_1.default)()];
                 case 1:
                     _a.sent();
-                    return [3 /*break*/, 3];
+                    return [3 /*break*/, 5];
                 case 2:
+                    if (!(opType == TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, (0, transaction_sync_1.transactionWithoutGenderInfo)()];
+                case 3:
+                    _a.sent();
+                    return [3 /*break*/, 5];
+                case 4:
+                    console.log("Please specify the operation type");
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
                     error_1 = _a.sent();
                     console.log(error_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     }); };
 }
 exports.nrlais_transaction_elt = nrlais_transaction_elt;
+(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO)()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); })();

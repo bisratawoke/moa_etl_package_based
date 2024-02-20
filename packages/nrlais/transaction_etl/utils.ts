@@ -7,6 +7,32 @@ import * as path from "path";
 // export const indexName =
 //   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
 
+export const insertWithOutGender = async (
+  indexName: string,
+  rec: Record<string, any>,
+  id: string
+) => {
+  try {
+    const result = await axios.post(
+      `${config.ELASTIC_URL}/${indexName}/_doc`,
+      rec,
+      {
+        auth: {
+          username: config.ELASTIC_USERNAME,
+          password: config.ELASTIC_PASSWORD,
+        },
+      }
+    );
+    console.log(result.status);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.message);
+      console.log(error.response?.data);
+    }
+    return;
+  }
+};
+
 export const insertIntoElastic = async (
   indexName: string,
   rec: Record<string, any>

@@ -3,7 +3,7 @@ const Cursor = require("pg-cursor");
 const fs = require("fs");
 const axios = require("axios");
 import config from "moa_config";
-import { insertIntoElastic } from "./utils";
+import { insertIntoElastic, insertWithOutGender } from "./utils";
 import {
   InheritanceWithWillTransformer,
   InheritanceWithWillTransformer_v2,
@@ -314,4 +314,78 @@ export default async function sync() {
       });
     }
   }
+}
+
+export async function transactionWithoutGenderInfo() {
+  try {
+    const client = await pool.connect();
+    const cursor = client.query(
+      new Cursor(`
+    SELECT 
+    tr.csaregionid,
+    r.csaregionnameeng as region_name,
+    tr.nrlais_zoneid,
+    z.csazonenameeng as zone_name,
+    tr.nrlais_woredaid,
+    w.woredanameeng as woreda_name,
+    tr.nrlais_kebeleid,
+    k.kebelenameeng as kebele_name,
+    DATE_PART('year', tr.syscreatedate::date) as year,
+    tr.transactiontype,
+    trt.en as trtype,
+    trs.en as trstatus,
+    COUNT(tr.transactiontype) as no_trans
+FROM nrlais_inventory.t_transaction tr
+LEFT JOIN nrlais_sys.t_cl_transactiontype trt ON tr.transactiontype=trt.codeid  
+LEFT JOIN nrlais_sys.t_cl_txstatus trs ON tr.txstatus=trs.codeid
+LEFT JOIN nrlais_sys.t_regions r ON tr.csaregionid=r.csaregionid
+LEFT JOIN nrlais_sys.t_zones z ON tr.nrlais_zoneid=z.nrlais_zoneid
+LEFT JOIN nrlais_sys.t_woredas w ON tr.nrlais_woredaid=w.nrlais_woredaid
+LEFT JOIN nrlais_sys.t_kebeles k ON tr.nrlais_kebeleid=k.nrlais_kebeleid
+where tr.transactiontype != 100
+GROUP BY 
+    tr.csaregionid, 
+    region_name, 
+    tr.nrlais_zoneid,
+    zone_name, 
+    tr.nrlais_woredaid,
+    woreda_name, 
+    tr.nrlais_kebeleid,
+    kebele_name, 
+    year, 
+    tr.transactiontype, 
+    trtype, 
+    trstatus;`)
+    );
+
+    let rows = await cursor.read(1);
+    while (rows.length) {
+      try {
+        rows.forEach(async (rec) => {
+          let id = `${rec["nrlais_kebeleid"]}_${rec["transactiontype"]}_${rec["year"]}`;
+          let payload = {
+            ...rec,
+            string_year: rec["year"],
+            transaction_type: rec["trtype"],
+            application_status: rec["trstatus"],
+            result: Number(rec["no_trans"]),
+            area: Number(rec["no_trans"]),
+            id,
+          };
+
+          await insertWithOutGender(
+            "nrlais_transaction_party_with_out_gender_information",
+            payload,
+            id
+          );
+        });
+        rows = await cursor.read(1);
+      } catch (error) {
+        console.log(error);
+        cursor.close(() => {
+          client.release();
+        });
+      }
+    }
+  } catch (error) {}
 }
