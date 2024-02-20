@@ -12,6 +12,7 @@ import {
   majorWatershedTransformer,
   adminLocationTransformer,
 } from "./src/services/transform/psnp_pw.services.transform.location";
+
 export enum OPERATION_TYPE {
   LOCATION = "ADMIN_LOCATION",
   MAJOR_WATERSHED = "MAJOR_WATERSHEDS",

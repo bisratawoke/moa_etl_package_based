@@ -21,7 +21,7 @@ export default async function main() {
       },
     };
     const db_conn = await sql.connect(db_config);
-    // const pds_member = await extract_pds_member(db_conn);
+    const pds_member = await extract_pds_member(db_conn);
     // const pw_member = await extract_pw_member(db_conn);
     const pds_cash_transfer = await extract_pds_total_cash_transfer(db_conn);
     const pw_cash_transfer = await extract_pw_total_cash_transfer(db_conn);

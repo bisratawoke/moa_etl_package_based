@@ -238,7 +238,8 @@ function ethiopianToGregorians(ethiopianYear) {
     var gregorianYear = ethiopianYear + gregorianDifference;
     return gregorianYear;
 }
-main("slmp_2001_2015_swc_treatments_result");
+// main("slmp_2001_2015_swc_treatments_result");
+main("calm_soil_water_conservation_treatments_result");
 function main(indexName) {
     return __awaiter(this, void 0, void 0, function () {
         var count, result, err_1;
@@ -261,22 +262,8 @@ function main(indexName) {
                         var payload_1;
                         var _this = this;
                         return __generator(this, function (_a) {
-                            if (rec._source.old_year) {
-                                console.log("old year exists");
-                                // let payload = {
-                                //   ...rec._source,
-                                //   old_year: rec._source.year,
-                                //   year: ethiopianToGregorian(rec._source.year),
-                                //   string_year: String(ethiopianToGregorian(rec._source.year)),
-                                // };
-                                // console.log(payload);
-                            }
-                            else {
-                                // console.log("===== no old year ======");
-                                // console.log(rec._source.year);
-                                console.log("no old year");
-                                payload_1 = __assign(__assign({}, rec._source), { old_year: rec._source.year, year: ethiopianToGregorian(rec._source.year), string_year: String(ethiopianToGregorian(rec._source.year)) });
-                                console.log(payload_1);
+                            if (rec._source.region_name == "Benshangul Gumuz") {
+                                payload_1 = __assign(__assign({}, rec._source), { region_name: "Benishangul Gumuz" });
                                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
@@ -286,7 +273,7 @@ function main(indexName) {
                                                 return [2 /*return*/];
                                         }
                                     });
-                                }); }, indx * 300);
+                                }); }, indx * 200);
                             }
                             return [2 /*return*/];
                         });

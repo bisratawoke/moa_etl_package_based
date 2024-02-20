@@ -60,7 +60,3 @@ export default async function sync() {
     client.release();
   });
 }
-
-(async () => {
-  await sync();
-})();

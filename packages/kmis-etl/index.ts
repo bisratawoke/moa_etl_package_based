@@ -348,15 +348,71 @@ async function removePreviousData(indexName: string) {
 
 export default async function main() {
   try {
-    await insertMajorWatershed();
-    await insertMicroWatershed();
-    await hectarOfAreaClosureWithinEtlCalendar();
-    await lswi();
-    await insertNumberOfWoredasWithEth();
+    setTimeout(async () => {
+      try {
+        await insertMajorWatershed();
+      } catch (error) {
+        if (error instanceof etlExceptions) throw error;
+        else {
+          throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+        }
+      }
+    }, 5000);
 
-    await insertCommunityWaterShedsCoopWithEthCalendar();
-    // await insertMajorWatershed();
-    // await insertMicroWatershed();
+    setTimeout(async () => {
+      try {
+        await insertMicroWatershed();
+      } catch (error) {
+        if (error instanceof etlExceptions) throw error;
+        else {
+          throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+        }
+      }
+    }, 10000);
+
+    // setTimeout(async () => {
+    //   try {
+    //     await hectarOfAreaClosureWithinEtlCalendar();
+    //   } catch (error) {
+    //     if (error instanceof etlExceptions) throw error;
+    //     else {
+    //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+    //     }
+    //   }
+    // }, 15000);
+
+    // setTimeout(async () => {
+    //   try {
+    //     await lswi();
+    //   } catch (error) {
+    //     if (error instanceof etlExceptions) throw error;
+    //     else {
+    //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+    //     }
+    //   }
+    // }, 20000);
+
+    // setTimeout(async () => {
+    //   try {
+    //     await insertNumberOfWoredasWithEth();
+    //   } catch (error) {
+    //     if (error instanceof etlExceptions) throw error;
+    //     else {
+    //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+    //     }
+    //   }
+    // }, 25000);
+
+    // setTimeout(async () => {
+    //   try {
+    //     await insertCommunityWaterShedsCoopWithEthCalendar();
+    //   } catch (error) {
+    //     if (error instanceof etlExceptions) throw error;
+    //     else {
+    //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+    //     }
+    //   }
+    // }, 30000);
   } catch (error) {
     if (error instanceof etlExceptions) throw error;
     else {

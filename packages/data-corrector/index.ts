@@ -124,7 +124,8 @@ function ethiopianToGregorians(ethiopianYear) {
   return gregorianYear;
 }
 
-main("slmp_2001_2015_swc_treatments_result");
+// main("slmp_2001_2015_swc_treatments_result");
+main("calm_soil_water_conservation_treatments_result");
 async function main(indexName) {
   try {
     const { count } = await getCount(indexName);
@@ -138,35 +139,44 @@ async function main(indexName) {
     console.log(`${result.hits.hits.length} ${count}`);
 
     result.hits.hits.forEach(async (rec, indx) => {
-      if (rec._source.old_year) {
-        console.log("old year exists");
-        // let payload = {
-        //   ...rec._source,
-        //   old_year: rec._source.year,
-        //   year: ethiopianToGregorian(rec._source.year),
-        //   string_year: String(ethiopianToGregorian(rec._source.year)),
-        // };
-        // console.log(payload);
-      } else {
-        // console.log("===== no old year ======");
-        // console.log(rec._source.year);
-        console.log("no old year");
-        // console.log(payload);
+      if (rec._source.region_name == "Benshangul Gumuz") {
         let payload = {
           ...rec._source,
-          old_year: rec._source.year,
-          year: ethiopianToGregorian(rec._source.year),
-          string_year: String(ethiopianToGregorian(rec._source.year)),
+          region_name: "Benishangul Gumuz",
         };
-        console.log(payload);
+
         setTimeout(async () => {
           await updateIndex(payload, rec._id, indexName);
-        }, indx * 300);
+        }, indx * 200);
       }
+      // if (rec._source.old_year) {
+      //   console.log("old year exists");
+      //   // let payload = {
+      //   //   ...rec._source,
+      //   //   old_year: rec._source.year,
+      //   //   year: ethiopianToGregorian(rec._source.year),
+      //   //   string_year: String(ethiopianToGregorian(rec._source.year)),
+      //   // };
+      //   // console.log(payload);
+      // } else {
+      //   // console.log("===== no old year ======");
+      //   // console.log(rec._source.year);
+      //   console.log("no old year");
+      //   // console.log(payload);
+      //   let payload = {
+      //     ...rec._source,
+      //     old_year: rec._source.year,
+      //     year: ethiopianToGregorian(rec._source.year),
+      //     string_year: String(ethiopianToGregorian(rec._source.year)),
+      //   };
 
-      // setTimeout(async () => {
-      //   await updateIndex(payload, rec._id, indexName);
-      // }, indx * 200);
+      //   console.log(payload);
+
+      //   // console.log(payload);
+      //   // setTimeout(async () => {
+      //   //   await updateIndex(payload, rec._id, indexName);
+      //   // }, indx * 300);
+      // }
     });
   } catch (err) {
     console.error(err.response);

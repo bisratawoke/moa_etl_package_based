@@ -461,40 +461,102 @@ function removePreviousData(indexName) {
 }
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var error_9;
+        var _this = this;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 7, , 8]);
-                    return [4 /*yield*/, insertMajorWatershed()];
-                case 1:
-                    _a.sent();
-                    return [4 /*yield*/, insertMicroWatershed()];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, lswi()];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, insertNumberOfWoredasWithEth()];
-                case 5:
-                    _a.sent();
-                    return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
-                case 6:
-                    _a.sent();
-                    return [3 /*break*/, 8];
-                case 7:
-                    error_9 = _a.sent();
-                    if (error_9 instanceof etl_exception_1.default)
-                        throw error_9;
-                    else {
-                        throw new etl_exception_1.default(error_9.message, etl_exception_1.etlExceptionType.UNKNOWN);
-                    }
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+            try {
+                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_9;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, insertMajorWatershed()];
+                            case 1:
+                                _a.sent();
+                                return [3 /*break*/, 3];
+                            case 2:
+                                error_9 = _a.sent();
+                                if (error_9 instanceof etl_exception_1.default)
+                                    throw error_9;
+                                else {
+                                    throw new etl_exception_1.default(error_9.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                                }
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); }, 5000);
+                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_10;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, insertMicroWatershed()];
+                            case 1:
+                                _a.sent();
+                                return [3 /*break*/, 3];
+                            case 2:
+                                error_10 = _a.sent();
+                                if (error_10 instanceof etl_exception_1.default)
+                                    throw error_10;
+                                else {
+                                    throw new etl_exception_1.default(error_10.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                                }
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); }, 10000);
+                // setTimeout(async () => {
+                //   try {
+                //     await hectarOfAreaClosureWithinEtlCalendar();
+                //   } catch (error) {
+                //     if (error instanceof etlExceptions) throw error;
+                //     else {
+                //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+                //     }
+                //   }
+                // }, 15000);
+                // setTimeout(async () => {
+                //   try {
+                //     await lswi();
+                //   } catch (error) {
+                //     if (error instanceof etlExceptions) throw error;
+                //     else {
+                //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+                //     }
+                //   }
+                // }, 20000);
+                // setTimeout(async () => {
+                //   try {
+                //     await insertNumberOfWoredasWithEth();
+                //   } catch (error) {
+                //     if (error instanceof etlExceptions) throw error;
+                //     else {
+                //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+                //     }
+                //   }
+                // }, 25000);
+                // setTimeout(async () => {
+                //   try {
+                //     await insertCommunityWaterShedsCoopWithEthCalendar();
+                //   } catch (error) {
+                //     if (error instanceof etlExceptions) throw error;
+                //     else {
+                //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+                //     }
+                //   }
+                // }, 30000);
             }
+            catch (error) {
+                if (error instanceof etl_exception_1.default)
+                    throw error;
+                else {
+                    throw new etl_exception_1.default(error.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                }
+            }
+            return [2 /*return*/];
         });
     });
 }
