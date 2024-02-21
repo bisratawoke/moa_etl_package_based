@@ -56,7 +56,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertIntoElasticNotDuplication = exports.getMaxDate = exports.indexName = void 0;
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertIntoElasticNotDuplication = exports.getMaxDate = exports.getParcelsThatIntersectWatersheds = exports.getMicroWatershed = exports.getIndexCount = exports.watershedIndexName = exports.indexName = void 0;
 var axios_1 = require("axios");
 var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
@@ -66,9 +66,128 @@ var path = require("path");
 // export const indexName =
 //   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
 exports.indexName = "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
+exports.watershedIndexName = "kmismws";
+function getIndexCount(indexName, query) {
+    return __awaiter(this, void 0, void 0, function () {
+        var res, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_count"), query ? query : {}, {
+                            auth: {
+                                username: config_1.default.ELASTIC_USERNAME,
+                                password: config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 1:
+                    res = _a.sent();
+                    return [2 /*return*/, res.data.count];
+                case 2:
+                    error_1 = _a.sent();
+                    console.log(error_1);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getIndexCount = getIndexCount;
+function getMicroWatershed() {
+    return __awaiter(this, void 0, void 0, function () {
+        var count, result, watershedList, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 4, , 5]);
+                    return [4 /*yield*/, getIndexCount(exports.watershedIndexName)];
+                case 1:
+                    count = _a.sent();
+                    return [4 /*yield*/, axios_1.default.get("".concat(config_1.default.ELASTIC_URL, "/").concat(exports.watershedIndexName, "/_search?size=").concat(count), {
+                            auth: {
+                                username: config_1.default.ELASTIC_USERNAME,
+                                password: config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 2:
+                    result = _a.sent();
+                    return [4 /*yield*/, result.data.hits.hits];
+                case 3:
+                    watershedList = _a.sent();
+                    return [2 /*return*/, watershedList];
+                case 4:
+                    error_2 = _a.sent();
+                    console.log("============ in get micro watersheds =================");
+                    console.log(error_2);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getMicroWatershed = getMicroWatershed;
+function getParcelsThatIntersectWatersheds(watershedIndexName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var watershedInfo, x, id, query, count, result, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 7, , 8]);
+                    return [4 /*yield*/, getMicroWatershed()];
+                case 1:
+                    watershedInfo = _a.sent();
+                    x = 0;
+                    _a.label = 2;
+                case 2:
+                    if (!(x < watershedInfo.length)) return [3 /*break*/, 6];
+                    id = watershedInfo[0]._id;
+                    query = {
+                        query: {
+                            bool: {
+                                filter: {
+                                    geo_shape: {
+                                        location: {
+                                            indexed_shape: {
+                                                index: watershedIndexName,
+                                                id: id,
+                                                path: "location",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    };
+                    return [4 /*yield*/, getIndexCount(exports.indexName, query)];
+                case 3:
+                    count = _a.sent();
+                    return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(watershedIndexName, "/_search?size=").concat(count), query, {
+                            auth: {
+                                username: config_1.default.ELASTIC_USERNAME,
+                                password: config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 4:
+                    result = _a.sent();
+                    if (result.data.hits.hits.length > 0)
+                        console.log(result.data.hits.hits);
+                    _a.label = 5;
+                case 5:
+                    x++;
+                    return [3 /*break*/, 2];
+                case 6: return [3 /*break*/, 8];
+                case 7:
+                    error_3 = _a.sent();
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getParcelsThatIntersectWatersheds = getParcelsThatIntersectWatersheds;
 function getMaxDate() {
     return __awaiter(this, void 0, void 0, function () {
-        var payload, res, error_1;
+        var payload, res, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -100,9 +219,9 @@ function getMaxDate() {
                             max_updated_at: res.data.aggregations.max_updated_at,
                         }];
                 case 2:
-                    error_1 = _a.sent();
+                    error_4 = _a.sent();
                     console.log("============ in get max date =================");
-                    console.log(error_1);
+                    console.log(error_4);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -113,7 +232,7 @@ exports.getMaxDate = getMaxDate;
 var insertIntoElasticNotDuplication = function (indexName, rec) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
-                var result, error_2;
+                var result, error_5;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -129,7 +248,7 @@ var insertIntoElasticNotDuplication = function (indexName, rec) { return __await
                             resolve(true);
                             return [3 /*break*/, 3];
                         case 2:
-                            error_2 = _a.sent();
+                            error_5 = _a.sent();
                             console.log("========= error while inserting elastic ===== ");
                             resolve(true);
                             return [3 /*break*/, 3];
@@ -143,7 +262,7 @@ exports.insertIntoElasticNotDuplication = insertIntoElasticNotDuplication;
 var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
-                var res, payload, result, payload, result, error_3;
+                var res, payload, result, payload, result, error_6;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -178,7 +297,7 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                             _a.label = 5;
                         case 5: return [3 /*break*/, 7];
                         case 6:
-                            error_3 = _a.sent();
+                            error_6 = _a.sent();
                             resolve(true);
                             return [3 /*break*/, 7];
                         case 7: return [2 /*return*/];
@@ -243,7 +362,7 @@ var transformer = function (record) {
 exports.transformer = transformer;
 function doesParcelExist(parcel_id) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_4;
+        var response, error_7;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -258,7 +377,7 @@ function doesParcelExist(parcel_id) {
                     response = _a.sent();
                     return [2 /*return*/, { source: response.data._source, found: response.data.found }];
                 case 2:
-                    error_4 = _a.sent();
+                    error_7 = _a.sent();
                     return [2 /*return*/, null];
                 case 3: return [2 /*return*/];
             }
@@ -276,7 +395,7 @@ function updateConfig(data) {
 exports.updateConfig = updateConfig;
 function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_5;
+        var response, error_8;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -307,11 +426,11 @@ function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
                             updated_at: response.data._source.updated,
                         }];
                 case 2:
-                    error_5 = _a.sent();
-                    if (error_5 instanceof etl_exception_1.default)
-                        throw error_5;
+                    error_8 = _a.sent();
+                    if (error_8 instanceof etl_exception_1.default)
+                        throw error_8;
                     else
-                        throw new etl_exception_1.default(error_5.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                        throw new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

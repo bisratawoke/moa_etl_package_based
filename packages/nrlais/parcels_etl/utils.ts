@@ -8,7 +8,90 @@ import * as path from "path";
 //   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
 export const indexName =
   "nrlais_land_admin_system_parcels_weekly_extracted_data_information";
+export const watershedIndexName = "kmismws";
 
+export async function getIndexCount(
+  indexName: string,
+  query?: Record<any, any>
+) {
+  try {
+    const res = await axios.post(
+      `${config.ELASTIC_URL}/${indexName}/_count`,
+      query ? query : {},
+      {
+        auth: {
+          username: config.ELASTIC_USERNAME,
+          password: config.ELASTIC_PASSWORD,
+        },
+      }
+    );
+
+    return res.data.count;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getMicroWatershed() {
+  try {
+    const count = await getIndexCount(watershedIndexName);
+    const result = await axios.get(
+      `${config.ELASTIC_URL}/${watershedIndexName}/_search?size=${count}`,
+      {
+        auth: {
+          username: config.ELASTIC_USERNAME,
+          password: config.ELASTIC_PASSWORD,
+        },
+      }
+    );
+    const watershedList = await result.data.hits.hits;
+    return watershedList;
+  } catch (error) {
+    console.log("============ in get micro watersheds =================");
+    console.log(error);
+  }
+}
+
+export async function getParcelsThatIntersectWatersheds(watershedIndexName) {
+  try {
+    const watershedInfo = await getMicroWatershed();
+    for (let x = 0; x < watershedInfo.length; x++) {
+      let id = watershedInfo[0]._id;
+      let query = {
+        query: {
+          bool: {
+            filter: {
+              geo_shape: {
+                location: {
+                  indexed_shape: {
+                    index: watershedIndexName,
+                    id: id,
+                    path: "location",
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+      let count = await getIndexCount(indexName, query);
+
+      const result = await axios.post(
+        `${config.ELASTIC_URL}/${watershedIndexName}/_search?size=${count}`,
+        query,
+        {
+          auth: {
+            username: config.ELASTIC_USERNAME,
+            password: config.ELASTIC_PASSWORD,
+          },
+        }
+      );
+
+      if (result.data.hits.hits.length > 0) console.log(result.data.hits.hits);
+      // console.log(id);
+    }
+  } catch (error) {}
+}
 export async function getMaxDate() {
   try {
     let payload = {

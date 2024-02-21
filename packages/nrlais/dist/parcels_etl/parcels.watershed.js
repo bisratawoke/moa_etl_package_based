@@ -36,52 +36,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nrlais_parcel_elt = exports.OPERATION_TYPE = void 0;
-var parcels_sync_1 = require("./parcels.sync");
-var parcels_etl_1 = require("./parcels.etl");
-var parcels_watershed_1 = require("./parcels.watershed");
-var OPERATION_TYPE;
-(function (OPERATION_TYPE) {
-    OPERATION_TYPE["SYNC"] = "SYNC";
-    OPERATION_TYPE["ETL"] = "ETL";
-    OPERATION_TYPE["WATERSHED_SYNC"] = "WATERSHED_SYNC";
-})(OPERATION_TYPE || (exports.OPERATION_TYPE = OPERATION_TYPE = {}));
-function nrlais_parcel_elt(opType) {
-    var _this = this;
-    return function () { return __awaiter(_this, void 0, void 0, function () {
-        var error_1;
+var utils_1 = require("./utils");
+function main() {
+    return __awaiter(this, void 0, void 0, function () {
+        var watershed, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 8, , 9]);
-                    if (!(opType == OPERATION_TYPE.SYNC)) return [3 /*break*/, 2];
-                    return [4 /*yield*/, (0, parcels_sync_1.default)()];
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, (0, utils_1.getParcelsThatIntersectWatersheds)(utils_1.watershedIndexName)];
                 case 1:
-                    _a.sent();
-                    return [3 /*break*/, 7];
+                    watershed = _a.sent();
+                    console.log(watershed);
+                    return [3 /*break*/, 3];
                 case 2:
-                    if (!(opType == OPERATION_TYPE.ETL)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, (0, parcels_etl_1.default)()];
-                case 3:
-                    _a.sent();
-                    return [3 /*break*/, 7];
-                case 4:
-                    if (!(opType == OPERATION_TYPE.WATERSHED_SYNC)) return [3 /*break*/, 6];
-                    return [4 /*yield*/, (0, parcels_watershed_1.default)()];
-                case 5:
-                    _a.sent();
-                    return [3 /*break*/, 7];
-                case 6:
-                    console.log("error please specify the operation type");
-                    _a.label = 7;
-                case 7: return [3 /*break*/, 9];
-                case 8:
                     error_1 = _a.sent();
-                    console.log(error_1);
-                    return [3 /*break*/, 9];
-                case 9: return [2 /*return*/];
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
-    }); };
+    });
 }
-exports.nrlais_parcel_elt = nrlais_parcel_elt;
+exports.default = main;
+(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, main()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); })();
