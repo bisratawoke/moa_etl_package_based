@@ -32,28 +32,33 @@ const transformer = async (record: any) =>
       if (!Number.isNaN(record.transactiontype) && record.tx_data != null) {
         switch (record.transactiontype) {
           case 26:
+            console.log("====== in transformer =======");
             record.transaction_type = "Inheritance with will";
 
             result = InheritanceWithWillTransformer(record.tx_data.data);
-
+            console.log(result);
             result.forEach(async (rec) => {
-              await insertIntoElastic(
-                "transaction_houshold_information_with_party_type_info",
-                {
-                  ...rec,
-                  region_name: record.region_name,
-                  zone_name: record.zone_name,
-                  woreda_name: record.woreda_name,
-                  kebele_name: record.kebele_name,
-                  ...record,
-                }
-              );
+              try {
+                console.log(result);
+                await insertIntoElastic(
+                  "transaction_houshold_information_with_party_type_info",
+                  {
+                    ...rec,
+                    region_name: record.region_name,
+                    zone_name: record.zone_name,
+                    woreda_name: record.woreda_name,
+                    kebele_name: record.kebele_name,
+                    ...record,
+                  }
+                );
+              } catch (error) {
+                console.log(error);
+              }
             });
 
             break;
           case 27:
             record.transaction_type = "Inheritance without will";
-            result = InheritanceWithWillTransformer(record.tx_data.data);
             // console.log({
             //   ...result[0],
             //   region_name: record.region_name,
@@ -62,14 +67,24 @@ const transformer = async (record: any) =>
             //   kebele_name: record.kebele_name,
             // });
             // console.log(record["info"]);
-            // await insertIntoElastic("transaction_houshold_information_with_party_type_info", {
-            //   ...result[0],
-            //   region_name: record.region_name,
-            //   zone_name: record.zone_name,
-            //   woreda_name: record.woreda_name,
-            //   kebele_name: record.kebele_name,
-            //   ...record,
-            // });
+            try {
+              result = InheritanceWithWillTransformer(record.tx_data.data);
+              result.forEach(async (rec) => {
+                await insertIntoElastic(
+                  "transaction_houshold_information_with_party_type_info",
+                  {
+                    ...rec,
+                    region_name: record.region_name,
+                    zone_name: record.zone_name,
+                    woreda_name: record.woreda_name,
+                    kebele_name: record.kebele_name,
+                    ...record,
+                  }
+                );
+              });
+            } catch (error) {
+              console.log(error);
+            }
 
             break;
 
@@ -84,7 +99,6 @@ const transformer = async (record: any) =>
           case 24:
             record.transaction_type = "Gift";
 
-            result = giftTransfomer(record.tx_data.data);
             // result.forEach((res) => {
             //   console.log({
             //     ...result[0],
@@ -94,19 +108,24 @@ const transformer = async (record: any) =>
             //     kebele_name: record.kebele_name,
             //   });
             // });
-            result.forEach(async (rec) => {
-              await insertIntoElastic(
-                "transaction_houshold_information_with_party_type_info",
-                {
-                  ...rec,
-                  region_name: record.region_name,
-                  zone_name: record.zone_name,
-                  woreda_name: record.woreda_name,
-                  kebele_name: record.kebele_name,
-                  ...record,
-                }
-              );
-            });
+            try {
+              result = giftTransfomer(record.tx_data.data);
+              result.forEach(async (rec) => {
+                await insertIntoElastic(
+                  "transaction_houshold_information_with_party_type_info",
+                  {
+                    ...rec,
+                    region_name: record.region_name,
+                    zone_name: record.zone_name,
+                    woreda_name: record.woreda_name,
+                    kebele_name: record.kebele_name,
+                    ...record,
+                  }
+                );
+              });
+            } catch (error) {
+              console.log(error);
+            }
 
             // console.log(record["info"]);
             break;
@@ -121,7 +140,6 @@ const transformer = async (record: any) =>
           case 7:
             record.transaction_type = "Reallocation";
 
-            result = reallocationTransformer(record.tx_data.data);
             // console.log({
             //   ...result[0],
             //   region_name: record.region_name,
@@ -129,20 +147,24 @@ const transformer = async (record: any) =>
             //   woreda_name: record.woreda_name,
             //   kebele_name: record.kebele_name,
             // });
-
-            result.forEach(async (rec) => {
-              await insertIntoElastic(
-                "transaction_houshold_information_with_party_type_info",
-                {
-                  ...result[0],
-                  region_name: record.region_name,
-                  zone_name: record.zone_name,
-                  woreda_name: record.woreda_name,
-                  kebele_name: record.kebele_name,
-                  ...record,
-                }
-              );
-            });
+            try {
+              result = reallocationTransformer(record.tx_data.data);
+              result.forEach(async (rec) => {
+                await insertIntoElastic(
+                  "transaction_houshold_information_with_party_type_info",
+                  {
+                    ...result[0],
+                    region_name: record.region_name,
+                    zone_name: record.zone_name,
+                    woreda_name: record.woreda_name,
+                    kebele_name: record.kebele_name,
+                    ...record,
+                  }
+                );
+              });
+            } catch (error) {
+              console.log(error);
+            }
 
             break;
           case 8:
@@ -218,7 +240,6 @@ const transformer = async (record: any) =>
           case 25:
             record.transaction_type = "Marriage";
 
-            result = marrageTransformer(record.tx_data.data);
             // console.log({
             //   ...result[0],
             //   region_name: record.region_name,
@@ -227,19 +248,24 @@ const transformer = async (record: any) =>
             //   kebele_name: record.kebele_name,
             // });
             // console.log(record["info"]);
-            result.forEach(async (rec) => {
-              await insertIntoElastic(
-                "transaction_houshold_information_with_party_type_info",
-                {
-                  ...rec,
-                  region_name: record.region_name,
-                  zone_name: record.zone_name,
-                  woreda_name: record.woreda_name,
-                  kebele_name: record.kebele_name,
-                  ...record,
-                }
-              );
-            });
+            try {
+              result = marrageTransformer(record.tx_data.data);
+              result.forEach(async (rec) => {
+                await insertIntoElastic(
+                  "transaction_houshold_information_with_party_type_info",
+                  {
+                    ...rec,
+                    region_name: record.region_name,
+                    zone_name: record.zone_name,
+                    woreda_name: record.woreda_name,
+                    kebele_name: record.kebele_name,
+                    ...record,
+                  }
+                );
+              });
+            } catch (error) {
+              console.log(error);
+            }
 
             break;
           default:
@@ -306,7 +332,7 @@ export default async function sync() {
         and transactiontype != 15
         and transactiontype != 18 
         and tx_data is not null 
-        limit 50 
+        
         
 		`
     )
@@ -316,6 +342,8 @@ export default async function sync() {
   let count = 0;
   while (rows.length) {
     try {
+      console.log(rows.length);
+      // console.log(rows[0]);
       await transformer(rows[0]);
 
       rows = await cursor.read(1);

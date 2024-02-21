@@ -107,6 +107,7 @@ export const insertIntoElastic = async (
     try {
       delete rec.tx_data;
 
+      console.log("====== in insert baby =====");
       let partyTypeText = partyTypeConv(rec.partyType);
       let partyTextRole = getRelationshipText(rec.mreg_familyrole);
 
@@ -118,17 +119,17 @@ export const insertIntoElastic = async (
 
       console.log("====== in insert baby ======");
       console.log(payload);
-      // const result = await axios.post(
-      //   `${config.ELASTIC_URL}/${indexName}/_doc`,
-      //   payload,
-      //   {
-      //     auth: {
-      //       username: config.ELASTIC_USERNAME,
-      //       password: config.ELASTIC_PASSWORD,
-      //     },
-      //   }
-      // );
-      // console.log(result.status);
+      const result = await axios.post(
+        `${config.ELASTIC_URL}/${indexName}/_doc`,
+        payload,
+        {
+          auth: {
+            username: config.ELASTIC_USERNAME,
+            password: config.ELASTIC_PASSWORD,
+          },
+        }
+      );
+      console.log(result.status);
       resolve(true);
 
       // if (rec.mreg_familyrole) {
@@ -153,7 +154,8 @@ export const insertIntoElastic = async (
         console.log(error.message);
         console.log(error.response?.data);
       }
-      resolve(true);
+      console.log(error);
+      reject(true);
     }
   });
 };
