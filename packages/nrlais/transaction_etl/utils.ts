@@ -49,6 +49,7 @@ export function partyTypeConv(code: Number) {
       partyTypeText = "Natural Person";
       break;
     case 2:
+      console.log("==== finally ====");
       partyTypeText = "Non-natural person";
       break;
     case 3:
@@ -69,7 +70,6 @@ export function partyTypeConv(code: Number) {
     default:
       partyTypeText = "Undefined";
   }
-
   return partyTypeText;
 }
 
@@ -109,12 +109,12 @@ export const insertIntoElastic = async (
 
       console.log("====== in insert baby =====");
       let partyTypeText = partyTypeConv(rec.partyType);
-      let partyTextRole = getRelationshipText(rec.mreg_familyrole);
+      // let partyTextRole = getRelationshipText(rec.mreg_familyrole);
 
       let payload = {
         ...rec,
         partyTypeText,
-        partyTextRole,
+        // partyTextRole,
       };
 
       console.log("====== in insert baby ======");

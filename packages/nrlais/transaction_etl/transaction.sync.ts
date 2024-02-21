@@ -25,6 +25,7 @@ const pool = new Pool({
   user: config.NRLAIS_DB_USER,
   database: config.NRLAIS_DB_NAME,
 });
+
 const transformer = async (record: any) =>
   new Promise(async (resovle, reject) => {
     try {
@@ -32,33 +33,32 @@ const transformer = async (record: any) =>
       if (!Number.isNaN(record.transactiontype) && record.tx_data != null) {
         switch (record.transactiontype) {
           case 26:
-            console.log("====== in transformer =======");
             record.transaction_type = "Inheritance with will";
-
             result = InheritanceWithWillTransformer(record.tx_data.data);
-            console.log(result);
-            result.forEach(async (rec) => {
-              try {
-                console.log(result);
-                await insertIntoElastic(
-                  "transaction_houshold_information_with_party_type_info",
-                  {
-                    ...rec,
-                    region_name: record.region_name,
-                    zone_name: record.zone_name,
-                    woreda_name: record.woreda_name,
-                    kebele_name: record.kebele_name,
-                    ...record,
-                  }
-                );
-              } catch (error) {
-                console.log(error);
-              }
-            });
+
+            // result.forEach(async (rec) => {
+            //   try {
+            //     console.log(result);
+            // await insertIntoElastic(
+            //   "transaction_houshold_information_with_party_type_info",
+            //   {
+            //     ...rec,
+            //     region_name: record.region_name,
+            //     zone_name: record.zone_name,
+            //     woreda_name: record.woreda_name,
+            //     kebele_name: record.kebele_name,
+            //     ...record,
+            //   }
+            // );
+            //   } catch (error) {
+            //     console.log(error);
+            //   }
+            // });
 
             break;
           case 27:
             record.transaction_type = "Inheritance without will";
+            result = InheritanceWithWillTransformer(record.tx_data.data);
             // console.log({
             //   ...result[0],
             //   region_name: record.region_name,
@@ -67,24 +67,24 @@ const transformer = async (record: any) =>
             //   kebele_name: record.kebele_name,
             // });
             // console.log(record["info"]);
-            try {
-              result = InheritanceWithWillTransformer(record.tx_data.data);
-              result.forEach(async (rec) => {
-                await insertIntoElastic(
-                  "transaction_houshold_information_with_party_type_info",
-                  {
-                    ...rec,
-                    region_name: record.region_name,
-                    zone_name: record.zone_name,
-                    woreda_name: record.woreda_name,
-                    kebele_name: record.kebele_name,
-                    ...record,
-                  }
-                );
-              });
-            } catch (error) {
-              console.log(error);
-            }
+            //   try {
+            //     result = InheritanceWithWillTransformer(record.tx_data.data);
+            //     result.forEach(async (rec) => {
+            //       await insertIntoElastic(
+            //         "transaction_houshold_information_with_party_type_info",
+            //         {
+            //           ...rec,
+            //           region_name: record.region_name,
+            //           zone_name: record.zone_name,
+            //           woreda_name: record.woreda_name,
+            //           kebele_name: record.kebele_name,
+            //           ...record,
+            //         }
+            //       );
+            //     });
+            //   } catch (error) {
+            //     console.log(error);
+            // }
 
             break;
 
@@ -110,19 +110,19 @@ const transformer = async (record: any) =>
             // });
             try {
               result = giftTransfomer(record.tx_data.data);
-              result.forEach(async (rec) => {
-                await insertIntoElastic(
-                  "transaction_houshold_information_with_party_type_info",
-                  {
-                    ...rec,
-                    region_name: record.region_name,
-                    zone_name: record.zone_name,
-                    woreda_name: record.woreda_name,
-                    kebele_name: record.kebele_name,
-                    ...record,
-                  }
-                );
-              });
+              // result.forEach(async (rec) => {
+              //   await insertIntoElastic(
+              //     "transaction_houshold_information_with_party_type_info",
+              //     {
+              //       ...rec,
+              //       region_name: record.region_name,
+              //       zone_name: record.zone_name,
+              //       woreda_name: record.woreda_name,
+              //       kebele_name: record.kebele_name,
+              //       ...record,
+              //     }
+              //   );
+              // });
             } catch (error) {
               console.log(error);
             }
@@ -149,19 +149,19 @@ const transformer = async (record: any) =>
             // });
             try {
               result = reallocationTransformer(record.tx_data.data);
-              result.forEach(async (rec) => {
-                await insertIntoElastic(
-                  "transaction_houshold_information_with_party_type_info",
-                  {
-                    ...result[0],
-                    region_name: record.region_name,
-                    zone_name: record.zone_name,
-                    woreda_name: record.woreda_name,
-                    kebele_name: record.kebele_name,
-                    ...record,
-                  }
-                );
-              });
+              // result.forEach(async (rec) => {
+              //   await insertIntoElastic(
+              //     "transaction_houshold_information_with_party_type_info",
+              //     {
+              //       ...result[0],
+              //       region_name: record.region_name,
+              //       zone_name: record.zone_name,
+              //       woreda_name: record.woreda_name,
+              //       kebele_name: record.kebele_name,
+              //       ...record,
+              //     }
+              //   );
+              // });
             } catch (error) {
               console.log(error);
             }
@@ -216,27 +216,27 @@ const transformer = async (record: any) =>
           case 21:
             record.transaction_type = "Modify Mortgage";
             break;
-          // case 22:
-          //   record.transaction_type = "Cancel Mortgage";
+          case 22:
+            record.transaction_type = "Cancel Mortgage";
+            console.log(record.tx_data.data);
+            result = cancelMorgageTransform(record.tx_data.data);
+            // console.log({
+            //   ...result[0],
+            //   region_name: record.region_name,
+            //   zone_name: record.zone_name,
+            //   woreda_name: record.woreda_name,
+            //   kebele_name: record.kebele_name,
+            // });
+            // await insertIntoElastic("transaction_houshold_information_with_party_type_info", {
+            //   ...result[0],
+            //   region_name: record.region_name,
+            //   zone_name: record.zone_name,
+            //   woreda_name: record.woreda_name,
+            //   kebele_name: record.kebele_name,
+            //   ...record,
+            // });
 
-          //   result = cancelMorgageTransform(record.tx_data.data);
-          //   // console.log({
-          //   //   ...result[0],
-          //   //   region_name: record.region_name,
-          //   //   zone_name: record.zone_name,
-          //   //   woreda_name: record.woreda_name,
-          //   //   kebele_name: record.kebele_name,
-          //   // });
-          //   await insertIntoElastic("transaction_houshold_information_with_party_type_info", {
-          //     ...result[0],
-          //     region_name: record.region_name,
-          //     zone_name: record.zone_name,
-          //     woreda_name: record.woreda_name,
-          //     kebele_name: record.kebele_name,
-          //     ...record,
-          //   });
-
-          //   break;
+            break;
           case 25:
             record.transaction_type = "Marriage";
 
@@ -250,19 +250,19 @@ const transformer = async (record: any) =>
             // console.log(record["info"]);
             try {
               result = marrageTransformer(record.tx_data.data);
-              result.forEach(async (rec) => {
-                await insertIntoElastic(
-                  "transaction_houshold_information_with_party_type_info",
-                  {
-                    ...rec,
-                    region_name: record.region_name,
-                    zone_name: record.zone_name,
-                    woreda_name: record.woreda_name,
-                    kebele_name: record.kebele_name,
-                    ...record,
-                  }
-                );
-              });
+              // result.forEach(async (rec) => {
+              //   await insertIntoElastic(
+              //     "transaction_houshold_information_with_party_type_info",
+              //     {
+              //       ...rec,
+              //       region_name: record.region_name,
+              //       zone_name: record.zone_name,
+              //       woreda_name: record.woreda_name,
+              //       kebele_name: record.kebele_name,
+              //       ...record,
+              //     }
+              //   );
+              // });
             } catch (error) {
               console.log(error);
             }
@@ -330,22 +330,25 @@ export default async function sync() {
         left join nrlais_inventory.t_transaction_data as t_transaction_data on t_transaction.uid = t_transaction_data.tx_uid 
         where transactiontype != 100 
         and transactiontype != 15
-        and transactiontype != 18 
+        and transactiontype != 18
         and tx_data is not null 
-        
-        
 		`
     )
     // "select t_parcels.uid as id , t_parcels.syscreatedate as date ,t_party.gender as gender, t_party.partytype ,t_rights.partyuid , t_reg.csaregionnameeng as region_name ,  t_zone.csazonenameeng as zone_name , t_woreda.woredanameeng as woreda_name , t_kebeles.kebelenameeng as kebele_name , t_holdings.holdingtype , t_parcels.areageom  from nrlais_inventory.t_parcels as t_parcels left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid  left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid left join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid"
   );
   let rows = await cursor.read(1);
-  let count = 0;
   while (rows.length) {
     try {
-      console.log(rows.length);
       // console.log(rows[0]);
-      await transformer(rows[0]);
-
+      let result: any = await transformer(rows[0]);
+      if (result) {
+        result.forEach(async (rec) => {
+          await insertIntoElastic(
+            "transaction_houshold_information_with_party_type_info",
+            rec
+          );
+        });
+      }
       rows = await cursor.read(1);
     } catch (error) {
       console.log(error);

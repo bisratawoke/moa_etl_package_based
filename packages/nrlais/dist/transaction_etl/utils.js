@@ -96,6 +96,7 @@ function partyTypeConv(code) {
             partyTypeText = "Natural Person";
             break;
         case 2:
+            console.log("==== finally ====");
             partyTypeText = "Non-natural person";
             break;
         case 3:
@@ -151,7 +152,7 @@ exports.insertWithOutGender = insertWithOutGender;
 var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
-                var partyTypeText, partyTextRole, payload, result, error_2;
+                var partyTypeText, payload, result, error_2;
                 var _a;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
@@ -160,8 +161,7 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                             delete rec.tx_data;
                             console.log("====== in insert baby =====");
                             partyTypeText = partyTypeConv(rec.partyType);
-                            partyTextRole = getRelationshipText(rec.mreg_familyrole);
-                            payload = __assign(__assign({}, rec), { partyTypeText: partyTypeText, partyTextRole: partyTextRole });
+                            payload = __assign(__assign({}, rec), { partyTypeText: partyTypeText });
                             console.log("====== in insert baby ======");
                             console.log(payload);
                             return [4 /*yield*/, axios_2.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), payload, {

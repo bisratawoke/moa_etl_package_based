@@ -65,39 +65,37 @@ var pool = new Pool({
 var transformer = function (record) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resovle, reject) { return __awaiter(void 0, void 0, void 0, function () {
-                var result_1;
+                var result;
                 return __generator(this, function (_a) {
                     try {
-                        result_1 = null;
+                        result = null;
                         if (!Number.isNaN(record.transactiontype) && record.tx_data != null) {
                             switch (record.transactiontype) {
                                 case 26:
-                                    console.log("====== in transformer =======");
                                     record.transaction_type = "Inheritance with will";
-                                    result_1 = (0, transformer_1.InheritanceWithWillTransformer)(record.tx_data.data);
-                                    console.log(result_1);
-                                    result_1.forEach(function (rec) { return __awaiter(void 0, void 0, void 0, function () {
-                                        var error_1;
-                                        return __generator(this, function (_a) {
-                                            switch (_a.label) {
-                                                case 0:
-                                                    _a.trys.push([0, 2, , 3]);
-                                                    console.log(result_1);
-                                                    return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information_with_party_type_info", __assign(__assign(__assign({}, rec), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
-                                                case 1:
-                                                    _a.sent();
-                                                    return [3 /*break*/, 3];
-                                                case 2:
-                                                    error_1 = _a.sent();
-                                                    console.log(error_1);
-                                                    return [3 /*break*/, 3];
-                                                case 3: return [2 /*return*/];
-                                            }
-                                        });
-                                    }); });
+                                    result = (0, transformer_1.InheritanceWithWillTransformer)(record.tx_data.data);
+                                    // result.forEach(async (rec) => {
+                                    //   try {
+                                    //     console.log(result);
+                                    // await insertIntoElastic(
+                                    //   "transaction_houshold_information_with_party_type_info",
+                                    //   {
+                                    //     ...rec,
+                                    //     region_name: record.region_name,
+                                    //     zone_name: record.zone_name,
+                                    //     woreda_name: record.woreda_name,
+                                    //     kebele_name: record.kebele_name,
+                                    //     ...record,
+                                    //   }
+                                    // );
+                                    //   } catch (error) {
+                                    //     console.log(error);
+                                    //   }
+                                    // });
                                     break;
                                 case 27:
                                     record.transaction_type = "Inheritance without will";
+                                    result = (0, transformer_1.InheritanceWithWillTransformer)(record.tx_data.data);
                                     // console.log({
                                     //   ...result[0],
                                     //   region_name: record.region_name,
@@ -106,22 +104,24 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                                     //   kebele_name: record.kebele_name,
                                     // });
                                     // console.log(record["info"]);
-                                    try {
-                                        result_1 = (0, transformer_1.InheritanceWithWillTransformer)(record.tx_data.data);
-                                        result_1.forEach(function (rec) { return __awaiter(void 0, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0: return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information_with_party_type_info", __assign(__assign(__assign({}, rec), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
-                                                    case 1:
-                                                        _a.sent();
-                                                        return [2 /*return*/];
-                                                }
-                                            });
-                                        }); });
-                                    }
-                                    catch (error) {
-                                        console.log(error);
-                                    }
+                                    //   try {
+                                    //     result = InheritanceWithWillTransformer(record.tx_data.data);
+                                    //     result.forEach(async (rec) => {
+                                    //       await insertIntoElastic(
+                                    //         "transaction_houshold_information_with_party_type_info",
+                                    //         {
+                                    //           ...rec,
+                                    //           region_name: record.region_name,
+                                    //           zone_name: record.zone_name,
+                                    //           woreda_name: record.woreda_name,
+                                    //           kebele_name: record.kebele_name,
+                                    //           ...record,
+                                    //         }
+                                    //       );
+                                    //     });
+                                    //   } catch (error) {
+                                    //     console.log(error);
+                                    // }
                                     break;
                                 //does not have beneficary holding
                                 case 3:
@@ -142,17 +142,20 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                                     //   });
                                     // });
                                     try {
-                                        result_1 = (0, transformer_1.giftTransfomer)(record.tx_data.data);
-                                        result_1.forEach(function (rec) { return __awaiter(void 0, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0: return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information_with_party_type_info", __assign(__assign(__assign({}, rec), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
-                                                    case 1:
-                                                        _a.sent();
-                                                        return [2 /*return*/];
-                                                }
-                                            });
-                                        }); });
+                                        result = (0, transformer_1.giftTransfomer)(record.tx_data.data);
+                                        // result.forEach(async (rec) => {
+                                        //   await insertIntoElastic(
+                                        //     "transaction_houshold_information_with_party_type_info",
+                                        //     {
+                                        //       ...rec,
+                                        //       region_name: record.region_name,
+                                        //       zone_name: record.zone_name,
+                                        //       woreda_name: record.woreda_name,
+                                        //       kebele_name: record.kebele_name,
+                                        //       ...record,
+                                        //     }
+                                        //   );
+                                        // });
                                     }
                                     catch (error) {
                                         console.log(error);
@@ -177,17 +180,20 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                                     //   kebele_name: record.kebele_name,
                                     // });
                                     try {
-                                        result_1 = (0, transformer_1.reallocationTransformer)(record.tx_data.data);
-                                        result_1.forEach(function (rec) { return __awaiter(void 0, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0: return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information_with_party_type_info", __assign(__assign(__assign({}, result_1[0]), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
-                                                    case 1:
-                                                        _a.sent();
-                                                        return [2 /*return*/];
-                                                }
-                                            });
-                                        }); });
+                                        result = (0, transformer_1.reallocationTransformer)(record.tx_data.data);
+                                        // result.forEach(async (rec) => {
+                                        //   await insertIntoElastic(
+                                        //     "transaction_houshold_information_with_party_type_info",
+                                        //     {
+                                        //       ...result[0],
+                                        //       region_name: record.region_name,
+                                        //       zone_name: record.zone_name,
+                                        //       woreda_name: record.woreda_name,
+                                        //       kebele_name: record.kebele_name,
+                                        //       ...record,
+                                        //     }
+                                        //   );
+                                        // });
                                     }
                                     catch (error) {
                                         console.log(error);
@@ -196,7 +202,7 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                                 case 8:
                                     // at
                                     record.transaction_type = "Special case";
-                                    result_1 = (0, transformer_1.specialCaseTransformer)(record.tx_data.data);
+                                    result = (0, transformer_1.specialCaseTransformer)(record.tx_data.data);
                                     break;
                                 case 9:
                                     record.transaction_type = "Rent/Lease";
@@ -238,25 +244,26 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                                 case 21:
                                     record.transaction_type = "Modify Mortgage";
                                     break;
-                                // case 22:
-                                //   record.transaction_type = "Cancel Mortgage";
-                                //   result = cancelMorgageTransform(record.tx_data.data);
-                                //   // console.log({
-                                //   //   ...result[0],
-                                //   //   region_name: record.region_name,
-                                //   //   zone_name: record.zone_name,
-                                //   //   woreda_name: record.woreda_name,
-                                //   //   kebele_name: record.kebele_name,
-                                //   // });
-                                //   await insertIntoElastic("transaction_houshold_information_with_party_type_info", {
-                                //     ...result[0],
-                                //     region_name: record.region_name,
-                                //     zone_name: record.zone_name,
-                                //     woreda_name: record.woreda_name,
-                                //     kebele_name: record.kebele_name,
-                                //     ...record,
-                                //   });
-                                //   break;
+                                case 22:
+                                    record.transaction_type = "Cancel Mortgage";
+                                    console.log(record.tx_data.data);
+                                    result = (0, transformer_1.cancelMorgageTransform)(record.tx_data.data);
+                                    // console.log({
+                                    //   ...result[0],
+                                    //   region_name: record.region_name,
+                                    //   zone_name: record.zone_name,
+                                    //   woreda_name: record.woreda_name,
+                                    //   kebele_name: record.kebele_name,
+                                    // });
+                                    // await insertIntoElastic("transaction_houshold_information_with_party_type_info", {
+                                    //   ...result[0],
+                                    //   region_name: record.region_name,
+                                    //   zone_name: record.zone_name,
+                                    //   woreda_name: record.woreda_name,
+                                    //   kebele_name: record.kebele_name,
+                                    //   ...record,
+                                    // });
+                                    break;
                                 case 25:
                                     record.transaction_type = "Marriage";
                                     // console.log({
@@ -268,17 +275,20 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                                     // });
                                     // console.log(record["info"]);
                                     try {
-                                        result_1 = (0, transformer_1.marrageTransformer)(record.tx_data.data);
-                                        result_1.forEach(function (rec) { return __awaiter(void 0, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0: return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information_with_party_type_info", __assign(__assign(__assign({}, rec), { region_name: record.region_name, zone_name: record.zone_name, woreda_name: record.woreda_name, kebele_name: record.kebele_name }), record))];
-                                                    case 1:
-                                                        _a.sent();
-                                                        return [2 /*return*/];
-                                                }
-                                            });
-                                        }); });
+                                        result = (0, transformer_1.marrageTransformer)(record.tx_data.data);
+                                        // result.forEach(async (rec) => {
+                                        //   await insertIntoElastic(
+                                        //     "transaction_houshold_information_with_party_type_info",
+                                        //     {
+                                        //       ...rec,
+                                        //       region_name: record.region_name,
+                                        //       zone_name: record.zone_name,
+                                        //       woreda_name: record.woreda_name,
+                                        //       kebele_name: record.kebele_name,
+                                        //       ...record,
+                                        //     }
+                                        //   );
+                                        // });
                                     }
                                     catch (error) {
                                         console.log(error);
@@ -288,7 +298,7 @@ var transformer = function (record) { return __awaiter(void 0, void 0, void 0, f
                                     record.transaction_type = "Initial";
                                     break;
                             }
-                            resovle(result_1);
+                            resovle(result);
                         }
                     }
                     catch (error) {
@@ -323,7 +333,8 @@ function conn(pool) {
 }
 function sync() {
     return __awaiter(this, void 0, void 0, function () {
-        var client, cursor, rows, count, error_2;
+        var client, cursor, rows, result, error_1;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -341,32 +352,40 @@ function sync() {
                     return [4 /*yield*/, pool.connect()];
                 case 2:
                     client = _a.sent();
-                    cursor = client.query(new Cursor("select\t\n        t_transactiontype.en as transaction_type,\n        t_transaction.uid as id ,\n        t_regions.csaregionnameeng as region_name, \n        t_kebeles.kebelenameeng as kebele_name , \n        t_woredas.woredanameeng as woreda_name ,\n        t_zones.csazonenameeng as zone_name, \n        transactiontype , \n        t_transaction_data.tx_data as tx_data , \n        t_transaction.syscreatedate as date  \n        from nrlais_inventory.t_transaction as t_transaction  \n        left join nrlais_sys.t_cl_transactiontype as t_transactiontype on t_transaction.transactiontype =  t_transactiontype.codeid \n        left join nrlais_sys.t_regions as t_regions on t_transaction.csaregionid = t_regions.csaregionid \n        left join nrlais_sys.t_zones as t_zones on t_transaction.nrlais_zoneid = t_zones.csazoneid \n        left join nrlais_sys.t_woredas as t_woredas on t_transaction.nrlais_woredaid = t_woredas.woredaid \n        left join nrlais_sys.t_kebeles as t_kebeles on t_transaction.nrlais_kebeleid = t_kebeles.kebeleid \n        left join nrlais_inventory.t_transaction_data as t_transaction_data on t_transaction.uid = t_transaction_data.tx_uid \n        where transactiontype != 100 \n        and transactiontype != 15\n        and transactiontype != 18 \n        and tx_data is not null \n        \n        \n\t\t")
+                    cursor = client.query(new Cursor("select\t\n        t_transactiontype.en as transaction_type,\n        t_transaction.uid as id ,\n        t_regions.csaregionnameeng as region_name, \n        t_kebeles.kebelenameeng as kebele_name , \n        t_woredas.woredanameeng as woreda_name ,\n        t_zones.csazonenameeng as zone_name, \n        transactiontype , \n        t_transaction_data.tx_data as tx_data , \n        t_transaction.syscreatedate as date  \n        from nrlais_inventory.t_transaction as t_transaction  \n        left join nrlais_sys.t_cl_transactiontype as t_transactiontype on t_transaction.transactiontype =  t_transactiontype.codeid \n        left join nrlais_sys.t_regions as t_regions on t_transaction.csaregionid = t_regions.csaregionid \n        left join nrlais_sys.t_zones as t_zones on t_transaction.nrlais_zoneid = t_zones.csazoneid \n        left join nrlais_sys.t_woredas as t_woredas on t_transaction.nrlais_woredaid = t_woredas.woredaid \n        left join nrlais_sys.t_kebeles as t_kebeles on t_transaction.nrlais_kebeleid = t_kebeles.kebeleid \n        left join nrlais_inventory.t_transaction_data as t_transaction_data on t_transaction.uid = t_transaction_data.tx_uid \n        where transactiontype != 100 \n        and transactiontype != 15\n        and transactiontype != 18\n        and tx_data is not null \n\t\t")
                     // "select t_parcels.uid as id , t_parcels.syscreatedate as date ,t_party.gender as gender, t_party.partytype ,t_rights.partyuid , t_reg.csaregionnameeng as region_name ,  t_zone.csazonenameeng as zone_name , t_woreda.woredanameeng as woreda_name , t_kebeles.kebelenameeng as kebele_name , t_holdings.holdingtype , t_parcels.areageom  from nrlais_inventory.t_parcels as t_parcels left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid  left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid left join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid"
                     );
                     return [4 /*yield*/, cursor.read(1)];
                 case 3:
                     rows = _a.sent();
-                    count = 0;
                     _a.label = 4;
                 case 4:
                     if (!rows.length) return [3 /*break*/, 10];
                     _a.label = 5;
                 case 5:
                     _a.trys.push([5, 8, , 9]);
-                    console.log(rows.length);
-                    // console.log(rows[0]);
                     return [4 /*yield*/, transformer(rows[0])];
                 case 6:
-                    // console.log(rows[0]);
-                    _a.sent();
+                    result = _a.sent();
+                    if (result) {
+                        result.forEach(function (rec) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information_with_party_type_info", rec)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                    }
                     return [4 /*yield*/, cursor.read(1)];
                 case 7:
                     rows = _a.sent();
                     return [3 /*break*/, 9];
                 case 8:
-                    error_2 = _a.sent();
-                    console.log(error_2);
+                    error_1 = _a.sent();
+                    console.log(error_1);
                     cursor.close(function () {
                         client.release();
                     });
@@ -380,7 +399,7 @@ function sync() {
 exports.default = sync;
 function transactionWithoutGenderInfo() {
     return __awaiter(this, void 0, void 0, function () {
-        var client_1, cursor, rows, error_3, error_4;
+        var client_1, cursor, rows, error_2, error_3;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -418,7 +437,7 @@ function transactionWithoutGenderInfo() {
                     rows = _a.sent();
                     return [3 /*break*/, 7];
                 case 6:
-                    error_3 = _a.sent();
+                    error_2 = _a.sent();
                     cursor.close(function () {
                         client_1.release();
                     });
@@ -426,7 +445,7 @@ function transactionWithoutGenderInfo() {
                 case 7: return [3 /*break*/, 3];
                 case 8: return [3 /*break*/, 10];
                 case 9:
-                    error_4 = _a.sent();
+                    error_3 = _a.sent();
                     return [3 /*break*/, 10];
                 case 10: return [2 /*return*/];
             }

@@ -1,6 +1,8 @@
 // export async function InheritanceWithWillTransformer(jsonData) {
 //   const personalInfo: any = [];
 
+import { partyTypeConv } from "./utils";
+
 //   jsonData.beneficiaryHolding.forEach((holding) => {
 //     console.log(holding.parties);
 //     holding.parties.forEach((party) => {
@@ -277,11 +279,15 @@ export function InheritanceWithWillTransformer(jsonData) {
     for (let j = 0; j < holding.parties.length; j++) {
       const party = holding.parties[j];
       const { sex, name1, name2 } = party.party;
+      let partyType = partyTypeConv(party.party.partyType);
+
       personalInfo.push({
         gender_name: sex === 1 ? "Female" : "Male",
         first_name: name1,
         last_name: name2,
         ...party.party,
+        pt: party.partyType,
+        partyTypeText: partyType,
       });
     }
   }
@@ -297,10 +303,13 @@ export function InheritanceWithWillTransformer_v2(jsonData) {
     for (let j = 0; j < holding.parties.length; j++) {
       const party = holding.parties[j];
       const { sex, name1, name2 } = party.party;
+      let partyType = partyTypeConv(party.party.partyType);
+
       personalInfo.push({
         gender_name: sex === 1 ? "Female" : "Male",
         first_name: name1,
         last_name: name2,
+        partyTypeText: partyType,
       });
     }
   }
@@ -315,10 +324,13 @@ export function InheritanceWithOutTransformerWill(jsonData) {
   for (let i = 0; i < holding.parties.length; i++) {
     const party = holding.parties[i];
     const { sex, name1, name2 } = party.party;
+    let partyType = partyTypeConv(party.party.partyType);
+
     personalInfo.push({
       gender_name: sex === 1 ? "Female" : "Male",
       first_name: name1,
       last_name: name2,
+      partyTypeText: partyType,
     });
   }
 
@@ -335,6 +347,7 @@ export function divorceTransformer(jsonData) {
     const party = jsonData.parties.find(
       (party) => party.existingPartyUID === selfPartyUID
     ).party;
+    let partyType = partyTypeConv(party.partyType);
 
     personalInfo.push({
       gender_name: party.sex === 1 ? "Female" : "Male",
@@ -342,6 +355,7 @@ export function divorceTransformer(jsonData) {
       last_name: party.name2,
       relationWithParty,
       inheritancRole,
+      partyTypeText: partyType,
     });
   }
 
@@ -358,6 +372,7 @@ export function giftTransfomer(jsonData) {
     const party = beneficiary.parties.find(
       (party) => party.existingPartyUID === selfPartyUID
     ).party;
+    let partyType = partyTypeConv(party.partyType);
 
     personalInfo.push({
       gender_name: party.sex === 2 ? "Female" : "Male",
@@ -366,6 +381,8 @@ export function giftTransfomer(jsonData) {
       relationWithParty,
       inheritancRole,
       ...party,
+      partyTypeText: partyType,
+      p1: party.partyType,
     });
   }
 
@@ -380,8 +397,15 @@ export function reallocationTransformer(jsonData) {
     const beneficiary = jsonData.beneficiaries[i];
     const gender_name = beneficiary.party.sex === 1 ? "Female" : "Male";
     const full_name = `${beneficiary.party.name1} ${beneficiary.party.name2} ${beneficiary.party.name3}`;
+    let partyType = partyTypeConv(beneficiary.party.partyType);
 
-    personalInfo.push({ gender_name, full_name, ...beneficiary.party });
+    personalInfo.push({
+      gender_name,
+      full_name,
+      ...beneficiary.party,
+      partyTypeText: partyType,
+      p1: beneficiary.party.partyType,
+    });
   }
 
   // Extract personal information from applicants
@@ -404,8 +428,15 @@ export function specialCaseTransformer(jsonData) {
     const party = applicant.party;
     const gender_name = party.sex === 1 ? "Female" : "Male";
     const full_name = `${party.name1} ${party.name2} ${party.name3}`;
+    let partyType = partyTypeConv(party.partyType);
+
     // const partyType = partyTypeConv(party.partyType)
-    personalInfo.push({ gender_name, full_name, ...party });
+    personalInfo.push({
+      gender_name,
+      full_name,
+      ...party,
+      partyTypeText: partyType,
+    });
   }
 
   return personalInfo;
@@ -421,8 +452,9 @@ export function registerMorgageTransform(jsonObj) {
         const first_name = `${party.name1} ${party.name2 || ""} ${
           party.name3 || ""
         }`;
+        let partyType = partyTypeConv(party.partyType);
 
-        personalInfo.push({ gender_name, first_name, ...party });
+        personalInfo.push({ gender_name, first_name, ...party, partyType });
       }
     }
   }
@@ -442,8 +474,14 @@ export function cancelMorgageTransform(jsonObj) {
         const first_name = `${party.name1} ${party.name2 || ""} ${
           party.name3 || ""
         }`;
+        let partyType = partyTypeConv(party.partyType);
 
-        personalInfo.push({ gender_name, first_name, ...party });
+        personalInfo.push({
+          gender_name,
+          first_name,
+          ...party,
+          partyTypeText: partyType,
+        });
       }
     }
   }
@@ -465,12 +503,15 @@ export function marrageTransformer(jsonObj) {
           }`;
 
           const party_id = party.id;
+          let partyType = partyTypeConv(party.partyType);
+
           personalInfo.push({
             gender_name,
             first_name,
             party,
             party_id,
             ...party,
+            partyTypeText: partyType,
           });
         }
       }
