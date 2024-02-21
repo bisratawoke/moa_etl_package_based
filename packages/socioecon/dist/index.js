@@ -54,12 +54,12 @@ var socioecon_services_transform_1 = require("./services/socioecon.services.tran
 var socioecon_services_load_1 = require("./services/socioecon.services.load");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var db_config, db_conn, pds_cash_transfer_1, pw_cash_transfer_1, _loop_1, x, _loop_2, x, err_1;
+        var db_config, db_conn, pds_member, pds_cash_transfer_1, pw_cash_transfer_1, _loop_1, x, _loop_2, x, err_1;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 4, , 5]);
+                    _a.trys.push([0, 5, , 6]);
                     db_config = {
                         server: String(moa_config_1.default.PSNP_MIS_HOST),
                         database: String(moa_config_1.default.PSNP_MIS_DATABASE),
@@ -72,11 +72,14 @@ function main() {
                     return [4 /*yield*/, sql.connect(db_config)];
                 case 1:
                     db_conn = _a.sent();
-                    return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pds_total_cash_transfer)(db_conn)];
+                    return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pds_member)(db_conn)];
                 case 2:
+                    pds_member = _a.sent();
+                    return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pds_total_cash_transfer)(db_conn)];
+                case 3:
                     pds_cash_transfer_1 = _a.sent();
                     return [4 /*yield*/, (0, socioecon_services_extract_1.extract_pw_total_cash_transfer)(db_conn)];
-                case 3:
+                case 4:
                     pw_cash_transfer_1 = _a.sent();
                     _loop_1 = function (x) {
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
@@ -143,13 +146,13 @@ function main() {
                     for (x = 0; x < pw_cash_transfer_1.length; x++) {
                         _loop_2(x);
                     }
-                    return [3 /*break*/, 5];
-                case 4:
+                    return [3 /*break*/, 6];
+                case 5:
                     err_1 = _a.sent();
                     console.log(err_1);
                     process.exit(-1);
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });

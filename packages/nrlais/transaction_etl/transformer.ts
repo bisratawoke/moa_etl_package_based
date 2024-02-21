@@ -294,7 +294,6 @@ export function InheritanceWithWillTransformer_v2(jsonData) {
 
   for (let i = 0; i < jsonData.beneficiaryHolding.length; i++) {
     const holding = jsonData.beneficiaryHolding[i];
-    console.log(holding.parties);
     for (let j = 0; j < holding.parties.length; j++) {
       const party = holding.parties[j];
       const { sex, name1, name2 } = party.party;
@@ -315,7 +314,6 @@ export function InheritanceWithOutTransformerWill(jsonData) {
   const holding = jsonData.beneficiaryHolding[0];
   for (let i = 0; i < holding.parties.length; i++) {
     const party = holding.parties[i];
-    console.log(party);
     const { sex, name1, name2 } = party.party;
     personalInfo.push({
       gender_name: sex === 1 ? "Female" : "Male",
@@ -337,13 +335,7 @@ export function divorceTransformer(jsonData) {
     const party = jsonData.parties.find(
       (party) => party.existingPartyUID === selfPartyUID
     ).party;
-    console.log({
-      gender_name: party.sex === 1 ? "Female" : "Male",
-      first_name: party.name1,
-      last_name: party.name2,
-      relationWithParty,
-      inheritancRole,
-    });
+
     personalInfo.push({
       gender_name: party.sex === 1 ? "Female" : "Male",
       first_name: party.name1,
@@ -367,13 +359,6 @@ export function giftTransfomer(jsonData) {
       (party) => party.existingPartyUID === selfPartyUID
     ).party;
 
-    console.log({
-      gender_name: party.sex === 2 ? "Female" : "Male",
-      first_name: party.name1,
-      last_name: party.name2,
-      relationWithParty,
-      inheritancRole,
-    });
     personalInfo.push({
       gender_name: party.sex === 2 ? "Female" : "Male",
       first_name: party.name1,
@@ -384,7 +369,6 @@ export function giftTransfomer(jsonData) {
     });
   }
 
-  console.log(personalInfo);
   return personalInfo;
 }
 
@@ -409,7 +393,6 @@ export function reallocationTransformer(jsonData) {
     personalInfo.push({ gender_name, full_name });
   }
 
-  console.log(personalInfo);
   return personalInfo;
 }
 
@@ -421,11 +404,10 @@ export function specialCaseTransformer(jsonData) {
     const party = applicant.party;
     const gender_name = party.sex === 1 ? "Female" : "Male";
     const full_name = `${party.name1} ${party.name2} ${party.name3}`;
-
+    // const partyType = partyTypeConv(party.partyType)
     personalInfo.push({ gender_name, full_name, ...party });
   }
 
-  console.log(personalInfo);
   return personalInfo;
 }
 
@@ -445,7 +427,6 @@ export function registerMorgageTransform(jsonObj) {
     }
   }
 
-  console.log(personalInfo);
   return personalInfo;
 }
 

@@ -23,7 +23,5 @@ export function nrlais_transaction_elt(
 }
 
 (async () => {
-  await nrlais_transaction_elt(
-    TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO
-  )();
+  await nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHGENDER_INFO)();
 })();

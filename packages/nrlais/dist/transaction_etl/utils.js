@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertWithOutGender = void 0;
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertWithOutGender = exports.partyTypeConv = void 0;
 var axios_1 = require("axios");
 var axios_2 = require("axios");
 var config_1 = require("config");
@@ -56,6 +56,69 @@ var fs = require("fs");
 var path = require("path");
 // export const indexName =
 //   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
+/**
+ *
+ * @param indexName   // case 14:
+          //   record.transaction_type = "Boundary Correction";
+          //   break;
+ * @param rec
+ * @param id
+ * @returns
+ */
+function getRelationshipText(number) {
+    switch (number) {
+        case 1:
+            return "Husband";
+        case 2:
+            return "Wife";
+        case 3:
+            return "Brother";
+        case 4:
+            return "Sister";
+        case 5:
+            return "Female Headed Household";
+        case 6:
+            return "Male Headed Household";
+        case 7:
+            return "Under Age";
+        case 8:
+            return "Other";
+        case 9:
+            return "Not Available";
+        default:
+            return "Unknown Relationship";
+    }
+}
+function partyTypeConv(code) {
+    var partyTypeText = null;
+    switch (code) {
+        case 1:
+            partyTypeText = "Natural Person";
+            break;
+        case 2:
+            partyTypeText = "Non-natural person";
+            break;
+        case 3:
+            partyTypeText = "State";
+            break;
+        case 4:
+            partyTypeText = "Community";
+            break;
+        case 5:
+            partyTypeText = "Tribe";
+            break;
+        case 6:
+            partyTypeText = "Group Party";
+            break;
+        case 7:
+            partyTypeText = "Financial Institution";
+            break;
+        default:
+            partyTypeText = "Undefined";
+    }
+    return partyTypeText;
+}
+exports.partyTypeConv = partyTypeConv;
 var insertWithOutGender = function (indexName, rec, id) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_1;
     var _a;
@@ -88,42 +151,54 @@ exports.insertWithOutGender = insertWithOutGender;
 var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
-                var result, error_2;
+                var partyTypeText, partyTextRole, payload;
                 var _a;
                 return __generator(this, function (_b) {
-                    switch (_b.label) {
-                        case 0:
-                            _b.trys.push([0, 4, , 5]);
-                            console.log("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"));
-                            console.log(rec);
-                            delete rec.tx_data;
-                            if (!rec.mreg_familyrole) return [3 /*break*/, 2];
-                            return [4 /*yield*/, axios_2.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), rec, {
-                                    auth: {
-                                        username: config_1.default.ELASTIC_USERNAME,
-                                        password: config_1.default.ELASTIC_PASSWORD,
-                                    },
-                                })];
-                        case 1:
-                            result = _b.sent();
-                            console.log(result.status);
-                            resolve(true);
-                            return [3 /*break*/, 3];
-                        case 2:
-                            console.log("mreg_familyrole does not exist");
-                            resolve(true);
-                            _b.label = 3;
-                        case 3: return [3 /*break*/, 5];
-                        case 4:
-                            error_2 = _b.sent();
-                            if (error_2 instanceof axios_1.AxiosError) {
-                                console.log(error_2.message);
-                                console.log((_a = error_2.response) === null || _a === void 0 ? void 0 : _a.data);
-                            }
-                            resolve(true);
-                            return [3 /*break*/, 5];
-                        case 5: return [2 /*return*/];
+                    try {
+                        delete rec.tx_data;
+                        partyTypeText = partyTypeConv(rec.partyType);
+                        partyTextRole = getRelationshipText(rec.mreg_familyrole);
+                        payload = __assign(__assign({}, rec), { partyTypeText: partyTypeText, partyTextRole: partyTextRole });
+                        console.log("====== in insert baby ======");
+                        console.log(payload);
+                        // const result = await axios.post(
+                        //   `${config.ELASTIC_URL}/${indexName}/_doc`,
+                        //   payload,
+                        //   {
+                        //     auth: {
+                        //       username: config.ELASTIC_USERNAME,
+                        //       password: config.ELASTIC_PASSWORD,
+                        //     },
+                        //   }
+                        // );
+                        // console.log(result.status);
+                        resolve(true);
+                        // if (rec.mreg_familyrole) {
+                        //   const result = await axios.post(
+                        //     `${config.ELASTIC_URL}/${indexName}/_doc`,
+                        //     rec,
+                        //     {
+                        //       auth: {
+                        //         username: config.ELASTIC_USERNAME,
+                        //         password: config.ELASTIC_PASSWORD,
+                        //       },
+                        //     }
+                        //   );
+                        //   console.log(result.status);
+                        //   resolve(true);
+                        // } else {
+                        //   console.log("mreg_familyrole does not exist");
+                        //   resolve(true);
+                        // }
                     }
+                    catch (error) {
+                        if (error instanceof axios_1.AxiosError) {
+                            console.log(error.message);
+                            console.log((_a = error.response) === null || _a === void 0 ? void 0 : _a.data);
+                        }
+                        resolve(true);
+                    }
+                    return [2 /*return*/];
                 });
             }); })];
     });
@@ -193,7 +268,7 @@ function updateConfig(data) {
 exports.updateConfig = updateConfig;
 function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_3;
+        var response, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -224,11 +299,11 @@ function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
                             updated_at: response.data._source.updated,
                         }];
                 case 2:
-                    error_3 = _a.sent();
-                    if (error_3 instanceof etl_exception_1.default)
-                        throw error_3;
+                    error_2 = _a.sent();
+                    if (error_2 instanceof etl_exception_1.default)
+                        throw error_2;
                     else
-                        throw new etl_exception_1.default(error_3.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                        throw new etl_exception_1.default(error_2.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

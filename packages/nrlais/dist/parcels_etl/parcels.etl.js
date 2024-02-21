@@ -40,6 +40,26 @@ var etl_exception_1 = require("etl-exception");
 var moa_config_1 = require("moa_config");
 var pg_1 = require("pg");
 var utils_1 = require("./utils");
+//PROOF THAT morgage info
+/***
+ *
+select
+    partytype.en,
+    t_party.mreg_familyrole,
+    familyrole.en
+from  nrlais_inventory.t_restrictions as t_res
+inner join nrlais_inventory.t_parcels as t_parcel on t_parcel.uid = t_res.parceluid
+inner join nrlais_inventory.t_holdings as t_holding on t_res.holdinguid = t_holding.uid
+inner join nrlais_sys.t_cl_holdingtype as t_holding_type on t_holding.holdingtype = t_holding_type.codeid
+inner join nrlais_sys.t_cl_restrictiontype t_res_type on t_res.restrictiontype = t_res_type.codeid
+inner join nrlais_inventory.t_rights as t_rights on t_parcel.uid = t_rights.parceluid
+inner join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid
+inner join nrlais_sys.t_cl_partytype as partytype on t_party.partytype = partytype.codeid
+inner join nrlais_sys.t_cl_familyrole as familyrole on familyrole.codeid = t_party.mreg_familyrole
+
+
+ *
+ */
 /**
  * select
     respartytype.en as res_type,

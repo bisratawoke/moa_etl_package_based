@@ -7,6 +7,72 @@ import * as path from "path";
 // export const indexName =
 //   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
 
+/**
+ * 
+ * @param indexName   // case 14:
+          //   record.transaction_type = "Boundary Correction";
+          //   break;
+ * @param rec 
+ * @param id 
+ * @returns 
+ */
+
+function getRelationshipText(number) {
+  switch (number) {
+    case 1:
+      return "Husband";
+    case 2:
+      return "Wife";
+    case 3:
+      return "Brother";
+    case 4:
+      return "Sister";
+    case 5:
+      return "Female Headed Household";
+    case 6:
+      return "Male Headed Household";
+    case 7:
+      return "Under Age";
+    case 8:
+      return "Other";
+    case 9:
+      return "Not Available";
+    default:
+      return "Unknown Relationship";
+  }
+}
+
+export function partyTypeConv(code: Number) {
+  let partyTypeText: string | null = null;
+  switch (code) {
+    case 1:
+      partyTypeText = "Natural Person";
+      break;
+    case 2:
+      partyTypeText = "Non-natural person";
+      break;
+    case 3:
+      partyTypeText = "State";
+      break;
+    case 4:
+      partyTypeText = "Community";
+      break;
+    case 5:
+      partyTypeText = "Tribe";
+      break;
+    case 6:
+      partyTypeText = "Group Party";
+      break;
+    case 7:
+      partyTypeText = "Financial Institution";
+      break;
+    default:
+      partyTypeText = "Undefined";
+  }
+
+  return partyTypeText;
+}
+
 export const insertWithOutGender = async (
   indexName: string,
   rec: Record<string, any>,
@@ -39,26 +105,49 @@ export const insertIntoElastic = async (
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(`${config.ELASTIC_URL}/${indexName}/_doc`);
-      console.log(rec);
       delete rec.tx_data;
-      if (rec.mreg_familyrole) {
-        const result = await axios.post(
-          `${config.ELASTIC_URL}/${indexName}/_doc`,
-          rec,
-          {
-            auth: {
-              username: config.ELASTIC_USERNAME,
-              password: config.ELASTIC_PASSWORD,
-            },
-          }
-        );
-        console.log(result.status);
-        resolve(true);
-      } else {
-        console.log("mreg_familyrole does not exist");
-        resolve(true);
-      }
+
+      let partyTypeText = partyTypeConv(rec.partyType);
+      let partyTextRole = getRelationshipText(rec.mreg_familyrole);
+
+      let payload = {
+        ...rec,
+        partyTypeText,
+        partyTextRole,
+      };
+
+      console.log("====== in insert baby ======");
+      console.log(payload);
+      // const result = await axios.post(
+      //   `${config.ELASTIC_URL}/${indexName}/_doc`,
+      //   payload,
+      //   {
+      //     auth: {
+      //       username: config.ELASTIC_USERNAME,
+      //       password: config.ELASTIC_PASSWORD,
+      //     },
+      //   }
+      // );
+      // console.log(result.status);
+      resolve(true);
+
+      // if (rec.mreg_familyrole) {
+      //   const result = await axios.post(
+      //     `${config.ELASTIC_URL}/${indexName}/_doc`,
+      //     rec,
+      //     {
+      //       auth: {
+      //         username: config.ELASTIC_USERNAME,
+      //         password: config.ELASTIC_PASSWORD,
+      //       },
+      //     }
+      //   );
+      //   console.log(result.status);
+      //   resolve(true);
+      // } else {
+      //   console.log("mreg_familyrole does not exist");
+      //   resolve(true);
+      // }
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.message);

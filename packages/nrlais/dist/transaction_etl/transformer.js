@@ -259,7 +259,6 @@ function InheritanceWithWillTransformer_v2(jsonData) {
     var personalInfo = [];
     for (var i = 0; i < jsonData.beneficiaryHolding.length; i++) {
         var holding = jsonData.beneficiaryHolding[i];
-        console.log(holding.parties);
         for (var j = 0; j < holding.parties.length; j++) {
             var party = holding.parties[j];
             var _a = party.party, sex = _a.sex, name1 = _a.name1, name2 = _a.name2;
@@ -278,7 +277,6 @@ function InheritanceWithOutTransformerWill(jsonData) {
     var holding = jsonData.beneficiaryHolding[0];
     for (var i = 0; i < holding.parties.length; i++) {
         var party = holding.parties[i];
-        console.log(party);
         var _a = party.party, sex = _a.sex, name1 = _a.name1, name2 = _a.name2;
         personalInfo.push({
             gender_name: sex === 1 ? "Female" : "Male",
@@ -295,13 +293,6 @@ function divorceTransformer(jsonData) {
         var applicant = jsonData.data.applicants[x];
         var selfPartyUID = applicant.selfPartyUID, idDocument = applicant.idDocument, relationWithParty = applicant.relationWithParty, inheritancRole = applicant.inheritancRole;
         var party = jsonData.parties.find(function (party) { return party.existingPartyUID === selfPartyUID; }).party;
-        console.log({
-            gender_name: party.sex === 1 ? "Female" : "Male",
-            first_name: party.name1,
-            last_name: party.name2,
-            relationWithParty: relationWithParty,
-            inheritancRole: inheritancRole,
-        });
         personalInfo.push({
             gender_name: party.sex === 1 ? "Female" : "Male",
             first_name: party.name1,
@@ -322,19 +313,11 @@ function giftTransfomer(jsonData) {
         var beneficiary = jsonData.beneficiaryHolding[i];
         var _a = beneficiary.holderBeneficiaries[0] || {}, selfPartyUID = _a.selfPartyUID, idDocument = _a.idDocument, relationWithParty = _a.relationWithParty, inheritancRole = _a.inheritancRole;
         var party = beneficiary.parties.find(function (party) { return party.existingPartyUID === selfPartyUID; }).party;
-        console.log({
-            gender_name: party.sex === 2 ? "Female" : "Male",
-            first_name: party.name1,
-            last_name: party.name2,
-            relationWithParty: relationWithParty,
-            inheritancRole: inheritancRole,
-        });
         personalInfo.push(__assign({ gender_name: party.sex === 2 ? "Female" : "Male", first_name: party.name1, last_name: party.name2, relationWithParty: relationWithParty, inheritancRole: inheritancRole }, party));
     };
     for (var i = 0; i < jsonData.beneficiaryHolding.length; i++) {
         _loop_2(i);
     }
-    console.log(personalInfo);
     return personalInfo;
 }
 exports.giftTransfomer = giftTransfomer;
@@ -354,7 +337,6 @@ function reallocationTransformer(jsonData) {
         var full_name = "".concat(applicant.representative.name1, " ").concat(applicant.representative.name2, " ").concat(applicant.representative.name3);
         personalInfo.push({ gender_name: gender_name, full_name: full_name });
     }
-    console.log(personalInfo);
     return personalInfo;
 }
 exports.reallocationTransformer = reallocationTransformer;
@@ -365,9 +347,9 @@ function specialCaseTransformer(jsonData) {
         var party = applicant.party;
         var gender_name = party.sex === 1 ? "Female" : "Male";
         var full_name = "".concat(party.name1, " ").concat(party.name2, " ").concat(party.name3);
+        // const partyType = partyTypeConv(party.partyType)
         personalInfo.push(__assign({ gender_name: gender_name, full_name: full_name }, party));
     }
-    console.log(personalInfo);
     return personalInfo;
 }
 exports.specialCaseTransformer = specialCaseTransformer;
@@ -383,7 +365,6 @@ function registerMorgageTransform(jsonObj) {
             }
         }
     }
-    console.log(personalInfo);
     return personalInfo;
 }
 exports.registerMorgageTransform = registerMorgageTransform;
