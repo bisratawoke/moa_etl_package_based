@@ -35,8 +35,9 @@ export async function getIndexCount(
 export async function getMicroWatershed() {
   try {
     const count = await getIndexCount(watershedIndexName);
-    const result = await axios.get(
+    const result = await axios.post(
       `${config.ELASTIC_URL}/${watershedIndexName}/_search?size=${count}`,
+      {},
       {
         auth: {
           username: config.ELASTIC_USERNAME,
@@ -52,11 +53,17 @@ export async function getMicroWatershed() {
   }
 }
 
-export async function getParcelsThatIntersectWatersheds(watershedIndexName) {
+export async function getParcelsThatIntersectWatersheds(
+  watershedIndexName: string
+) {
   try {
     const watershedInfo = await getMicroWatershed();
+    console.log("======= watershed info start ====");
+    console.log(watershedInfo);
+    console.log("======= watershed info end ====");
+    let count = 0;
     for (let x = 0; x < watershedInfo.length; x++) {
-      let id = watershedInfo[0]._id;
+      let id = watershedInfo[x]._id;
       let query = {
         query: {
           bool: {
@@ -73,21 +80,33 @@ export async function getParcelsThatIntersectWatersheds(watershedIndexName) {
             },
           },
         },
+        script: {
+          source: `ctx._source._watershed = true`,
+          lang: "painless",
+        },
       };
-      let count = await getIndexCount(indexName, query);
+      // let count = await getIndexCount(indexName, query);
 
-      const result = await axios.post(
-        `${config.ELASTIC_URL}/${watershedIndexName}/_search?size=${count}`,
-        query,
-        {
-          auth: {
-            username: config.ELASTIC_USERNAME,
-            password: config.ELASTIC_PASSWORD,
-          },
+      setTimeout(async () => {
+        try {
+          const result = await axios.post(
+            `${config.ELASTIC_URL}/${indexName}/_update_by_query`,
+            query,
+            {
+              auth: {
+                username: config.ELASTIC_USERNAME,
+                password: config.ELASTIC_PASSWORD,
+              },
+            }
+          );
+          console.log(result.status);
+        } catch (error) {
+          count += 1;
+          console.log("");
         }
-      );
+      }, x * 500);
+      console.log(count);
 
-      if (result.data.hits.hits.length > 0) console.log(result.data.hits.hits);
       // console.log(id);
     }
   } catch (error) {}
