@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertWithOutGender = exports.partyTypeConv = void 0;
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertWithOutGender = exports.partyTypeConv = exports.getRelationshipText = void 0;
 var axios_1 = require("axios");
 var axios_2 = require("axios");
 var config_1 = require("config");
@@ -89,6 +89,7 @@ function getRelationshipText(number) {
             return "Unknown Relationship";
     }
 }
+exports.getRelationshipText = getRelationshipText;
 function partyTypeConv(code) {
     var partyTypeText = null;
     switch (code) {

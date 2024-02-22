@@ -17,7 +17,7 @@ import * as path from "path";
  * @returns 
  */
 
-function getRelationshipText(number) {
+export function getRelationshipText(number) {
   switch (number) {
     case 1:
       return "Husband";

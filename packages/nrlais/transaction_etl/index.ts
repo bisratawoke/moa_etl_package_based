@@ -1,4 +1,6 @@
-import sync, { transactionWithoutGenderInfo } from "./transaction.sync";
+import transactionWithGenderInfo, {
+  transactionWithoutGenderInfo,
+} from "./transaction.sync";
 
 export enum TRANSACTION_OPERATION_TYPE {
   WITHGENDER_INFO,
@@ -10,7 +12,7 @@ export function nrlais_transaction_elt(
   return async () => {
     try {
       if (opType == TRANSACTION_OPERATION_TYPE.WITHGENDER_INFO) {
-        await sync();
+        await transactionWithGenderInfo();
       } else if (opType == TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO) {
         await transactionWithoutGenderInfo();
       } else {

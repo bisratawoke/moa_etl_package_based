@@ -3,7 +3,12 @@ const Cursor = require("pg-cursor");
 const fs = require("fs");
 const axios = require("axios");
 import config from "moa_config";
-import { insertIntoElastic, insertWithOutGender, partyTypeConv } from "./utils";
+import {
+  insertIntoElastic,
+  insertWithOutGender,
+  partyTypeConv,
+  getRelationshipText,
+} from "./utils";
 import {
   InheritanceWithWillTransformer,
   InheritanceWithWillTransformer_v2,
@@ -189,37 +194,41 @@ const transformer = async (record: any) =>
             record.transaction_type = "Parcel Consolidation/Merge";
             break;
 
-          // case 20:
-          //   record.transaction_type = "Register Mortgage";
-          //   // console.log(record.tx_data.data);
+          case 20:
+            record.transaction_type = "Register Mortgage";
+            // console.log(record.tx_data.data);
 
-          //   result = registerMorgageTransform(record.tx_data.data);
-          //   // console.log({
-          //   //   ...result[0],
-          //   //   region_name: record.region_name,
-          //   //   zone_name: record.zone_name,
-          //   //   woreda_name: record.woreda_name,
-          //   //   kebele_name: record.kebele_name,
-          //   // });
-          //   // console.log(record["info"]);
-          //   // if(result[0].)
-          //   await insertIntoElastic("transaction_houshold_information_with_party_type_info", {
-          //     ...result[0],
-          //     region_name: record.region_name,
-          //     zone_name: record.zone_name,
-          //     woreda_name: record.woreda_name,
-          //     kebele_name: record.kebele_name,
-          //     ...record,
-          //   });
+            result = registerMorgageTransform(record.tx_data.data);
+            // console.log({
+            //   ...result[0],
+            //   region_name: record.region_name,
+            //   zone_name: record.zone_name,
+            //   woreda_name: record.woreda_name,
+            //   kebele_name: record.kebele_name,
+            // });
+            // console.log(record["info"]);
+            // if(result[0].)
+            // await insertIntoElastic("transaction_houshold_information_with_party_type_info", {
+            //   ...result[0],
+            //   region_name: record.region_name,
+            //   zone_name: record.zone_name,
+            //   woreda_name: record.woreda_name,
+            //   kebele_name: record.kebele_name,
+            //   ...record,
+            // });
 
-          //   break;
+            break;
           case 21:
             record.transaction_type = "Modify Mortgage";
             break;
           case 22:
             record.transaction_type = "Cancel Mortgage";
-            console.log(record.tx_data.data);
-            result = cancelMorgageTransform(record.tx_data.data);
+            try {
+              result = cancelMorgageTransform(record.tx_data.data);
+            } catch (error) {
+              console.log("====== in cancelMorgageTransform =======");
+              console.log(error);
+            }
             // console.log({
             //   ...result[0],
             //   region_name: record.region_name,
@@ -272,7 +281,8 @@ const transformer = async (record: any) =>
             record.transaction_type = "Initial";
             break;
         }
-        resovle(result);
+
+        resovle({ ...record, parties: result });
       }
     } catch (error) {
       console.log(error);
@@ -295,23 +305,16 @@ async function conn(pool: any) {
   }
 }
 export default async function sync() {
-  console.log("==== i am runnint ===");
-  console.log({
-    host: config.NRLAIS_DB_HOST,
-    port: config.NRLAIS_DB_PORT,
-    password: config.NRLAIS_DB_PASSWORD,
-    user: config.NRLAIS_DB_USER,
-    database: config.NRLAIS_DB_NAME,
-  });
-
   await conn(pool);
-  /**
-   * left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid
-   */
+
   const client = await pool.connect();
   const cursor = client.query(
     new Cursor(
       `select	
+         t_transaction.syscreatedate AS date,
+    EXTRACT(YEAR FROM t_transaction.syscreatedate) AS year,
+        t_transaction.syscreatedate as created_at,
+        t_transaction.syslastmoddate as updated_at,
         t_transactiontype.en as transaction_type,
         t_transaction.uid as id ,
         t_regions.csaregionnameeng as region_name, 
@@ -319,8 +322,7 @@ export default async function sync() {
         t_woredas.woredanameeng as woreda_name ,
         t_zones.csazonenameeng as zone_name, 
         transactiontype , 
-        t_transaction_data.tx_data as tx_data , 
-        t_transaction.syscreatedate as date  
+        t_transaction_data.tx_data as tx_data 
         from nrlais_inventory.t_transaction as t_transaction  
         left join nrlais_sys.t_cl_transactiontype as t_transactiontype on t_transaction.transactiontype =  t_transactiontype.codeid 
         left join nrlais_sys.t_regions as t_regions on t_transaction.csaregionid = t_regions.csaregionid 
@@ -339,14 +341,39 @@ export default async function sync() {
   let rows = await cursor.read(1);
   while (rows.length) {
     try {
-      // console.log(rows[0]);
       let result: any = await transformer(rows[0]);
-      if (result) {
-        result.forEach(async (rec) => {
-          await insertIntoElastic(
-            "transaction_houshold_information_with_party_type_info",
-            rec
-          );
+      if (result.parties) {
+        result.parties.forEach(async (rec: Record<string, any>, indx: any) => {
+          console.log("============= start ==============");
+          let houseHoldType = getRelationshipText(rec["mreg_familyrole"]);
+
+          if (rec["sex"]) console.log(rec["sex"]);
+          let payload = {
+            ...rec,
+            ...result,
+            houseHoldType: houseHoldType,
+          };
+          delete payload.tx_data;
+
+          payload = { ...payload, string_year: String(payload.year) };
+          console.log(payload.year);
+          // console.log(payload["region_name"]);
+          // console.log(payload["zone_name"]);
+          // console.log(payload["woreda_name"]);
+          // console.log(payload["kebele_name"]);
+          // console.log(payload["transactiontype"]);
+          // console.log(payload["transaction_type"]);
+          // console.log(houseHoldType);
+          // console.log(payload["partyTypeText"]);
+          // console.log(payload["gender_name"]);
+          // console.log(payload["mreg_familyrole"]);
+          // console.log("============= end ==============");
+          setTimeout(async () => {
+            await insertIntoElastic(
+              "transaction_houshold_information_with_party_type_info",
+              payload
+            );
+          }, indx * 100);
         });
       }
       rows = await cursor.read(1);
