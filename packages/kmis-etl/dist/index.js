@@ -485,7 +485,7 @@ function main() {
                             case 3: return [2 /*return*/];
                         }
                     });
-                }); }, 5000);
+                }); }, 15000);
                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                     var error_10;
                     return __generator(this, function (_a) {
@@ -507,47 +507,95 @@ function main() {
                             case 3: return [2 /*return*/];
                         }
                     });
-                }); }, 10000);
-                // setTimeout(async () => {
-                //   try {
-                //     await hectarOfAreaClosureWithinEtlCalendar();
-                //   } catch (error) {
-                //     if (error instanceof etlExceptions) throw error;
-                //     else {
-                //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-                //     }
-                //   }
-                // }, 15000);
-                // setTimeout(async () => {
-                //   try {
-                //     await lswi();
-                //   } catch (error) {
-                //     if (error instanceof etlExceptions) throw error;
-                //     else {
-                //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-                //     }
-                //   }
-                // }, 20000);
-                // setTimeout(async () => {
-                //   try {
-                //     await insertNumberOfWoredasWithEth();
-                //   } catch (error) {
-                //     if (error instanceof etlExceptions) throw error;
-                //     else {
-                //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-                //     }
-                //   }
-                // }, 25000);
-                // setTimeout(async () => {
-                //   try {
-                //     await insertCommunityWaterShedsCoopWithEthCalendar();
-                //   } catch (error) {
-                //     if (error instanceof etlExceptions) throw error;
-                //     else {
-                //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-                //     }
-                //   }
-                // }, 30000);
+                }); }, 20000);
+                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_11;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, hectarOfAreaClosureWithinEtlCalendar()];
+                            case 1:
+                                _a.sent();
+                                return [3 /*break*/, 3];
+                            case 2:
+                                error_11 = _a.sent();
+                                if (error_11 instanceof etl_exception_1.default)
+                                    throw error_11;
+                                else {
+                                    throw new etl_exception_1.default(error_11.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                                }
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); }, 35000);
+                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_12;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, lswi()];
+                            case 1:
+                                _a.sent();
+                                return [3 /*break*/, 3];
+                            case 2:
+                                error_12 = _a.sent();
+                                if (error_12 instanceof etl_exception_1.default)
+                                    throw error_12;
+                                else {
+                                    throw new etl_exception_1.default(error_12.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                                }
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); }, 45000);
+                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_13;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, insertNumberOfWoredasWithEth()];
+                            case 1:
+                                _a.sent();
+                                return [3 /*break*/, 3];
+                            case 2:
+                                error_13 = _a.sent();
+                                if (error_13 instanceof etl_exception_1.default)
+                                    throw error_13;
+                                else {
+                                    throw new etl_exception_1.default(error_13.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                                }
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); }, 55000);
+                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var error_14;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, insertCommunityWaterShedsCoopWithEthCalendar()];
+                            case 1:
+                                _a.sent();
+                                return [3 /*break*/, 3];
+                            case 2:
+                                error_14 = _a.sent();
+                                if (error_14 instanceof etl_exception_1.default)
+                                    throw error_14;
+                                else {
+                                    throw new etl_exception_1.default(error_14.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                                }
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); }, 65000);
             }
             catch (error) {
                 if (error instanceof etl_exception_1.default)

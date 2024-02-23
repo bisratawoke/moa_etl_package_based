@@ -356,7 +356,11 @@ export default async function sync() {
           delete payload.tx_data;
 
           payload = { ...payload, string_year: String(payload.year) };
-          console.log(payload.year);
+
+          console.log(payload);
+          console.log("=============== end =============");
+          // console.log(payload.year);
+
           // console.log(payload["region_name"]);
           // console.log(payload["zone_name"]);
           // console.log(payload["woreda_name"]);
@@ -367,7 +371,7 @@ export default async function sync() {
           // console.log(payload["partyTypeText"]);
           // console.log(payload["gender_name"]);
           // console.log(payload["mreg_familyrole"]);
-          // console.log("============= end ==============");
+          // console.transaction_houshold_information_with_party_type_infolog("============= end ==============");
           setTimeout(async () => {
             await insertIntoElastic(
               "transaction_houshold_information_with_party_type_info",

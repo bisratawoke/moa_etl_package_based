@@ -357,7 +357,7 @@ export default async function main() {
           throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
         }
       }
-    }, 5000);
+    }, 15000);
 
     setTimeout(async () => {
       try {
@@ -368,51 +368,51 @@ export default async function main() {
           throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
         }
       }
-    }, 10000);
+    }, 20000);
 
-    // setTimeout(async () => {
-    //   try {
-    //     await hectarOfAreaClosureWithinEtlCalendar();
-    //   } catch (error) {
-    //     if (error instanceof etlExceptions) throw error;
-    //     else {
-    //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-    //     }
-    //   }
-    // }, 15000);
+    setTimeout(async () => {
+      try {
+        await hectarOfAreaClosureWithinEtlCalendar();
+      } catch (error) {
+        if (error instanceof etlExceptions) throw error;
+        else {
+          throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+        }
+      }
+    }, 35000);
 
-    // setTimeout(async () => {
-    //   try {
-    //     await lswi();
-    //   } catch (error) {
-    //     if (error instanceof etlExceptions) throw error;
-    //     else {
-    //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-    //     }
-    //   }
-    // }, 20000);
+    setTimeout(async () => {
+      try {
+        await lswi();
+      } catch (error) {
+        if (error instanceof etlExceptions) throw error;
+        else {
+          throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+        }
+      }
+    }, 45000);
 
-    // setTimeout(async () => {
-    //   try {
-    //     await insertNumberOfWoredasWithEth();
-    //   } catch (error) {
-    //     if (error instanceof etlExceptions) throw error;
-    //     else {
-    //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-    //     }
-    //   }
-    // }, 25000);
+    setTimeout(async () => {
+      try {
+        await insertNumberOfWoredasWithEth();
+      } catch (error) {
+        if (error instanceof etlExceptions) throw error;
+        else {
+          throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+        }
+      }
+    }, 55000);
 
-    // setTimeout(async () => {
-    //   try {
-    //     await insertCommunityWaterShedsCoopWithEthCalendar();
-    //   } catch (error) {
-    //     if (error instanceof etlExceptions) throw error;
-    //     else {
-    //       throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
-    //     }
-    //   }
-    // }, 30000);
+    setTimeout(async () => {
+      try {
+        await insertCommunityWaterShedsCoopWithEthCalendar();
+      } catch (error) {
+        if (error instanceof etlExceptions) throw error;
+        else {
+          throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
+        }
+      }
+    }, 65000);
   } catch (error) {
     if (error instanceof etlExceptions) throw error;
     else {

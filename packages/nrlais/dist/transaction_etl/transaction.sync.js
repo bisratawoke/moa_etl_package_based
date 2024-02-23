@@ -375,7 +375,9 @@ function sync() {
                                                 payload = __assign(__assign(__assign({}, rec), result_1), { houseHoldType: houseHoldType });
                                                 delete payload.tx_data;
                                                 payload = __assign(__assign({}, payload), { string_year: String(payload.year) });
-                                                console.log(payload.year);
+                                                console.log(payload);
+                                                console.log("=============== end =============");
+                                                // console.log(payload.year);
                                                 // console.log(payload["region_name"]);
                                                 // console.log(payload["zone_name"]);
                                                 // console.log(payload["woreda_name"]);
@@ -386,7 +388,7 @@ function sync() {
                                                 // console.log(payload["partyTypeText"]);
                                                 // console.log(payload["gender_name"]);
                                                 // console.log(payload["mreg_familyrole"]);
-                                                // console.log("============= end ==============");
+                                                // console.transaction_houshold_information_with_party_type_infolog("============= end ==============");
                                                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                                     return __generator(this, function (_a) {
                                                         switch (_a.label) {
