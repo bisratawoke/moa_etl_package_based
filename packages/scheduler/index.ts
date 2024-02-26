@@ -18,12 +18,12 @@ schedule.scheduleJob(
 );
 
 // // // calm etl schedule
-// schedule.scheduleJob(
-//   config.CALM_DB_ETL_FREQUENCY,
-//   jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
-// );
+schedule.scheduleJob(
+  config.CALM_DB_ETL_FREQUENCY,
+  jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
+);
 
-// // //psnp pw schedules
+// // // //psnp pw schedules
 // schedule.scheduleJob(
 //   config.PSNP_PW_DB_ETL_FREQUENCY,
 //   jobber(
@@ -32,6 +32,7 @@ schedule.scheduleJob(
 //     config.PSNP_PW_DB_ETL_RETRY_RATE
 //   )
 // );
+
 // schedule.scheduleJob(
 //   config.PSNP_PW_DB_ETL_FREQUENCY,
 //   jobber(
@@ -40,6 +41,7 @@ schedule.scheduleJob(
 //     config.PSNP_PW_DB_ETL_RETRY_RATE
 //   )
 // );
+
 // schedule.scheduleJob(
 //   config.PSNP_PW_DB_ETL_FREQUENCY,
 //   jobber(
@@ -48,6 +50,7 @@ schedule.scheduleJob(
 //     config.PSNP_PW_DB_ETL_RETRY_RATE
 //   )
 // );
+
 // schedule.scheduleJob(
 //   config.PSNP_PW_DB_ETL_FREQUENCY,
 //   jobber(
