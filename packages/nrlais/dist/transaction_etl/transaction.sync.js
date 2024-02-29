@@ -55,6 +55,12 @@ var axios = require("axios");
 var moa_config_1 = require("moa_config");
 var utils_1 = require("./utils");
 var transformer_1 = require("./transformer");
+var notifire_1 = require("notifire");
+var notifire = new notifire_1.default({
+    host: moa_config_1.default.ELASTIC_URL,
+    username: moa_config_1.default.ELASTIC_USER,
+    password: moa_config_1.default.ELASTIC_PASSWORD,
+});
 var pool = new Pool({
     host: moa_config_1.default.NRLAIS_DB_HOST,
     port: moa_config_1.default.NRLAIS_DB_PORT,
@@ -433,7 +439,7 @@ function sync() {
 exports.default = sync;
 function transactionWithoutGenderInfo() {
     return __awaiter(this, void 0, void 0, function () {
-        var client_1, cursor, rows, error_2, error_3;
+        var client_1, cursor, numOfRecs, rows, error_2, error_3;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -442,8 +448,9 @@ function transactionWithoutGenderInfo() {
                     return [4 /*yield*/, pool.connect()];
                 case 1:
                     client_1 = _a.sent();
-                    cursor = client_1.query(new Cursor("\n    SELECT \n    tr.csaregionid,\n    r.csaregionnameeng as region_name,\n    tr.nrlais_zoneid,\n    z.csazonenameeng as zone_name,\n    tr.nrlais_woredaid,\n    w.woredanameeng as woreda_name,\n    tr.nrlais_kebeleid,\n    k.kebelenameeng as kebele_name,\n    DATE_PART('year', tr.syscreatedate::date) as year,\n    tr.transactiontype,\n    trt.en as trtype,\n    trs.en as trstatus,\n    COUNT(tr.transactiontype) as no_trans\nFROM nrlais_inventory.t_transaction tr\nLEFT JOIN nrlais_sys.t_cl_transactiontype trt ON tr.transactiontype=trt.codeid  \nLEFT JOIN nrlais_sys.t_cl_txstatus trs ON tr.txstatus=trs.codeid\nLEFT JOIN nrlais_sys.t_regions r ON tr.csaregionid=r.csaregionid\nLEFT JOIN nrlais_sys.t_zones z ON tr.nrlais_zoneid=z.nrlais_zoneid\nLEFT JOIN nrlais_sys.t_woredas w ON tr.nrlais_woredaid=w.nrlais_woredaid\nLEFT JOIN nrlais_sys.t_kebeles k ON tr.nrlais_kebeleid=k.nrlais_kebeleid\nwhere tr.transactiontype != 100\nGROUP BY \n    tr.csaregionid, \n    region_name, \n    tr.nrlais_zoneid,\n    zone_name, \n    tr.nrlais_woredaid,\n    woreda_name, \n    tr.nrlais_kebeleid,\n    kebele_name, \n    year, \n    tr.transactiontype, \n    trtype, \n    trstatus;"));
-                    return [4 /*yield*/, cursor.read(1)];
+                    cursor = client_1.query(new Cursor("\n    SELECT \n    tr.uid,\n    tr.csaregionid,\n    r.csaregionnameeng as region_name,\n    tr.nrlais_zoneid,\n    z.csazonenameeng as zone_name,\n    tr.nrlais_woredaid,\n    w.woredanameeng as woreda_name,\n    tr.nrlais_kebeleid,\n    k.kebelenameeng as kebele_name,\n    DATE_PART('year', tr.syscreatedate::date) as year,\n    tr.transactiontype,\n    trt.en as trtype,\n    trs.en as trstatus,\n    COUNT(tr.transactiontype) as no_trans\nFROM nrlais_inventory.t_transaction tr\nLEFT JOIN nrlais_sys.t_cl_transactiontype trt ON tr.transactiontype=trt.codeid  \nLEFT JOIN nrlais_sys.t_cl_txstatus trs ON tr.txstatus=trs.codeid\nLEFT JOIN nrlais_sys.t_regions r ON tr.csaregionid=r.csaregionid\nLEFT JOIN nrlais_sys.t_zones z ON tr.nrlais_zoneid=z.nrlais_zoneid\nLEFT JOIN nrlais_sys.t_woredas w ON tr.nrlais_woredaid=w.nrlais_woredaid\nLEFT JOIN nrlais_sys.t_kebeles k ON tr.nrlais_kebeleid=k.nrlais_kebeleid\nwhere tr.transactiontype != 100\nGROUP BY \n    tr.csaregionid, \n    region_name, \n    tr.nrlais_zoneid,\n    zone_name, \n    tr.nrlais_woredaid,\n    woreda_name, \n    tr.nrlais_kebeleid,\n    kebele_name, \n    year, \n    tr.transactiontype, \n    trtype, \n    trstatus;"));
+                    numOfRecs = 1000;
+                    return [4 /*yield*/, cursor.read(numOfRecs)];
                 case 2:
                     rows = _a.sent();
                     _a.label = 3;
@@ -472,9 +479,23 @@ function transactionWithoutGenderInfo() {
                     return [3 /*break*/, 7];
                 case 6:
                     error_2 = _a.sent();
-                    cursor.close(function () {
-                        client_1.release();
-                    });
+                    cursor.close(function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, notifire.notify({
+                                        extraction_date: new Date(),
+                                        extraction_status: notifire_1.EXTRACTION_STATUS.FAILED,
+                                        number_of_extracted_records: 0,
+                                        index: "nrlais_data",
+                                        method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                    })];
+                                case 1:
+                                    _a.sent();
+                                    client_1.release();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
                     return [3 /*break*/, 7];
                 case 7: return [3 /*break*/, 3];
                 case 8: return [3 /*break*/, 10];

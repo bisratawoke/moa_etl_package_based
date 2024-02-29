@@ -80,7 +80,7 @@ export const insertWithOutGender = async (
 ) => {
   try {
     const result = await axios.post(
-      `${config.ELASTIC_URL}/${indexName}/_doc`,
+      `${config.ELASTIC_URL}/${indexName}/_doc/${id}`,
       rec,
       {
         auth: {

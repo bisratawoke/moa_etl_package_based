@@ -128,7 +128,7 @@ var insertWithOutGender = function (indexName, rec, id) { return __awaiter(void 
         switch (_b.label) {
             case 0:
                 _b.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, axios_2.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), rec, {
+                return [4 /*yield*/, axios_2.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(id), rec, {
                         auth: {
                             username: config_1.default.ELASTIC_USERNAME,
                             password: config_1.default.ELASTIC_PASSWORD,

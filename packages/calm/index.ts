@@ -3,13 +3,27 @@ import * as fs from "fs";
 const axios = require("axios");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 import config from "config";
-
+import etlExceptions, { etlExceptionType } from "etl-exception";
+import Notifier, { EXTRACTION_METHOD, EXTRACTION_STATUS } from "notifire";
 const connection = mysql.createConnection({
   host: config.CALM_MYSQL_HOST,
   port: config.CALM_MYSQL_PORT,
   user: config.CALM_MYSQL_USER,
   password: config.CALM_MYSQL_PASSWORD,
   database: config.CALM_MYSQL_DB,
+});
+
+/**
+ *  {
+  host: string;
+  username: string;
+  password: string;
+}
+ */
+const notifire = new Notifier({
+  host: config.ELASTIC_URL,
+  username: config.ELASTIC_USER,
+  password: config.ELASTIC_PASSWORD,
 });
 
 async function etl() {
@@ -33,6 +47,13 @@ async function etl() {
       if (err) {
         console.log(err);
       } else {
+        await notifire.notify({
+          index: "calm",
+          extraction_date: new Date(),
+          extraction_status: EXTRACTION_STATUS.COMPLETED,
+          number_of_extracted_records: results.length,
+          method: EXTRACTION_METHOD.SYSTEMATIC,
+        });
         let records: any = [];
         for (let x = 0; x < results.length; x++) {
           let woreda = results[x];
@@ -64,7 +85,21 @@ async function etl() {
           )}`;
           records.push(record);
           setTimeout(async () => {
-            await insertIntoElastic(record, id);
+            try {
+              await insertIntoElastic(record, id);
+            } catch (error) {
+              if (error instanceof etlExceptions) {
+                let message = {
+                  index: "calm",
+                  extraction_date: new Date(),
+                  extraction_status: EXTRACTION_STATUS.COMPLETED,
+                  number_of_extracted_records: results.length,
+                  method: EXTRACTION_METHOD.SYSTEMATIC,
+                  message: error.message,
+                };
+                await notifire.notify(message);
+              }
+            }
           }, 300 * x);
         }
         let new_date = addOneWeek(date);
@@ -156,10 +191,8 @@ async function insertIntoElastic(rec: any, id: any) {
     );
     console.log(result.status);
     return;
-  } catch (error) {
-    console.log(error);
-    console.log(error.response);
-    process.exit(1);
+  } catch (error: any) {
+    throw new etlExceptions(error.message, etlExceptionType.LOADING);
   }
 }
 
@@ -172,6 +205,13 @@ export default async function initialEtl() {
         console.log(err);
       } else {
         let records: any = [];
+        await notifire.notify({
+          index: "calm",
+          extraction_date: new Date(),
+          extraction_status: EXTRACTION_STATUS.COMPLETED,
+          number_of_extracted_records: results.length,
+          method: EXTRACTION_METHOD.SYSTEMATIC,
+        });
         for (let x = 0; x < results.length; x++) {
           let woreda = results[x];
 
@@ -198,7 +238,21 @@ export default async function initialEtl() {
           console.log(record, id);
           records.push(record);
           setTimeout(async () => {
-            await insertIntoElastic(record, id);
+            try {
+              await insertIntoElastic(record, id);
+            } catch (error) {
+              if (error instanceof etlExceptions) {
+                let message = {
+                  index: "calm",
+                  extraction_date: new Date(),
+                  extraction_status: EXTRACTION_STATUS.COMPLETED,
+                  number_of_extracted_records: results.length,
+                  method: EXTRACTION_METHOD.SYSTEMATIC,
+                  message: error.message,
+                };
+                await notifire.notify(message);
+              }
+            }
           }, 300 * x);
         }
         let new_date = addOneWeek(date);
@@ -245,7 +299,3 @@ async function updateCsvFile(records: any) {
     process.exit(1);
   }
 }
-
-(async () => {
-  await initialEtl();
-})();

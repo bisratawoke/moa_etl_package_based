@@ -6,6 +6,7 @@ import {
   OPERATION_TYPE,
   nrlais_parcel_elt,
   nrlais_transaction_elt,
+  TRANSACTION_OPERATION_TYPE,
 } from "nrlais";
 import psnp_etl, { OPERATION_TYPE as PSNP_OP_TYPE } from "psnp-pw";
 import jobber from "./job";
@@ -76,6 +77,15 @@ schedule.scheduleJob(
   jobber(
     "nrlias_data",
     nrlais_parcel_elt(OPERATION_TYPE.SYNC),
+    config.NRLAIS_DB_ETL_RETRY_RATE
+  )
+);
+
+schedule.scheduleJob(
+  config.NRLAIS_DB_ETL_FREQUENCY,
+  jobber(
+    "nrlais_data",
+    nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO),
     config.NRLAIS_DB_ETL_RETRY_RATE
   )
 );

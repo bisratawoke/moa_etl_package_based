@@ -41,12 +41,26 @@ var fs = require("fs");
 var axios = require("axios");
 var createCsvWriter = require("csv-writer").createObjectCsvWriter;
 var config_1 = require("config");
+var etl_exception_1 = require("etl-exception");
+var notifire_1 = require("notifire");
 var connection = mysql.createConnection({
     host: config_1.default.CALM_MYSQL_HOST,
     port: config_1.default.CALM_MYSQL_PORT,
     user: config_1.default.CALM_MYSQL_USER,
     password: config_1.default.CALM_MYSQL_PASSWORD,
     database: config_1.default.CALM_MYSQL_DB,
+});
+/**
+ *  {
+  host: string;
+  username: string;
+  password: string;
+}
+ */
+var notifire = new notifire_1.default({
+    host: config_1.default.ELASTIC_URL,
+    username: config_1.default.ELASTIC_USER,
+    password: config_1.default.ELASTIC_PASSWORD,
 });
 function etl() {
     return __awaiter(this, void 0, void 0, function () {
@@ -62,8 +76,16 @@ function etl() {
                         case 0:
                             if (!err) return [3 /*break*/, 1];
                             console.log(err);
-                            return [3 /*break*/, 8];
-                        case 1:
+                            return [3 /*break*/, 9];
+                        case 1: return [4 /*yield*/, notifire.notify({
+                                index: "calm",
+                                extraction_date: new Date(),
+                                extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                number_of_extracted_records: results.length,
+                                method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                            })];
+                        case 2:
+                            _a.sent();
                             records = [];
                             _loop_1 = function (x) {
                                 var woreda, prev, record, id;
@@ -95,12 +117,32 @@ function etl() {
                                             id = "".concat(String(record.date), "_").concat(String(record.woreda_name.replace(/\//g, "")));
                                             records.push(record);
                                             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                                var error_1, message;
                                                 return __generator(this, function (_a) {
                                                     switch (_a.label) {
-                                                        case 0: return [4 /*yield*/, insertIntoElastic(record, id)];
+                                                        case 0:
+                                                            _a.trys.push([0, 2, , 5]);
+                                                            return [4 /*yield*/, insertIntoElastic(record, id)];
                                                         case 1:
                                                             _a.sent();
-                                                            return [2 /*return*/];
+                                                            return [3 /*break*/, 5];
+                                                        case 2:
+                                                            error_1 = _a.sent();
+                                                            if (!(error_1 instanceof etl_exception_1.default)) return [3 /*break*/, 4];
+                                                            message = {
+                                                                index: "calm",
+                                                                extraction_date: new Date(),
+                                                                extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                                                number_of_extracted_records: results.length,
+                                                                method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                                                message: error_1.message,
+                                                            };
+                                                            return [4 /*yield*/, notifire.notify(message)];
+                                                        case 3:
+                                                            _a.sent();
+                                                            _a.label = 4;
+                                                        case 4: return [3 /*break*/, 5];
+                                                        case 5: return [2 /*return*/];
                                                     }
                                                 });
                                             }); }, 300 * x);
@@ -109,27 +151,27 @@ function etl() {
                                 });
                             };
                             x = 0;
-                            _a.label = 2;
-                        case 2:
-                            if (!(x < results.length)) return [3 /*break*/, 5];
-                            return [5 /*yield**/, _loop_1(x)];
+                            _a.label = 3;
                         case 3:
-                            _a.sent();
-                            _a.label = 4;
+                            if (!(x < results.length)) return [3 /*break*/, 6];
+                            return [5 /*yield**/, _loop_1(x)];
                         case 4:
-                            x++;
-                            return [3 /*break*/, 2];
+                            _a.sent();
+                            _a.label = 5;
                         case 5:
+                            x++;
+                            return [3 /*break*/, 3];
+                        case 6:
                             new_date = addOneWeek(date);
                             updateConfigFile({ date: new_date });
                             return [4 /*yield*/, updateCsvFile(records)];
-                        case 6:
-                            _a.sent();
-                            return [4 /*yield*/, etl()];
                         case 7:
                             _a.sent();
-                            _a.label = 8;
-                        case 8: return [2 /*return*/];
+                            return [4 /*yield*/, etl()];
+                        case 8:
+                            _a.sent();
+                            _a.label = 9;
+                        case 9: return [2 /*return*/];
                     }
                 });
             }); });
@@ -209,7 +251,7 @@ function readConfigFile() {
 //calm_mis_parcel_info
 function insertIntoElastic(rec, id) {
     return __awaiter(this, void 0, void 0, function () {
-        var INDEX_NAME, headers, result, error_1;
+        var INDEX_NAME, headers, result, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -227,11 +269,8 @@ function insertIntoElastic(rec, id) {
                     console.log(result.status);
                     return [2 /*return*/];
                 case 2:
-                    error_1 = _a.sent();
-                    console.log(error_1);
-                    console.log(error_1.response);
-                    process.exit(1);
-                    return [3 /*break*/, 3];
+                    error_2 = _a.sent();
+                    throw new etl_exception_1.default(error_2.message, etl_exception_1.etlExceptionType.LOADING);
                 case 3: return [2 /*return*/];
             }
         });
@@ -251,9 +290,18 @@ function initialEtl() {
                         case 0:
                             if (!err) return [3 /*break*/, 1];
                             console.log(err);
-                            return [3 /*break*/, 4];
+                            return [3 /*break*/, 5];
                         case 1:
                             records = [];
+                            return [4 /*yield*/, notifire.notify({
+                                    index: "calm",
+                                    extraction_date: new Date(),
+                                    extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                    number_of_extracted_records: results.length,
+                                    method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                })];
+                        case 2:
+                            _a.sent();
                             _loop_2 = function (x) {
                                 var woreda = results[x];
                                 var record = {
@@ -275,12 +323,32 @@ function initialEtl() {
                                 console.log(record, id);
                                 records.push(record);
                                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                    var error_3, message;
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
-                                            case 0: return [4 /*yield*/, insertIntoElastic(record, id)];
+                                            case 0:
+                                                _a.trys.push([0, 2, , 5]);
+                                                return [4 /*yield*/, insertIntoElastic(record, id)];
                                             case 1:
                                                 _a.sent();
-                                                return [2 /*return*/];
+                                                return [3 /*break*/, 5];
+                                            case 2:
+                                                error_3 = _a.sent();
+                                                if (!(error_3 instanceof etl_exception_1.default)) return [3 /*break*/, 4];
+                                                message = {
+                                                    index: "calm",
+                                                    extraction_date: new Date(),
+                                                    extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                                    number_of_extracted_records: results.length,
+                                                    method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                                    message: error_3.message,
+                                                };
+                                                return [4 /*yield*/, notifire.notify(message)];
+                                            case 3:
+                                                _a.sent();
+                                                _a.label = 4;
+                                            case 4: return [3 /*break*/, 5];
+                                            case 5: return [2 /*return*/];
                                         }
                                     });
                                 }); }, 300 * x);
@@ -291,13 +359,13 @@ function initialEtl() {
                             new_date = addOneWeek(date);
                             updateConfigFile({ date: new_date });
                             return [4 /*yield*/, updateCsvFile(records)];
-                        case 2:
-                            _a.sent();
-                            return [4 /*yield*/, etl()];
                         case 3:
                             _a.sent();
-                            _a.label = 4;
-                        case 4: return [2 /*return*/];
+                            return [4 /*yield*/, etl()];
+                        case 4:
+                            _a.sent();
+                            _a.label = 5;
+                        case 5: return [2 /*return*/];
                     }
                 });
             }); });
@@ -330,7 +398,7 @@ function updateCsvFile(records) {
         return __generator(this, function (_a) {
             try {
                 return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                        var error_2;
+                        var error_4;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -341,8 +409,8 @@ function updateCsvFile(records) {
                                     resolve();
                                     return [3 /*break*/, 3];
                                 case 2:
-                                    error_2 = _a.sent();
-                                    reject(error_2);
+                                    error_4 = _a.sent();
+                                    reject(error_4);
                                     return [3 /*break*/, 3];
                                 case 3: return [2 /*return*/];
                             }
@@ -357,13 +425,3 @@ function updateCsvFile(records) {
         });
     });
 }
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, initialEtl()];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); })();

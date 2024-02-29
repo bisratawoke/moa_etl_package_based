@@ -16,6 +16,7 @@
     "pg-cursor": "^2.10.3",
     "pg-promise": "^11.5.4",
     "etl-exception": "*",
-    "nodemon": "*"
+    "nodemon": "*",
+    "notifire": "*"
   }
 }

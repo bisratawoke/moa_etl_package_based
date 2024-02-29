@@ -22,6 +22,13 @@ import {
   marrageTransformer,
   getQuarter,
 } from "./transformer";
+import Notifier, { EXTRACTION_METHOD, EXTRACTION_STATUS } from "notifire";
+
+let notifire = new Notifier({
+  host: config.ELASTIC_URL,
+  username: config.ELASTIC_USER,
+  password: config.ELASTIC_PASSWORD,
+});
 
 const pool = new Pool({
   host: config.NRLAIS_DB_HOST,
@@ -396,6 +403,7 @@ export async function transactionWithoutGenderInfo() {
     const cursor = client.query(
       new Cursor(`
     SELECT 
+    tr.uid,
     tr.csaregionid,
     r.csaregionnameeng as region_name,
     tr.nrlais_zoneid,
@@ -431,8 +439,8 @@ GROUP BY
     trtype, 
     trstatus;`)
     );
-
-    let rows = await cursor.read(1);
+    let numOfRecs = 1000;
+    let rows = await cursor.read(numOfRecs);
     while (rows.length) {
       try {
         rows.forEach(async (rec) => {
@@ -454,8 +462,15 @@ GROUP BY
           );
         });
         rows = await cursor.read(1);
-      } catch (error) {
-        cursor.close(() => {
+      } catch (error: any) {
+        cursor.close(async () => {
+          await notifire.notify({
+            extraction_date: new Date(),
+            extraction_status: EXTRACTION_STATUS.FAILED,
+            number_of_extracted_records: 0,
+            index: "nrlais_data",
+            method: EXTRACTION_METHOD.SYSTEMATIC,
+          });
           client.release();
         });
       }
