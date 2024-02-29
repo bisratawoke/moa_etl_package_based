@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var schedule = require("node-schedule");
+var calm_1 = require("calm");
 var nrlais_1 = require("nrlais");
 var job_1 = require("./job");
 var moa_config_1 = require("moa_config");
@@ -10,10 +11,7 @@ var moa_config_1 = require("moa_config");
 //   jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
 // );
 // // calm etl schedule
-// schedule.scheduleJob(
-//   config.CALM_DB_ETL_FREQUENCY,
-//   jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
-// );
+schedule.scheduleJob(moa_config_1.default.CALM_DB_ETL_FREQUENCY, (0, job_1.default)("CALM MIS", calm_1.default, moa_config_1.default.CALM_DB_ETL_RETRY_RATE));
 // // irrigation schedule
 // schedule.scheduleJob(
 //   config.IRRIGATION_ETL_FREQUENCY,
