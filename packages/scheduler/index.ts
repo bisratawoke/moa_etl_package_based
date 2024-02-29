@@ -23,7 +23,7 @@ schedule.scheduleJob(
   jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
 );
 
-//irrigation schedule
+// irrigation schedule
 schedule.scheduleJob(
   config.IRRIGATION_ETL_FREQUENCY,
   jobber(
@@ -33,7 +33,7 @@ schedule.scheduleJob(
   )
 );
 
-// // // //psnp pw schedules
+// psnp pw schedules
 schedule.scheduleJob(
   config.PSNP_PW_DB_ETL_FREQUENCY,
   jobber(
@@ -70,11 +70,12 @@ schedule.scheduleJob(
   )
 );
 
-// schedule.scheduleJob(
-//   config.NRLAIS_DB_ETL_FREQUENCY,
-//   jobber(
-//     "nrlias_data",
-//     nrlais_parcel_elt(OPERATION_TYPE.SYNC),
-//     config.NRLAIS_DB_ETL_RETRY_RATE
-//   )
-// );
+// nrlais etl
+schedule.scheduleJob(
+  config.NRLAIS_DB_ETL_FREQUENCY,
+  jobber(
+    "nrlias_data",
+    nrlais_parcel_elt(OPERATION_TYPE.SYNC),
+    config.NRLAIS_DB_ETL_RETRY_RATE
+  )
+);
