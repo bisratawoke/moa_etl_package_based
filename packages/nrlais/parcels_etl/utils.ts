@@ -58,9 +58,7 @@ export async function getParcelsThatIntersectWatersheds(
 ) {
   try {
     const watershedInfo = await getMicroWatershed();
-    console.log("======= watershed info start ====");
-    console.log(watershedInfo);
-    console.log("======= watershed info end ====");
+
     let count = 0;
     for (let x = 0; x < watershedInfo.length; x++) {
       let id = watershedInfo[x]._id;
@@ -85,7 +83,6 @@ export async function getParcelsThatIntersectWatersheds(
           lang: "painless",
         },
       };
-      // let count = await getIndexCount(indexName, query);
 
       setTimeout(async () => {
         try {
@@ -154,16 +151,20 @@ export const insertIntoElasticNotDuplication = async (
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const result = await axios.post(
-        `${config.ELASTIC_URL}/${indexName}/_doc`,
-        rec,
-        {
-          auth: {
-            username: config.ELASTIC_USERNAME,
-            password: config.ELASTIC_PASSWORD,
-          },
-        }
-      );
+      const res = await doesParcelExist(rec.id, rec.partyuid);
+
+      if (!res) {
+        const result = await axios.post(
+          `${config.ELASTIC_URL}/${indexName}/_doc`,
+          rec,
+          {
+            auth: {
+              username: config.ELASTIC_USERNAME,
+              password: config.ELASTIC_PASSWORD,
+            },
+          }
+        );
+      }
       resolve(true);
     } catch (error) {
       console.log("========= error while inserting elastic ===== ");
@@ -171,6 +172,7 @@ export const insertIntoElasticNotDuplication = async (
     }
   });
 };
+
 export const insertIntoElastic = async (
   indexName: string,
   rec: Record<string, any>
@@ -178,7 +180,7 @@ export const insertIntoElastic = async (
   return new Promise(async (resolve, reject) => {
     try {
       console.log("======== in insertIntoElastic ====");
-      let res: any = await doesParcelExist(rec.id);
+      let res: any = await doesParcelExist(rec.id, rec.partyuid);
       if (res) {
         let payload = {
           ...res,
@@ -275,10 +277,31 @@ export const transformer = (
     return resolve(record);
   });
 };
-async function doesParcelExist(parcel_id: string) {
+export async function doesParcelExist(
+  parcel_id: string,
+  party_id: string
+): Promise<any> {
   try {
-    const response = await axios.get(
-      `http://${config.ELASTIC_URL}/${indexName}/_doc/${parcel_id}`,
+    const response = await axios.post(
+      `http://${config.ELASTIC_URL}/${indexName}/_search`,
+      {
+        query: {
+          bool: {
+            must: [
+              {
+                match_phrase: {
+                  id: parcel_id,
+                },
+              },
+              {
+                match_phrase: {
+                  partyuid: party_id,
+                },
+              },
+            ],
+          },
+        },
+      },
       {
         auth: {
           username: config.ELASTIC_USERNAME,
@@ -286,9 +309,10 @@ async function doesParcelExist(parcel_id: string) {
         },
       }
     );
-    return { source: response.data._source, found: response.data.found };
-  } catch (error) {
-    return null;
+
+    return response.data.hits.hits.length > 0 ? true : false;
+  } catch (error: any) {
+    throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
   }
 }
 

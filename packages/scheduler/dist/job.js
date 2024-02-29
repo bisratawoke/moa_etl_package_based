@@ -52,37 +52,43 @@ function jobber(indexName, job, retryInterval) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    // await notifier.notify({
-                    //   index: indexName,
-                    //   extraction_status: EXTRACTION_STATUS.IN_PROGRESS,
-                    //   extraction_date: new Date(),
-                    //   number_of_extracted_records: 0,
-                    //   method: EXTRACTION_METHOD.SYSTEMATIC,
-                    // });
-                    return [4 /*yield*/, job()];
+                    _a.trys.push([0, 4, , 7]);
+                    return [4 /*yield*/, notifier.notify({
+                            index: indexName,
+                            extraction_status: notifire_1.EXTRACTION_STATUS.IN_PROGRESS,
+                            extraction_date: new Date(),
+                            number_of_extracted_records: 0,
+                            method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                        })];
                 case 1:
-                    // await notifier.notify({
-                    //   index: indexName,
-                    //   extraction_status: EXTRACTION_STATUS.IN_PROGRESS,
-                    //   extraction_date: new Date(),
-                    //   number_of_extracted_records: 0,
-                    //   method: EXTRACTION_METHOD.SYSTEMATIC,
-                    // });
                     _a.sent();
-                    return [3 /*break*/, 3];
+                    return [4 /*yield*/, job()];
                 case 2:
+                    _a.sent();
+                    return [4 /*yield*/, notifier.notify({
+                            index: indexName,
+                            extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                            extraction_date: new Date(),
+                            number_of_extracted_records: 0,
+                            method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                        })];
+                case 3:
+                    _a.sent();
+                    return [3 /*break*/, 7];
+                case 4:
                     error_1 = _a.sent();
-                    if (error_1 instanceof etl_exception_1.default) {
-                        console.log(error_1);
-                        // await notifier.notify({
-                        //   index: indexName,
-                        //   extraction_status: EXTRACTION_STATUS.FAILED,
-                        //   extraction_date: new Date(),
-                        //   number_of_extracted_records: 0,
-                        //   method: EXTRACTION_METHOD.SYSTEMATIC,
-                        // });
-                    }
+                    if (!(error_1 instanceof etl_exception_1.default)) return [3 /*break*/, 6];
+                    return [4 /*yield*/, notifier.notify({
+                            index: indexName,
+                            extraction_status: notifire_1.EXTRACTION_STATUS.FAILED,
+                            extraction_date: new Date(),
+                            number_of_extracted_records: 0,
+                            method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                        })];
+                case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6:
                     setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
@@ -93,8 +99,8 @@ function jobber(indexName, job, retryInterval) {
                             }
                         });
                     }); }, retryInterval);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     }); };

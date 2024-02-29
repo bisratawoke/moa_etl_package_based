@@ -311,8 +311,8 @@ export default async function sync() {
   const cursor = client.query(
     new Cursor(
       `select	
-         t_transaction.syscreatedate AS date,
-    EXTRACT(YEAR FROM t_transaction.syscreatedate) AS year,
+        t_transaction.syscreatedate AS date,
+        EXTRACT(YEAR FROM t_transaction.syscreatedate) AS year,
         t_transaction.syscreatedate as created_at,
         t_transaction.syslastmoddate as updated_at,
         t_transactiontype.en as transaction_type,

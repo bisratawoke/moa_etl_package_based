@@ -1,6 +1,6 @@
 import axios from "axios";
 const nodemailer = require("nodemailer");
-
+import config from "moa_config";
 export interface IElasticConfig {
   host: string;
   username: string;
@@ -109,10 +109,26 @@ export default class Notifier {
 
   public async notify(message: IMessage) {
     try {
-      await this.sendEmail(message);
+      // await this.sendEmail(message);
       await this.sendToElasticLog(message);
     } catch (error) {
       console.log(error);
     }
   }
 }
+
+let notifier = new Notifier({
+  username: config.ELASTIC_USERNAME,
+  password: config.ELASTIC_PASSWORD,
+  host: config.ELASTIC_URL,
+});
+
+(async () => {
+  await notifier.notify({
+    index: "Testing",
+    extraction_status: EXTRACTION_STATUS.IN_PROGRESS,
+    extraction_date: new Date(),
+    number_of_extracted_records: 0,
+    method: EXTRACTION_METHOD.SYSTEMATIC,
+  });
+})();

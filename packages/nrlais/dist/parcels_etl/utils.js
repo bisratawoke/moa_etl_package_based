@@ -56,7 +56,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertIntoElasticNotDuplication = exports.getMaxDate = exports.getParcelsThatIntersectWatersheds = exports.getMicroWatershed = exports.getIndexCount = exports.watershedIndexName = exports.indexName = void 0;
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.doesParcelExist = exports.transformer = exports.insertIntoElastic = exports.insertIntoElasticNotDuplication = exports.getMaxDate = exports.getParcelsThatIntersectWatersheds = exports.getMicroWatershed = exports.getIndexCount = exports.watershedIndexName = exports.indexName = void 0;
 var axios_1 = require("axios");
 var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
@@ -137,9 +137,6 @@ function getParcelsThatIntersectWatersheds(watershedIndexName) {
                     return [4 /*yield*/, getMicroWatershed()];
                 case 1:
                     watershedInfo = _a.sent();
-                    console.log("======= watershed info start ====");
-                    console.log(watershedInfo);
-                    console.log("======= watershed info end ====");
                     count_1 = 0;
                     _loop_1 = function (x) {
                         var id = watershedInfo[x]._id;
@@ -164,7 +161,6 @@ function getParcelsThatIntersectWatersheds(watershedIndexName) {
                                 lang: "painless",
                             },
                         };
-                        // let count = await getIndexCount(indexName, query);
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                             var result, error_4;
                             return __generator(this, function (_a) {
@@ -252,27 +248,33 @@ exports.getMaxDate = getMaxDate;
 var insertIntoElasticNotDuplication = function (indexName, rec) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
-                var result, error_6;
+                var res, result, error_6;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            _a.trys.push([0, 2, , 3]);
+                            _a.trys.push([0, 4, , 5]);
+                            return [4 /*yield*/, doesParcelExist(rec.id, rec.partyuid)];
+                        case 1:
+                            res = _a.sent();
+                            if (!!res) return [3 /*break*/, 3];
                             return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), rec, {
                                     auth: {
                                         username: config_1.default.ELASTIC_USERNAME,
                                         password: config_1.default.ELASTIC_PASSWORD,
                                     },
                                 })];
-                        case 1:
-                            result = _a.sent();
-                            resolve(true);
-                            return [3 /*break*/, 3];
                         case 2:
+                            result = _a.sent();
+                            _a.label = 3;
+                        case 3:
+                            resolve(true);
+                            return [3 /*break*/, 5];
+                        case 4:
                             error_6 = _a.sent();
                             console.log("========= error while inserting elastic ===== ");
                             resolve(true);
-                            return [3 /*break*/, 3];
-                        case 3: return [2 /*return*/];
+                            return [3 /*break*/, 5];
+                        case 5: return [2 /*return*/];
                     }
                 });
             }); })];
@@ -288,7 +290,7 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
                         case 0:
                             _a.trys.push([0, 6, , 7]);
                             console.log("======== in insertIntoElastic ====");
-                            return [4 /*yield*/, doesParcelExist(rec.id)];
+                            return [4 /*yield*/, doesParcelExist(rec.id, rec.partyuid)];
                         case 1:
                             res = _a.sent();
                             if (!res) return [3 /*break*/, 3];
@@ -380,14 +382,31 @@ var transformer = function (record) {
     });
 };
 exports.transformer = transformer;
-function doesParcelExist(parcel_id) {
+function doesParcelExist(parcel_id, party_id) {
     return __awaiter(this, void 0, void 0, function () {
         var response, error_8;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1.default.get("http://".concat(config_1.default.ELASTIC_URL, "/").concat(exports.indexName, "/_doc/").concat(parcel_id), {
+                    return [4 /*yield*/, axios_1.default.post("http://".concat(config_1.default.ELASTIC_URL, "/").concat(exports.indexName, "/_search"), {
+                            query: {
+                                bool: {
+                                    must: [
+                                        {
+                                            match_phrase: {
+                                                id: parcel_id,
+                                            },
+                                        },
+                                        {
+                                            match_phrase: {
+                                                partyuid: party_id,
+                                            },
+                                        },
+                                    ],
+                                },
+                            },
+                        }, {
                             auth: {
                                 username: config_1.default.ELASTIC_USERNAME,
                                 password: config_1.default.ELASTIC_PASSWORD,
@@ -395,15 +414,16 @@ function doesParcelExist(parcel_id) {
                         })];
                 case 1:
                     response = _a.sent();
-                    return [2 /*return*/, { source: response.data._source, found: response.data.found }];
+                    return [2 /*return*/, response.data.hits.hits.length > 0 ? true : false];
                 case 2:
                     error_8 = _a.sent();
-                    return [2 /*return*/, null];
+                    throw new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.UNKNOWN);
                 case 3: return [2 /*return*/];
             }
         });
     });
 }
+exports.doesParcelExist = doesParcelExist;
 function readConfig() {
     return JSON.parse(fs.readFileSync(path.resolve(__dirname, "config.json")).toString());
 }
