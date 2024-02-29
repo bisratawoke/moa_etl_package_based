@@ -116,19 +116,3 @@ export default class Notifier {
     }
   }
 }
-
-let notifier = new Notifier({
-  username: config.ELASTIC_USERNAME,
-  password: config.ELASTIC_PASSWORD,
-  host: config.ELASTIC_URL,
-});
-
-(async () => {
-  await notifier.notify({
-    index: "Testing",
-    extraction_status: EXTRACTION_STATUS.IN_PROGRESS,
-    extraction_date: new Date(),
-    number_of_extracted_records: 0,
-    method: EXTRACTION_METHOD.SYSTEMATIC,
-  });
-})();

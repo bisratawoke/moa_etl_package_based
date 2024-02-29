@@ -38,8 +38,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.nrlais_parcel_elt = exports.OPERATION_TYPE = void 0;
 var parcels_sync_1 = require("./parcels.sync");
-var parcels_etl_1 = require("./parcels.etl");
-var parcels_watershed_1 = require("./parcels.watershed");
 var OPERATION_TYPE;
 (function (OPERATION_TYPE) {
     OPERATION_TYPE["SYNC"] = "SYNC";
@@ -53,33 +51,30 @@ function nrlais_parcel_elt(opType) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 8, , 9]);
+                    _a.trys.push([0, 4, , 5]);
                     if (!(opType == OPERATION_TYPE.SYNC)) return [3 /*break*/, 2];
+                    console.log("======= sync is called =======");
                     return [4 /*yield*/, (0, parcels_sync_1.default)()];
                 case 1:
                     _a.sent();
-                    return [3 /*break*/, 7];
+                    return [3 /*break*/, 3];
                 case 2:
-                    if (!(opType == OPERATION_TYPE.ETL)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, (0, parcels_etl_1.default)()];
-                case 3:
-                    _a.sent();
-                    return [3 /*break*/, 7];
+                    if (opType == OPERATION_TYPE.ETL) {
+                        // await etl();
+                    }
+                    else if (opType == OPERATION_TYPE.WATERSHED_SYNC) {
+                        // await parcelWaterShedSync();
+                    }
+                    else {
+                        console.log("error please specify the operation type");
+                    }
+                    _a.label = 3;
+                case 3: return [3 /*break*/, 5];
                 case 4:
-                    if (!(opType == OPERATION_TYPE.WATERSHED_SYNC)) return [3 /*break*/, 6];
-                    return [4 /*yield*/, (0, parcels_watershed_1.default)()];
-                case 5:
-                    _a.sent();
-                    return [3 /*break*/, 7];
-                case 6:
-                    console.log("error please specify the operation type");
-                    _a.label = 7;
-                case 7: return [3 /*break*/, 9];
-                case 8:
                     error_1 = _a.sent();
                     console.log(error_1);
-                    return [3 /*break*/, 9];
-                case 9: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     }); };

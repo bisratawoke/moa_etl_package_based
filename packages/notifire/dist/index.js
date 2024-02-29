@@ -50,7 +50,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EXTRACTION_STATUS = exports.EXTRACTION_METHOD = void 0;
 var axios_1 = require("axios");
 var nodemailer = require("nodemailer");
-var moa_config_1 = require("moa_config");
 var EXTRACTION_METHOD;
 (function (EXTRACTION_METHOD) {
     EXTRACTION_METHOD["SYSTEMATIC"] = "systematic";
@@ -186,24 +185,3 @@ var Notifier = /** @class */ (function () {
     return Notifier;
 }());
 exports.default = Notifier;
-var notifier = new Notifier({
-    username: moa_config_1.default.ELASTIC_USERNAME,
-    password: moa_config_1.default.ELASTIC_PASSWORD,
-    host: moa_config_1.default.ELASTIC_URL,
-});
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, notifier.notify({
-                    index: "Testing",
-                    extraction_status: EXTRACTION_STATUS.IN_PROGRESS,
-                    extraction_date: new Date(),
-                    number_of_extracted_records: 0,
-                    method: EXTRACTION_METHOD.SYSTEMATIC,
-                })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); })();

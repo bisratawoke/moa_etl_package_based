@@ -152,8 +152,9 @@ export const insertIntoElasticNotDuplication = async (
   return new Promise(async (resolve, reject) => {
     try {
       const res = await doesParcelExist(rec.id, rec.partyuid);
-
+      console.log(res);
       if (!res) {
+        console.log("======= found one ========");
         const result = await axios.post(
           `${config.ELASTIC_URL}/${indexName}/_doc`,
           rec,
@@ -164,9 +165,12 @@ export const insertIntoElasticNotDuplication = async (
             },
           }
         );
+        console.log(result.status);
       }
+
       resolve(true);
     } catch (error) {
+      console.log(error);
       console.log("========= error while inserting elastic ===== ");
       resolve(true);
     }
@@ -283,7 +287,7 @@ export async function doesParcelExist(
 ): Promise<any> {
   try {
     const response = await axios.post(
-      `http://${config.ELASTIC_URL}/${indexName}/_search`,
+      `${config.ELASTIC_URL}/${indexName}/_search`,
       {
         query: {
           bool: {
@@ -312,6 +316,7 @@ export async function doesParcelExist(
 
     return response.data.hits.hits.length > 0 ? true : false;
   } catch (error: any) {
+    console.log(error);
     throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
   }
 }

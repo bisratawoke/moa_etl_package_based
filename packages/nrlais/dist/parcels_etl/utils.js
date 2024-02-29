@@ -256,7 +256,9 @@ var insertIntoElasticNotDuplication = function (indexName, rec) { return __await
                             return [4 /*yield*/, doesParcelExist(rec.id, rec.partyuid)];
                         case 1:
                             res = _a.sent();
+                            console.log(res);
                             if (!!res) return [3 /*break*/, 3];
+                            console.log("======= found one ========");
                             return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc"), rec, {
                                     auth: {
                                         username: config_1.default.ELASTIC_USERNAME,
@@ -265,12 +267,14 @@ var insertIntoElasticNotDuplication = function (indexName, rec) { return __await
                                 })];
                         case 2:
                             result = _a.sent();
+                            console.log(result.status);
                             _a.label = 3;
                         case 3:
                             resolve(true);
                             return [3 /*break*/, 5];
                         case 4:
                             error_6 = _a.sent();
+                            console.log(error_6);
                             console.log("========= error while inserting elastic ===== ");
                             resolve(true);
                             return [3 /*break*/, 5];
@@ -389,7 +393,7 @@ function doesParcelExist(parcel_id, party_id) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, axios_1.default.post("http://".concat(config_1.default.ELASTIC_URL, "/").concat(exports.indexName, "/_search"), {
+                    return [4 /*yield*/, axios_1.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(exports.indexName, "/_search"), {
                             query: {
                                 bool: {
                                     must: [
@@ -417,6 +421,7 @@ function doesParcelExist(parcel_id, party_id) {
                     return [2 /*return*/, response.data.hits.hits.length > 0 ? true : false];
                 case 2:
                     error_8 = _a.sent();
+                    console.log(error_8);
                     throw new etl_exception_1.default(error_8.message, etl_exception_1.etlExceptionType.UNKNOWN);
                 case 3: return [2 /*return*/];
             }

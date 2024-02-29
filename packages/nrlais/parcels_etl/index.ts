@@ -11,11 +11,12 @@ export function nrlais_parcel_elt(opType: OPERATION_TYPE): any {
   return async () => {
     try {
       if (opType == OPERATION_TYPE.SYNC) {
+        console.log("======= sync is called =======");
         await sync();
       } else if (opType == OPERATION_TYPE.ETL) {
-        await etl();
+        // await etl();
       } else if (opType == OPERATION_TYPE.WATERSHED_SYNC) {
-        await parcelWaterShedSync();
+        // await parcelWaterShedSync();
       } else {
         console.log("error please specify the operation type");
       }
