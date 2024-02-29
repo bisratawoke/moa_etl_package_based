@@ -81,11 +81,11 @@ schedule.scheduleJob(
   )
 );
 
-schedule.scheduleJob(
-  config.NRLAIS_DB_ETL_FREQUENCY,
-  jobber(
-    "nrlais_data",
-    nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO),
-    config.NRLAIS_DB_ETL_RETRY_RATE
-  )
-);
+// schedule.scheduleJob(
+//   config.NRLAIS_DB_ETL_FREQUENCY,
+//   jobber(
+//     "nrlais_data",
+//     nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO),
+//     config.NRLAIS_DB_ETL_RETRY_RATE
+//   )
+// );
