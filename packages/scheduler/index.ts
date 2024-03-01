@@ -19,14 +19,14 @@ import config from "moa_config";
 // );
 
 // // calm etl schedule
-// schedule.scheduleJob(
-//   config.CALM_DB_ETL_FREQUENCY,
-//   jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
-// );
+schedule.scheduleJob(
+  config.CALM_DB_ETL_FREQUENCY,
+  jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
+);
 
-(async () => {
-  await calm();
-})();
+// (async () => {
+//   await calm();
+// })();
 
 // // irrigation schedule
 // schedule.scheduleJob(
