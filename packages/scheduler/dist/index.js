@@ -1,19 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var schedule = require("node-schedule");
-var nrlais_1 = require("nrlais");
+var calm_1 = require("calm");
 var job_1 = require("./job");
 var moa_config_1 = require("moa_config");
-// // kmis schedules
+// kmis schedules
 // schedule.scheduleJob(
 //   config.KMIS_API_ETL_FREQUENCY,
 //   jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
 // );
 // // calm etl schedule
-// schedule.scheduleJob(
-//   config.CALM_DB_ETL_FREQUENCY,
-//   jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
-// );
+schedule.scheduleJob(moa_config_1.default.CALM_DB_ETL_FREQUENCY, (0, job_1.default)("CALM MIS", calm_1.default, moa_config_1.default.CALM_DB_ETL_RETRY_RATE));
 // // irrigation schedule
 // schedule.scheduleJob(
 //   config.IRRIGATION_ETL_FREQUENCY,
@@ -56,13 +53,28 @@ var moa_config_1 = require("moa_config");
 //     config.PSNP_PW_DB_ETL_RETRY_RATE
 //   )
 // );
-// nrlais etl
-schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlias_data", (0, nrlais_1.nrlais_parcel_elt)(nrlais_1.OPERATION_TYPE.SYNC), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
+// // nrlais etl
 // schedule.scheduleJob(
 //   config.NRLAIS_DB_ETL_FREQUENCY,
 //   jobber(
-//     "nrlais_data",
+//     "nrlias_data",
+//     nrlais_parcel_elt(OPERATION_TYPE.SYNC),
+//     config.NRLAIS_DB_ETL_RETRY_RATE
+//   )
+// );
+// schedule.scheduleJob(
+//   config.NRLAIS_DB_ETL_FREQUENCY,
+//   jobber(
+//     "nrlais_transction_data",
 //     nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO),
+//     config.NRLAIS_DB_ETL_RETRY_RATE
+//   )
+// );
+// schedule.scheduleJob(
+//   config.NRLAIS_DB_ETL_FREQUENCY,
+//   jobber(
+//     "nrlais_watershed_link",
+//     nrlais_parcel_elt(OPERATION_TYPE.WATERSHED_SYNC),
 //     config.NRLAIS_DB_ETL_RETRY_RATE
 //   )
 // );

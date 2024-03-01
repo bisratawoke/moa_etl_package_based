@@ -119,7 +119,3 @@ export default async function etl() {
     else throw new etlExceptions(error.message, etlExceptionType.UNKNOWN);
   }
 }
-
-(async () => {
-  await etl();
-})();

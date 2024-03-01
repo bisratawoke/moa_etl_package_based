@@ -466,8 +466,10 @@ function transactionWithoutGenderInfo() {
                                 case 0:
                                     id = "".concat(rec["nrlais_kebeleid"], "_").concat(rec["transactiontype"], "_").concat(rec["year"]);
                                     payload = __assign(__assign({}, rec), { string_year: String(rec["year"]), transaction_type: rec["trtype"], application_status: rec["trstatus"], result: Number(rec["no_trans"]), area: Number(rec["no_trans"]), id: id });
-                                    return [4 /*yield*/, (0, utils_1.insertWithOutGender)("nrlais_transaction_party_with_out_gender_information", payload, id)];
+                                    //nrlais_transaction_party_with_out_gender_information
+                                    return [4 /*yield*/, (0, utils_1.insertWithOutGender)("nrlais_transaction_party_with_out_gender_information_annual_report", payload, id)];
                                 case 1:
+                                    //nrlais_transaction_party_with_out_gender_information
                                     _a.sent();
                                     return [2 /*return*/];
                             }

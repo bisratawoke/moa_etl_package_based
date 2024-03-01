@@ -454,9 +454,10 @@ GROUP BY
             area: Number(rec["no_trans"]),
             id,
           };
+          //nrlais_transaction_party_with_out_gender_information
 
           await insertWithOutGender(
-            "nrlais_transaction_party_with_out_gender_information",
+            "nrlais_transaction_party_with_out_gender_information_annual_report",
             payload,
             id
           );

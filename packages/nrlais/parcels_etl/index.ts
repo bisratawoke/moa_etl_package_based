@@ -16,7 +16,7 @@ export function nrlais_parcel_elt(opType: OPERATION_TYPE): any {
       } else if (opType == OPERATION_TYPE.ETL) {
         // await etl();
       } else if (opType == OPERATION_TYPE.WATERSHED_SYNC) {
-        // await parcelWaterShedSync();
+        await parcelWaterShedSync();
       } else {
         console.log("error please specify the operation type");
       }

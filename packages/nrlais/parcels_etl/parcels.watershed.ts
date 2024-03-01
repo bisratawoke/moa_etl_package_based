@@ -13,7 +13,3 @@ export default async function main() {
     console.log(watershed);
   } catch (error) {}
 }
-
-(async () => {
-  await main();
-})();
