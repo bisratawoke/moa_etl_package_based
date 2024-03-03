@@ -52,7 +52,7 @@ var connection = mysql.createConnection({
 });
 var notifire = new notifire_1.default({
     host: config_1.default.ELASTIC_URL,
-    username: config_1.default.ELASTIC_USER,
+    username: config_1.default.ELASTIC_USERNAME,
     password: config_1.default.ELASTIC_PASSWORD,
 });
 function etl() {

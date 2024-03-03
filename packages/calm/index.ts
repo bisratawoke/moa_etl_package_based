@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
 
 const notifire = new Notifier({
   host: config.ELASTIC_URL,
-  username: config.ELASTIC_USER,
+  username: config.ELASTIC_USERNAME,
   password: config.ELASTIC_PASSWORD,
 });
 
