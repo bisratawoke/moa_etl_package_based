@@ -43,25 +43,18 @@ var createCsvWriter = require("csv-writer").createObjectCsvWriter;
 var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
 var notifire_1 = require("notifire");
-var connection = mysql.createConnection({
-    host: config_1.default.CALM_MYSQL_HOST,
-    port: config_1.default.CALM_MYSQL_PORT,
-    user: config_1.default.CALM_MYSQL_USER,
-    password: config_1.default.CALM_MYSQL_PASSWORD,
-    database: config_1.default.CALM_MYSQL_DB,
-});
 var notifire = new notifire_1.default({
     host: config_1.default.ELASTIC_URL,
     username: config_1.default.ELASTIC_USERNAME,
     password: config_1.default.ELASTIC_PASSWORD,
 });
-function etl() {
+function etl(connection) {
     return __awaiter(this, void 0, void 0, function () {
         var date;
         var _this = this;
         return __generator(this, function (_a) {
             date = readConfigFile().date;
-            connection.query("select  \n        woredas.woreda_name , \n        zones.zone_name , \n        regions.region_name ,\n        sum(demarcated) as demarcated ,\n        sum(digitized) as digitized ,\n        sum(certificates_approved) as certificates_approved , \n        sum(certificates_printed) as certificates_printed , \n        sum(certificates_collected) as certificates_collected \n        from weekly_progress_details \n        inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code \n        inner join zones on woredas.zone_id = zones.id \n        inner join regions on zones.region_id = regions.id \n        where weekly_progress_id in (select id from weekly_progresses where  report_to = '".concat(date, "')  group by woredas.woreda_name,zones.zone_name , regions.region_name;"), function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
+            connection.query("select  \n        woredas.woreda_name , \n        zones.zone_name , \n        regions.region_name ,\n        sum(demarcated) as demarcated ,\n        sum(digitized) as digitized ,\n        sum(certificates_approved) as certificates_approved , \n        sum(certificates_printed) as certificates_printed , \n        sum(certificates_collected) as certificates_collected \n        from weekly_progress_details \n        inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code \n        inner join zones on woredas.zone_id = zones.id \n        inner join regions on zones.region_id = regions.id \n        where weekly_progress_id in (select id from weekly_progresses where  report_to = '".concat(date, "')  \n        group by woredas.woreda_name,zones.zone_name , regions.region_name;"), function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
                 var records, _loop_1, x, new_date;
                 var _this = this;
                 return __generator(this, function (_a) {
@@ -86,7 +79,7 @@ function etl() {
                                     switch (_b.label) {
                                         case 0:
                                             woreda = results[x];
-                                            return [4 /*yield*/, getOldest(date, woreda.woreda_name)];
+                                            return [4 /*yield*/, getOldest(connection, date, woreda.woreda_name)];
                                         case 1:
                                             prev = _b.sent();
                                             record = {
@@ -160,7 +153,7 @@ function etl() {
                             return [4 /*yield*/, updateCsvFile(records)];
                         case 7:
                             _a.sent();
-                            return [4 /*yield*/, etl()];
+                            return [4 /*yield*/, etl(connection)];
                         case 8:
                             _a.sent();
                             _a.label = 9;
@@ -178,7 +171,7 @@ function oneWeekLess(inputDate) {
     var resultDate = inputDateObj.toISOString().slice(0, 10);
     return resultDate;
 }
-function getOldest(date, woreda_name) {
+function getOldest(connection, date, woreda_name) {
     var _this = this;
     return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
         var new_date;
@@ -203,7 +196,7 @@ function getOldest(date, woreda_name) {
                                 return [3 /*break*/, 4];
                             case 1:
                                 if (!(results.length < 1)) return [3 /*break*/, 3];
-                                return [4 /*yield*/, getOldest(new_date, woreda_name)];
+                                return [4 /*yield*/, getOldest(connection, new_date, woreda_name)];
                             case 2:
                                 res = _a.sent();
                                 resolve(res);
@@ -271,10 +264,17 @@ function insertIntoElastic(rec, id) {
 }
 function initialEtl() {
     return __awaiter(this, void 0, void 0, function () {
-        var date;
+        var date, connection;
         var _this = this;
         return __generator(this, function (_a) {
             date = "2021-12-23";
+            connection = mysql.createConnection({
+                host: config_1.default.CALM_MYSQL_HOST,
+                port: config_1.default.CALM_MYSQL_PORT,
+                user: config_1.default.CALM_MYSQL_USER,
+                password: config_1.default.CALM_MYSQL_PASSWORD,
+                database: config_1.default.CALM_MYSQL_DB,
+            });
             connection.query("select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '2021-12-23')  group by woredas.woreda_name,zones.zone_name , regions.region_name;", function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
                 var records, _loop_2, x, new_date;
                 var _this = this;
@@ -354,7 +354,7 @@ function initialEtl() {
                             return [4 /*yield*/, updateCsvFile(records)];
                         case 3:
                             _a.sent();
-                            return [4 /*yield*/, etl()];
+                            return [4 /*yield*/, etl(connection)];
                         case 4:
                             _a.sent();
                             _a.label = 5;

@@ -6,21 +6,13 @@ import config from "config";
 import etlExceptions, { etlExceptionType } from "etl-exception";
 import Notifier, { EXTRACTION_METHOD, EXTRACTION_STATUS } from "notifire";
 
-const connection = mysql.createConnection({
-  host: config.CALM_MYSQL_HOST,
-  port: config.CALM_MYSQL_PORT,
-  user: config.CALM_MYSQL_USER,
-  password: config.CALM_MYSQL_PASSWORD,
-  database: config.CALM_MYSQL_DB,
-});
-
 const notifire = new Notifier({
   host: config.ELASTIC_URL,
   username: config.ELASTIC_USERNAME,
   password: config.ELASTIC_PASSWORD,
 });
 
-async function etl() {
+async function etl(connection: any) {
   const { date } = readConfigFile();
   connection.query(
     `select  
@@ -36,7 +28,8 @@ async function etl() {
         inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code 
         inner join zones on woredas.zone_id = zones.id 
         inner join regions on zones.region_id = regions.id 
-        where weekly_progress_id in (select id from weekly_progresses where  report_to = '${date}')  group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
+        where weekly_progress_id in (select id from weekly_progresses where  report_to = '${date}')  
+        group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
     async (err: any, results: any, fields: any) => {
       if (err) {
         console.log(err);
@@ -51,7 +44,7 @@ async function etl() {
         let records: any = [];
         for (let x = 0; x < results.length; x++) {
           let woreda = results[x];
-          let prev: any = await getOldest(date, woreda.woreda_name);
+          let prev: any = await getOldest(connection, date, woreda.woreda_name);
           let record: any = {
             woreda_name: woreda.woreda_name,
             zone_name: woreda.zone_name,
@@ -99,7 +92,7 @@ async function etl() {
         let new_date = addOneWeek(date);
         updateConfigFile({ date: new_date });
         await updateCsvFile(records);
-        await etl();
+        await etl(connection);
       }
     }
   );
@@ -112,7 +105,7 @@ function oneWeekLess(inputDate) {
   return resultDate;
 }
 
-function getOldest(date, woreda_name) {
+function getOldest(connection, date, woreda_name) {
   return new Promise(async (resolve, reject) => {
     let new_date = oneWeekLess(date);
 
@@ -131,7 +124,7 @@ function getOldest(date, woreda_name) {
               });
           } else {
             if (results.length < 1) {
-              let res = await getOldest(new_date, woreda_name);
+              let res = await getOldest(connection, new_date, woreda_name);
 
               resolve(res);
             } else {
@@ -192,7 +185,13 @@ async function insertIntoElastic(rec: any, id: any) {
 
 export default async function initialEtl() {
   let date = "2021-12-23";
-
+  const connection = mysql.createConnection({
+    host: config.CALM_MYSQL_HOST,
+    port: config.CALM_MYSQL_PORT,
+    user: config.CALM_MYSQL_USER,
+    password: config.CALM_MYSQL_PASSWORD,
+    database: config.CALM_MYSQL_DB,
+  });
   connection.query(
     `select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '2021-12-23')  group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
     async (err: any, results: any, fields: any) => {
@@ -254,7 +253,7 @@ export default async function initialEtl() {
         updateConfigFile({ date: new_date });
 
         await updateCsvFile(records);
-        await etl();
+        await etl(connection);
       }
     }
   );
