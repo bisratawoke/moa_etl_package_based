@@ -38,6 +38,7 @@ export default async function sync() {
   const cursor = client.query(
     new Cursor(
       `select 
+      ST_AsText(ST_Transform(t_parcels.geometry,4326)) as location,
        familyrole.en,t_parcels.syscreatedate as created_at, 
        t_parcels.syslastmoddate as updated_at, 
        t_parcels.uid as id,  
