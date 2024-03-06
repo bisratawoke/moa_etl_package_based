@@ -119,7 +119,7 @@ export async function syncWithOutGeom() {
     for (let x = 0; x < rows.length; x++) {
       await insert("nrlais_parcel_without_geom", rows[x], rows[x]["id"]);
     }
-    await cursor.read(numOrRow);
+    rows = await cursor.read(numOrRow);
     // const rec = await transformer(rows[0]);
     // await insertIntoElasticNotDuplication(indexName, rec);
   }

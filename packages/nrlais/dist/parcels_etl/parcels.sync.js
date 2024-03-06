@@ -151,7 +151,7 @@ function syncWithOutGeom() {
                     return [3 /*break*/, 4];
                 case 7: return [4 /*yield*/, cursor.read(numOrRow)];
                 case 8:
-                    _a.sent();
+                    rows = _a.sent();
                     return [3 /*break*/, 3];
                 case 9:
                     cursor.close(function () {
