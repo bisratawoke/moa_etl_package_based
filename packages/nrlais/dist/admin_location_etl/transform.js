@@ -36,66 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nrlais_parcel_elt = exports.OPERATION_TYPE = void 0;
-var parcels_sync_1 = require("./parcels.sync");
-var parcels_watershed_1 = require("./parcels.watershed");
-var OPERATION_TYPE;
-(function (OPERATION_TYPE) {
-    OPERATION_TYPE["SYNC"] = "SYNC";
-    OPERATION_TYPE["ETL"] = "ETL";
-    OPERATION_TYPE["WATERSHED_SYNC"] = "WATERSHED_SYNC";
-    OPERATION_TYPE["SYNC_WITHOUT_GEOM"] = "SYNC_WITHOUT_GEOM";
-})(OPERATION_TYPE || (exports.OPERATION_TYPE = OPERATION_TYPE = {}));
-function nrlais_parcel_elt(opType) {
-    var _this = this;
-    return function () { return __awaiter(_this, void 0, void 0, function () {
-        var error_1;
+exports.removeNullLocation = void 0;
+function removeNullLocation(record) {
+    return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 9, , 10]);
-                    if (!(opType == OPERATION_TYPE.SYNC)) return [3 /*break*/, 2];
-                    console.log("======= sync is called =======");
-                    return [4 /*yield*/, (0, parcels_sync_1.default)()];
-                case 1:
-                    _a.sent();
-                    return [3 /*break*/, 8];
-                case 2:
-                    if (!(opType == OPERATION_TYPE.ETL)) return [3 /*break*/, 3];
-                    return [3 /*break*/, 8];
-                case 3:
-                    if (!(opType == OPERATION_TYPE.WATERSHED_SYNC)) return [3 /*break*/, 5];
-                    return [4 /*yield*/, (0, parcels_watershed_1.default)()];
-                case 4:
-                    _a.sent();
-                    return [3 /*break*/, 8];
-                case 5:
-                    if (!(opType == OPERATION_TYPE.SYNC_WITHOUT_GEOM)) return [3 /*break*/, 7];
-                    return [4 /*yield*/, (0, parcels_sync_1.syncWithOutGeom)()];
-                case 6:
-                    _a.sent();
-                    return [3 /*break*/, 8];
-                case 7:
-                    console.log("error please specify the operation type");
-                    _a.label = 8;
-                case 8: return [3 /*break*/, 10];
-                case 9:
-                    error_1 = _a.sent();
-                    console.log(error_1);
-                    return [3 /*break*/, 10];
-                case 10: return [2 /*return*/];
-            }
+            if (record.location == null)
+                delete record.location;
+            return [2 /*return*/, record];
         });
-    }); };
-}
-exports.nrlais_parcel_elt = nrlais_parcel_elt;
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, nrlais_parcel_elt(OPERATION_TYPE.SYNC_WITHOUT_GEOM)()];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
     });
-}); })();
+}
+exports.removeNullLocation = removeNullLocation;

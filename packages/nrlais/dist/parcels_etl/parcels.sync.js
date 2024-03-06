@@ -36,12 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.syncWithOutGeom = void 0;
 var Pool = require("pg").Pool;
 var Cursor = require("pg-cursor");
 var fs = require("fs");
 var axios = require("axios");
 var moa_config_1 = require("moa_config");
 var utils_1 = require("./utils");
+var extract_1 = require("../admin_location_etl/extract");
 function conn(pool) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -110,3 +112,54 @@ function sync() {
     });
 }
 exports.default = sync;
+function syncWithOutGeom() {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, client, cursor, numOrRow, rows, x;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    pool = new Pool({
+                        host: moa_config_1.default.NRLAIS_DB_HOST,
+                        port: moa_config_1.default.NRLAIS_DB_PORT,
+                        password: moa_config_1.default.NRLAIS_DB_PASSWORD,
+                        user: moa_config_1.default.NRLAIS_DB_USER,
+                        database: moa_config_1.default.NRLAIS_DB_NAME,
+                    });
+                    return [4 /*yield*/, pool.connect()];
+                case 1:
+                    client = _a.sent();
+                    cursor = client.query(new Cursor("select\n        t_parcels.syslastmoddate as updated_at, \n        t_parcels.uid as id,  \n        t_parcels.syscreatedate as date,\n        t_reg.csaregionnameeng as region_name,  \n        t_zone.csazonenameeng as zone_name,\n        t_woreda.woredanameeng as woreda_name,  \n        t_kebeles.kebelenameeng as kebele_name, \n        t_parcels.areageom \n      from nrlais_inventory.t_parcels as t_parcels\n      left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid\n      left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid\n      left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid\n      left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid\n      left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid \n      left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid \n      left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid \n"
+                    // "select t_parcels.uid as id , t_parcels.syscreatedate as date ,t_party.gender as gender, t_party.partytype ,t_rights.partyuid , t_reg.csaregionnameeng as region_name ,  t_zone.csazonenameeng as zone_name , t_woreda.woredanameeng as woreda_name , t_kebeles.kebelenameeng as kebele_name , t_holdings.holdingtype , t_parcels.areageom  from nrlais_inventory.t_parcels as t_parcels left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid  left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid left join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid"
+                    ));
+                    numOrRow = 10000;
+                    return [4 /*yield*/, cursor.read(numOrRow)];
+                case 2:
+                    rows = _a.sent();
+                    _a.label = 3;
+                case 3:
+                    if (!rows.length) return [3 /*break*/, 9];
+                    x = 0;
+                    _a.label = 4;
+                case 4:
+                    if (!(x < rows.length)) return [3 /*break*/, 7];
+                    return [4 /*yield*/, (0, extract_1.insertIntoElastic)("nrlais_parcel_without_geom", rows[x], rows[x]["id"])];
+                case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6:
+                    x++;
+                    return [3 /*break*/, 4];
+                case 7: return [4 /*yield*/, cursor.read(numOrRow)];
+                case 8:
+                    _a.sent();
+                    return [3 /*break*/, 3];
+                case 9:
+                    cursor.close(function () {
+                        client.release();
+                    });
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.syncWithOutGeom = syncWithOutGeom;

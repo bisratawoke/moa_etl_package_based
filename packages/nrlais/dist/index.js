@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./parcels_etl/index"), exports);
 __exportStar(require("./transaction_etl/index"), exports);
 __exportStar(require("./mortgage_etl/mortgage.sync"), exports);
+__exportStar(require("./admin_location_etl/index"), exports);
