@@ -60,21 +60,3 @@ function admin_location_etl() {
     });
 }
 exports.admin_location_etl = admin_location_etl;
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, admin_location_etl()];
-            case 1:
-                _a.sent();
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                console.log(error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); })();
