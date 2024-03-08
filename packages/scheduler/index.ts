@@ -8,6 +8,7 @@ import {
   nrlais_transaction_elt,
   TRANSACTION_OPERATION_TYPE,
   nrlais_mortgage_sync,
+  admin_location_etl,
 } from "nrlais";
 import psnp_etl, { OPERATION_TYPE as PSNP_OP_TYPE } from "psnp-pw";
 import jobber from "./job";

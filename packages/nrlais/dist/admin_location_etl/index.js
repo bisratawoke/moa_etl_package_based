@@ -36,23 +36,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.admin_location_etl = void 0;
 var extract_1 = require("./extract");
 function admin_location_etl() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: 
-                // await etl_region();
-                return [4 /*yield*/, (0, extract_1.etl_zone)()];
+                case 0: return [4 /*yield*/, (0, extract_1.etl_region)()];
                 case 1:
-                    // await etl_region();
+                    _a.sent();
+                    return [4 /*yield*/, (0, extract_1.etl_zone)()];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, (0, extract_1.etl_woreda)()];
+                case 3:
+                    _a.sent();
+                    return [4 /*yield*/, (0, extract_1.etl_kebele)()];
+                case 4:
                     _a.sent();
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.default = admin_location_etl;
-// (async () => {
-//   await admin_location_etl();
-// })();
+exports.admin_location_etl = admin_location_etl;
+(function () { return __awaiter(void 0, void 0, void 0, function () {
+    var error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, admin_location_etl()];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                console.log(error_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); })();

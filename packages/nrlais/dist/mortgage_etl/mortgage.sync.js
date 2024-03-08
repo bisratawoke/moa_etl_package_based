@@ -120,7 +120,7 @@ function nrlais_mortgage_sync() {
                 case 3:
                     if (!rows.length) return [3 /*break*/, 7];
                     return [4 /*yield*/, notifire.notify({
-                            index: "nrlais parcels data",
+                            index: "nrlais mortgage data",
                             extraction_date: new Date(),
                             extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
                             number_of_extracted_records: rows.length,
