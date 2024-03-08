@@ -42,6 +42,8 @@ function removeNullLocation(record) {
         return __generator(this, function (_a) {
             if (record.location == null)
                 delete record.location;
+            else
+                record.location = JSON.parse(record.location);
             return [2 /*return*/, record];
         });
     });
