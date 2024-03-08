@@ -58,7 +58,7 @@ var transformer_1 = require("./transformer");
 var notifire_1 = require("notifire");
 var notifire = new notifire_1.default({
     host: moa_config_1.default.ELASTIC_URL,
-    username: moa_config_1.default.ELASTIC_USER,
+    username: moa_config_1.default.ELASTIC_USERNAME,
     password: moa_config_1.default.ELASTIC_PASSWORD,
 });
 var pool = new Pool({
@@ -365,9 +365,18 @@ function sync() {
                         return __generator(this, function (_b) {
                             switch (_b.label) {
                                 case 0:
-                                    _b.trys.push([0, 3, , 4]);
-                                    return [4 /*yield*/, transformer(rows[0])];
+                                    _b.trys.push([0, 4, , 5]);
+                                    return [4 /*yield*/, notifire.notify({
+                                            index: "nrlais transaction data",
+                                            extraction_date: new Date(),
+                                            extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                            number_of_extracted_records: rows.length,
+                                            method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                        })];
                                 case 1:
+                                    _b.sent();
+                                    return [4 /*yield*/, transformer(rows[0])];
+                                case 2:
                                     result_1 = _b.sent();
                                     if (result_1.parties) {
                                         result_1.parties.forEach(function (rec, indx) { return __awaiter(_this, void 0, void 0, function () {
@@ -381,24 +390,12 @@ function sync() {
                                                 payload = __assign(__assign(__assign({}, rec), result_1), { houseHoldType: houseHoldType });
                                                 delete payload.tx_data;
                                                 payload = __assign(__assign({}, payload), { string_year: String(payload.year) });
-                                                console.log(payload);
+                                                console.log("".concat(payload["id"], "-").concat(payload["partyUID"]));
                                                 console.log("=============== end =============");
-                                                // console.log(payload.year);
-                                                // console.log(payload["region_name"]);
-                                                // console.log(payload["zone_name"]);
-                                                // console.log(payload["woreda_name"]);
-                                                // console.log(payload["kebele_name"]);
-                                                // console.log(payload["transactiontype"]);
-                                                // console.log(payload["transaction_type"]);
-                                                // console.log(houseHoldType);
-                                                // console.log(payload["partyTypeText"]);
-                                                // console.log(payload["gender_name"]);
-                                                // console.log(payload["mreg_familyrole"]);
-                                                // console.transaction_houshold_information_with_party_type_infolog("============= end ==============");
                                                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                                     return __generator(this, function (_a) {
                                                         switch (_a.label) {
-                                                            case 0: return [4 /*yield*/, (0, utils_1.insertIntoElastic)("transaction_houshold_information_with_party_type_info", payload)];
+                                                            case 0: return [4 /*yield*/, (0, utils_1.insertIntoEs)("transaction_houshold_information_with_party_type_info_report", payload, "".concat(payload["id"], "-").concat(payload["partyUID"]))];
                                                             case 1:
                                                                 _a.sent();
                                                                 return [2 /*return*/];
@@ -410,17 +407,17 @@ function sync() {
                                         }); });
                                     }
                                     return [4 /*yield*/, cursor.read(1)];
-                                case 2:
-                                    rows = _b.sent();
-                                    return [3 /*break*/, 4];
                                 case 3:
+                                    rows = _b.sent();
+                                    return [3 /*break*/, 5];
+                                case 4:
                                     error_1 = _b.sent();
                                     console.log(error_1);
                                     cursor.close(function () {
                                         client.release();
                                     });
-                                    return [3 /*break*/, 4];
-                                case 4: return [2 /*return*/];
+                                    return [3 /*break*/, 5];
+                                case 5: return [2 /*return*/];
                             }
                         });
                     };
@@ -444,7 +441,7 @@ function transactionWithoutGenderInfo() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 9, , 10]);
+                    _a.trys.push([0, 10, , 11]);
                     return [4 /*yield*/, pool.connect()];
                 case 1:
                     client_1 = _a.sent();
@@ -455,10 +452,19 @@ function transactionWithoutGenderInfo() {
                     rows = _a.sent();
                     _a.label = 3;
                 case 3:
-                    if (!rows.length) return [3 /*break*/, 8];
+                    if (!rows.length) return [3 /*break*/, 9];
                     _a.label = 4;
                 case 4:
-                    _a.trys.push([4, 6, , 7]);
+                    _a.trys.push([4, 7, , 8]);
+                    return [4 /*yield*/, notifire.notify({
+                            index: "nrlais transaction data",
+                            extraction_date: new Date(),
+                            extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                            number_of_extracted_records: rows.length,
+                            method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                        })];
+                case 5:
+                    _a.sent();
                     rows.forEach(function (rec) { return __awaiter(_this, void 0, void 0, function () {
                         var id, payload;
                         return __generator(this, function (_a) {
@@ -476,10 +482,10 @@ function transactionWithoutGenderInfo() {
                         });
                     }); });
                     return [4 /*yield*/, cursor.read(1)];
-                case 5:
-                    rows = _a.sent();
-                    return [3 /*break*/, 7];
                 case 6:
+                    rows = _a.sent();
+                    return [3 /*break*/, 8];
+                case 7:
                     error_2 = _a.sent();
                     cursor.close(function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
@@ -498,13 +504,13 @@ function transactionWithoutGenderInfo() {
                             }
                         });
                     }); });
-                    return [3 /*break*/, 7];
-                case 7: return [3 /*break*/, 3];
-                case 8: return [3 /*break*/, 10];
-                case 9:
+                    return [3 /*break*/, 8];
+                case 8: return [3 /*break*/, 3];
+                case 9: return [3 /*break*/, 11];
+                case 10:
                     error_3 = _a.sent();
-                    return [3 /*break*/, 10];
-                case 10: return [2 /*return*/];
+                    return [3 /*break*/, 11];
+                case 11: return [2 /*return*/];
             }
         });
     });

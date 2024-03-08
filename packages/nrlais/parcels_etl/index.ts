@@ -14,8 +14,6 @@ export function nrlais_parcel_elt(opType: OPERATION_TYPE): any {
       if (opType == OPERATION_TYPE.SYNC) {
         console.log("======= sync is called =======");
         await sync();
-      } else if (opType == OPERATION_TYPE.ETL) {
-        // await etl();
       } else if (opType == OPERATION_TYPE.WATERSHED_SYNC) {
         await parcelWaterShedSync();
       } else if (opType == OPERATION_TYPE.SYNC_WITHOUT_GEOM) {
@@ -28,7 +26,3 @@ export function nrlais_parcel_elt(opType: OPERATION_TYPE): any {
     }
   };
 }
-
-(async () => {
-  await nrlais_parcel_elt(OPERATION_TYPE.SYNC_WITHOUT_GEOM)();
-})();

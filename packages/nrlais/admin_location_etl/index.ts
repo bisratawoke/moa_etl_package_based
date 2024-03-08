@@ -7,6 +7,6 @@ export default async function admin_location_etl() {
   // await etl_kebele();
 }
 
-(async () => {
-  await admin_location_etl();
-})();
+// (async () => {
+//   await admin_location_etl();
+// })();

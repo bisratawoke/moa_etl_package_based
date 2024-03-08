@@ -5,6 +5,7 @@ const axios = require("axios");
 import config from "moa_config";
 import {
   insertIntoElastic,
+  insertIntoEs,
   insertWithOutGender,
   partyTypeConv,
   getRelationshipText,
@@ -26,7 +27,7 @@ import Notifier, { EXTRACTION_METHOD, EXTRACTION_STATUS } from "notifire";
 
 let notifire = new Notifier({
   host: config.ELASTIC_URL,
-  username: config.ELASTIC_USER,
+  username: config.ELASTIC_USERNAME,
   password: config.ELASTIC_PASSWORD,
 });
 
@@ -311,6 +312,7 @@ async function conn(pool: any) {
     console.error(error);
   }
 }
+
 export default async function sync() {
   await conn(pool);
 
@@ -348,6 +350,13 @@ export default async function sync() {
   let rows = await cursor.read(1);
   while (rows.length) {
     try {
+      await notifire.notify({
+        index: "nrlais transaction data",
+        extraction_date: new Date(),
+        extraction_status: EXTRACTION_STATUS.COMPLETED,
+        number_of_extracted_records: rows.length,
+        method: EXTRACTION_METHOD.SYSTEMATIC,
+      });
       let result: any = await transformer(rows[0]);
       if (result.parties) {
         result.parties.forEach(async (rec: Record<string, any>, indx: any) => {
@@ -364,25 +373,14 @@ export default async function sync() {
 
           payload = { ...payload, string_year: String(payload.year) };
 
-          console.log(payload);
+          console.log(`${payload["id"]}-${payload["partyUID"]}`);
           console.log("=============== end =============");
-          // console.log(payload.year);
 
-          // console.log(payload["region_name"]);
-          // console.log(payload["zone_name"]);
-          // console.log(payload["woreda_name"]);
-          // console.log(payload["kebele_name"]);
-          // console.log(payload["transactiontype"]);
-          // console.log(payload["transaction_type"]);
-          // console.log(houseHoldType);
-          // console.log(payload["partyTypeText"]);
-          // console.log(payload["gender_name"]);
-          // console.log(payload["mreg_familyrole"]);
-          // console.transaction_houshold_information_with_party_type_infolog("============= end ==============");
           setTimeout(async () => {
-            await insertIntoElastic(
-              "transaction_houshold_information_with_party_type_info",
-              payload
+            await insertIntoEs(
+              "transaction_houshold_information_with_party_type_info_report",
+              payload,
+              `${payload["id"]}-${payload["partyUID"]}`
             );
           }, indx * 100);
         });
@@ -443,6 +441,14 @@ GROUP BY
     let rows = await cursor.read(numOfRecs);
     while (rows.length) {
       try {
+        await notifire.notify({
+          index: "nrlais transaction data",
+          extraction_date: new Date(),
+          extraction_status: EXTRACTION_STATUS.COMPLETED,
+          number_of_extracted_records: rows.length,
+          method: EXTRACTION_METHOD.SYSTEMATIC,
+        });
+
         rows.forEach(async (rec) => {
           let id = `${rec["nrlais_kebeleid"]}_${rec["transactiontype"]}_${rec["year"]}`;
           let payload = {

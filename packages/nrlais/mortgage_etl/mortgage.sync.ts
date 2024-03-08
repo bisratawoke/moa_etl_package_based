@@ -4,6 +4,13 @@ const fs = require("fs");
 const axios = require("axios");
 import { AxiosError } from "axios";
 import config from "moa_config";
+import Notifier, { EXTRACTION_METHOD, EXTRACTION_STATUS } from "notifire";
+
+const notifire = new Notifier({
+  host: config.ELASTIC_URL,
+  username: config.ELASTIC_USERNAME,
+  password: config.ELASTIC_PASSWORD,
+});
 
 export const insertIntoElastic = async (
   indexName: string,
@@ -43,8 +50,7 @@ export async function nrlais_mortgage_sync() {
     database: config.NRLAIS_DB_NAME,
   });
   const client = await pool.connect();
-  // ST_AsText(ST_Transform(t_parcels.geometry,4326)) as location,
-  // ST_AsText(ST_Transform(t_woreda.geometry,4326)) as woreda_location ,
+
   const cursor = client.query(
     new Cursor(
       `select 
@@ -87,8 +93,15 @@ export async function nrlais_mortgage_sync() {
 `
     )
   );
-  let rows = await cursor.read(1);
+  let rows = await cursor.read(1000);
   while (rows.length) {
+    await notifire.notify({
+      index: "nrlais mortgage data",
+      extraction_date: new Date(),
+      extraction_status: EXTRACTION_STATUS.COMPLETED,
+      number_of_extracted_records: rows.length,
+      method: EXTRACTION_METHOD.SYSTEMATIC,
+    });
     let rec = rows[0];
     console.log(rec);
 
@@ -103,7 +116,7 @@ export async function nrlais_mortgage_sync() {
       `${record.res_uid}-${record.string_year}-${record.partyuid}`
     );
 
-    rows = await cursor.read(1);
+    rows = await cursor.read(1000);
   }
   console.log("===== im done ======");
   cursor.close(() => {

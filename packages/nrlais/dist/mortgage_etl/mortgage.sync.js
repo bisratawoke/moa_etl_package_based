@@ -54,6 +54,12 @@ var fs = require("fs");
 var axios = require("axios");
 var axios_1 = require("axios");
 var moa_config_1 = require("moa_config");
+var notifire_1 = require("notifire");
+var notifire = new notifire_1.default({
+    host: moa_config_1.default.ELASTIC_URL,
+    username: moa_config_1.default.ELASTIC_USERNAME,
+    password: moa_config_1.default.ELASTIC_PASSWORD,
+});
 var insertIntoElastic = function (indexName, payload, id) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
@@ -107,23 +113,32 @@ function nrlais_mortgage_sync() {
                 case 1:
                     client = _a.sent();
                     cursor = client.query(new Cursor("select \n       EXTRACT(YEAR FROM t_res.syscreatedate) AS year,\n      t_res.syscreatedate,\n\tt_res.uid res_uid,\n\trespartytype.en as restrictor,\n\ttpartyres.partytype as rest_partytype,\n\tpartytype.en as righttype,\n\tt_party.partytype,\n\tfamilyrole.en as owner_type,\n\tCASE \n\tWHEN t_party.gender = 'f'\n\tTHEN 'Female'\n\tWHEN t_party.gender = 'm' \n\tTHEN 'Male' ELSE 'Unknown' \n\tEND AS gender_name, \n\tt_party.Name as name ,\n\tt_acm_mort_res.area as area , \n\tt_parcel.uid as id ,\n\tt_region.csaregionnameeng as region_name , \n\tt_zone.csazonenameeng as zone_name , \n\tt_woreda.woredanameeng as woreda_name , \n\tt_kebele.kebelenameeng as kebele_name,\n    \tt_party.uid as partyuid\n    from nrlais_inventory.t_acm_mortgage  as t_acm_mort \n    left join nrlais_inventory.t_acm_mortgage_restriction as t_acm_mort_res on  t_acm_mort.uid = t_acm_mort_res.mortgage_uid \n    inner join nrlais_inventory.t_restrictions as t_res on t_acm_mort_res.restriction_uid = t_res.uid\n     inner join nrlais_inventory.t_party as tpartyres on t_res.partyuid = tpartyres.uid \n     inner join nrlais_inventory.t_parcels as t_parcel on t_res.parceluid = t_parcel.uid \n     inner join nrlais_inventory.t_rights as t_rights on t_parcel.uid = t_rights.parceluid \n     inner join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid \n     inner join nrlais_sys.t_regions as t_region on t_region.csaregionid = t_parcel.csaregionid \n     inner join nrlais_sys.t_zones as t_zone on t_zone.nrlais_zoneid = t_parcel.nrlais_zoneid \n     inner join nrlais_sys.t_woredas as t_woreda on t_woreda.nrlais_woredaid = t_parcel.nrlais_woredaid \n     inner join nrlais_sys.t_kebeles as t_kebele on t_kebele.nrlais_kebeleid = t_parcel.nrlais_kebeleid \n     inner join nrlais_sys.t_cl_familyrole as familyrole on familyrole.codeid = t_party.mreg_familyrole \n     inner join nrlais_sys.t_cl_partytype as respartytype on tpartyres.partytype = respartytype.codeid \n     inner join nrlais_sys.t_cl_partytype as partytype on t_party.partytype = partytype.codeid\n"));
-                    return [4 /*yield*/, cursor.read(1)];
+                    return [4 /*yield*/, cursor.read(1000)];
                 case 2:
                     rows = _a.sent();
                     _a.label = 3;
                 case 3:
-                    if (!rows.length) return [3 /*break*/, 6];
+                    if (!rows.length) return [3 /*break*/, 7];
+                    return [4 /*yield*/, notifire.notify({
+                            index: "nrlais parcels data",
+                            extraction_date: new Date(),
+                            extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                            number_of_extracted_records: rows.length,
+                            method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                        })];
+                case 4:
+                    _a.sent();
                     rec = rows[0];
                     console.log(rec);
                     record = __assign(__assign({}, rec), { string_year: String(rec.year) });
                     return [4 /*yield*/, (0, exports.insertIntoElastic)("mortage_data_with_restrictor_info_annual_report", record, "".concat(record.res_uid, "-").concat(record.string_year, "-").concat(record.partyuid))];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, cursor.read(1)];
                 case 5:
+                    _a.sent();
+                    return [4 /*yield*/, cursor.read(1000)];
+                case 6:
                     rows = _a.sent();
                     return [3 /*break*/, 3];
-                case 6:
+                case 7:
                     console.log("===== im done ======");
                     cursor.close(function () {
                         client.release();

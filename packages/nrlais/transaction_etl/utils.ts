@@ -160,6 +160,68 @@ export const insertIntoElastic = async (
   });
 };
 
+export const insertIntoEs = async (
+  indexName: string,
+  rec: Record<string, any>,
+  id: string
+) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      delete rec.tx_data;
+
+      console.log("====== in insert baby =====");
+      let partyTypeText = partyTypeConv(rec.partyType);
+      // let partyTextRole = getRelationshipText(rec.mreg_familyrole);
+
+      let payload = {
+        ...rec,
+        partyTypeText,
+        // partyTextRole,
+      };
+
+      console.log("====== in insert baby ======");
+      console.log(payload);
+      const result = await axios.post(
+        `${config.ELASTIC_URL}/${indexName}/_doc/${id}`,
+        payload,
+        {
+          auth: {
+            username: config.ELASTIC_USERNAME,
+            password: config.ELASTIC_PASSWORD,
+          },
+        }
+      );
+      console.log(result.status);
+      resolve(true);
+
+      // if (rec.mreg_familyrole) {
+      //   const result = await axios.post(
+      //     `${config.ELASTIC_URL}/${indexName}/_doc`,
+      //     rec,
+      //     {
+      //       auth: {
+      //         username: config.ELASTIC_USERNAME,
+      //         password: config.ELASTIC_PASSWORD,
+      //       },
+      //     }
+      //   );
+      //   console.log(result.status);
+      //   resolve(true);
+      // } else {
+      //   console.log("mreg_familyrole does not exist");
+      //   resolve(true);
+      // }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error.message);
+        console.log(error.response?.data);
+      }
+      console.log(error);
+      reject(true);
+    }
+  });
+};
+
 export const transformer = (
   record: Record<string, any>
 ): Promise<Record<string, any>> => {

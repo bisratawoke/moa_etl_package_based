@@ -19,8 +19,14 @@ schedule.scheduleJob(moa_config_1.default.PSNP_PW_DB_ETL_FREQUENCY, (0, job_1.de
 schedule.scheduleJob(moa_config_1.default.PSNP_PW_DB_ETL_FREQUENCY, (0, job_1.default)("psnp pw admin location etl", (0, psnp_pw_1.default)(psnp_pw_1.OPERATION_TYPE.LOCATION), moa_config_1.default.PSNP_PW_DB_ETL_RETRY_RATE));
 schedule.scheduleJob(moa_config_1.default.PSNP_PW_DB_ETL_FREQUENCY, (0, job_1.default)("psnp pw major watershed etl", (0, psnp_pw_1.default)(psnp_pw_1.OPERATION_TYPE.MAJOR_WATERSHED), moa_config_1.default.PSNP_PW_DB_ETL_RETRY_RATE));
 schedule.scheduleJob(moa_config_1.default.PSNP_PW_DB_ETL_FREQUENCY, (0, job_1.default)("psnp pw micro watershed etl", (0, psnp_pw_1.default)(psnp_pw_1.OPERATION_TYPE.MICRO_WATERSHED), moa_config_1.default.PSNP_PW_DB_ETL_RETRY_RATE));
-//  nrlais etl
+//   nrlais etl
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlias_data", (0, nrlais_1.nrlais_parcel_elt)(nrlais_1.OPERATION_TYPE.SYNC), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
+schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlias_data", (0, nrlais_1.nrlais_parcel_elt)(nrlais_1.OPERATION_TYPE.SYNC_WITHOUT_GEOM), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
+/**
+ * @description
+ *  - nrlais transaction etl
+ */
+schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_transaction_data", (0, nrlais_1.nrlais_transaction_elt)(nrlais_1.TRANSACTION_OPERATION_TYPE.WITHGENDER_INFO), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_transction_data", (0, nrlais_1.nrlais_transaction_elt)(nrlais_1.TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_watershed_link", (0, nrlais_1.nrlais_parcel_elt)(nrlais_1.OPERATION_TYPE.WATERSHED_SYNC), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_mortgage_data", nrlais_1.nrlais_mortgage_sync, moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));

@@ -72,12 +72,34 @@ schedule.scheduleJob(
   )
 );
 
-//  nrlais etl
+//   nrlais etl
 schedule.scheduleJob(
   config.NRLAIS_DB_ETL_FREQUENCY,
   jobber(
     "nrlias_data",
     nrlais_parcel_elt(OPERATION_TYPE.SYNC),
+    config.NRLAIS_DB_ETL_RETRY_RATE
+  )
+);
+
+schedule.scheduleJob(
+  config.NRLAIS_DB_ETL_FREQUENCY,
+  jobber(
+    "nrlias_data",
+    nrlais_parcel_elt(OPERATION_TYPE.SYNC_WITHOUT_GEOM),
+    config.NRLAIS_DB_ETL_RETRY_RATE
+  )
+);
+
+/**
+ * @description
+ *  - nrlais transaction etl
+ */
+schedule.scheduleJob(
+  config.NRLAIS_DB_ETL_FREQUENCY,
+  jobber(
+    "nrlais_transaction_data",
+    nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHGENDER_INFO),
     config.NRLAIS_DB_ETL_RETRY_RATE
   )
 );

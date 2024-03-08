@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoElastic = exports.insertWithOutGender = exports.partyTypeConv = exports.getRelationshipText = void 0;
+exports.getMaxCreatedAtAndUpdatedAtFromIndex = exports.updateConfig = exports.readConfig = exports.transformer = exports.insertIntoEs = exports.insertIntoElastic = exports.insertWithOutGender = exports.partyTypeConv = exports.getRelationshipText = void 0;
 var axios_1 = require("axios");
 var axios_2 = require("axios");
 var config_1 = require("config");
@@ -192,6 +192,48 @@ var insertIntoElastic = function (indexName, rec) { return __awaiter(void 0, voi
     });
 }); };
 exports.insertIntoElastic = insertIntoElastic;
+var insertIntoEs = function (indexName, rec, id) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
+                var partyTypeText, payload, result, error_3;
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 2, , 3]);
+                            delete rec.tx_data;
+                            console.log("====== in insert baby =====");
+                            partyTypeText = partyTypeConv(rec.partyType);
+                            payload = __assign(__assign({}, rec), { partyTypeText: partyTypeText });
+                            console.log("====== in insert baby ======");
+                            console.log(payload);
+                            return [4 /*yield*/, axios_2.default.post("".concat(config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(id), payload, {
+                                    auth: {
+                                        username: config_1.default.ELASTIC_USERNAME,
+                                        password: config_1.default.ELASTIC_PASSWORD,
+                                    },
+                                })];
+                        case 1:
+                            result = _b.sent();
+                            console.log(result.status);
+                            resolve(true);
+                            return [3 /*break*/, 3];
+                        case 2:
+                            error_3 = _b.sent();
+                            if (error_3 instanceof axios_1.AxiosError) {
+                                console.log(error_3.message);
+                                console.log((_a = error_3.response) === null || _a === void 0 ? void 0 : _a.data);
+                            }
+                            console.log(error_3);
+                            reject(true);
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); })];
+    });
+}); };
+exports.insertIntoEs = insertIntoEs;
 var transformer = function (record) {
     return new Promise(function (resolve, reject) {
         record.year = new Date(record.date).getFullYear();
@@ -256,7 +298,7 @@ function updateConfig(data) {
 exports.updateConfig = updateConfig;
 function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_3;
+        var response, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -287,11 +329,11 @@ function getMaxCreatedAtAndUpdatedAtFromIndex(indexName) {
                             updated_at: response.data._source.updated,
                         }];
                 case 2:
-                    error_3 = _a.sent();
-                    if (error_3 instanceof etl_exception_1.default)
-                        throw error_3;
+                    error_4 = _a.sent();
+                    if (error_4 instanceof etl_exception_1.default)
+                        throw error_4;
                     else
-                        throw new etl_exception_1.default(error_3.message, etl_exception_1.etlExceptionType.UNKNOWN);
+                        throw new etl_exception_1.default(error_4.message, etl_exception_1.etlExceptionType.UNKNOWN);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
