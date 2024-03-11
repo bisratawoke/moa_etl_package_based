@@ -65,7 +65,7 @@ function main(optType) {
         return __generator(this, function (_1) {
             switch (_1.label) {
                 case 0:
-                    _1.trys.push([0, 56, , 57]);
+                    _1.trys.push([0, 55, , 56]);
                     count = 0;
                     _a = optType;
                     switch (_a) {
@@ -74,7 +74,7 @@ function main(optType) {
                         case OPERATION_TYPE.MICRO_WATERSHED: return [3 /*break*/, 27];
                         case OPERATION_TYPE.ACTIVITIES: return [3 /*break*/, 40];
                     }
-                    return [3 /*break*/, 54];
+                    return [3 /*break*/, 53];
                 case 1:
                     _1.trys.push([1, 7, 8, 13]);
                     _b = true, _c = __asyncValues((0, psnp_pw_services_extract_location_1.admin_location_info_extraction)());
@@ -110,7 +110,7 @@ function main(optType) {
                     if (e_1) throw e_1.error;
                     return [7 /*endfinally*/];
                 case 12: return [7 /*endfinally*/];
-                case 13: return [3 /*break*/, 55];
+                case 13: return [3 /*break*/, 54];
                 case 14:
                     _1.trys.push([14, 20, 21, 26]);
                     _e = true, _f = __asyncValues((0, psnp_pw_services_extract_location_1.extractMajorWatershed)());
@@ -146,7 +146,7 @@ function main(optType) {
                     if (e_2) throw e_2.error;
                     return [7 /*endfinally*/];
                 case 25: return [7 /*endfinally*/];
-                case 26: return [3 /*break*/, 55];
+                case 26: return [3 /*break*/, 54];
                 case 27:
                     _1.trys.push([27, 33, 34, 39]);
                     _h = true, _j = __asyncValues((0, psnp_pw_services_extract_location_1.extractMicrowatshed)());
@@ -182,17 +182,14 @@ function main(optType) {
                     if (e_3) throw e_3.error;
                     return [7 /*endfinally*/];
                 case 38: return [7 /*endfinally*/];
-                case 39: return [3 /*break*/, 55];
+                case 39: return [3 /*break*/, 54];
                 case 40:
-                    console.log("====== in activities ======");
-                    _1.label = 41;
-                case 41:
-                    _1.trys.push([41, 47, 48, 53]);
+                    _1.trys.push([40, 46, 47, 52]);
                     _l = true, _m = __asyncValues((0, psnp_pw_services_extract_activites_1.extract_activites_info)());
-                    _1.label = 42;
-                case 42: return [4 /*yield*/, _m.next()];
-                case 43:
-                    if (!(_o = _1.sent(), _y = _o.done, !_y)) return [3 /*break*/, 46];
+                    _1.label = 41;
+                case 41: return [4 /*yield*/, _m.next()];
+                case 42:
+                    if (!(_o = _1.sent(), _y = _o.done, !_y)) return [3 /*break*/, 45];
                     _0 = _o.value;
                     _l = false;
                     activity = _0;
@@ -201,35 +198,35 @@ function main(optType) {
                         ? console.log(record)
                         : console.log("yo");
                     return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_swc_treatment_result_scheduler_test", record.id)];
-                case 44:
+                case 43:
                     _1.sent();
-                    _1.label = 45;
-                case 45:
+                    _1.label = 44;
+                case 44:
                     _l = true;
-                    return [3 /*break*/, 42];
-                case 46: return [3 /*break*/, 53];
-                case 47:
+                    return [3 /*break*/, 41];
+                case 45: return [3 /*break*/, 52];
+                case 46:
                     e_4_1 = _1.sent();
                     e_4 = { error: e_4_1 };
-                    return [3 /*break*/, 53];
-                case 48:
-                    _1.trys.push([48, , 51, 52]);
-                    if (!(!_l && !_y && (_z = _m.return))) return [3 /*break*/, 50];
+                    return [3 /*break*/, 52];
+                case 47:
+                    _1.trys.push([47, , 50, 51]);
+                    if (!(!_l && !_y && (_z = _m.return))) return [3 /*break*/, 49];
                     return [4 /*yield*/, _z.call(_m)];
-                case 49:
+                case 48:
                     _1.sent();
-                    _1.label = 50;
-                case 50: return [3 /*break*/, 52];
-                case 51:
+                    _1.label = 49;
+                case 49: return [3 /*break*/, 51];
+                case 50:
                     if (e_4) throw e_4.error;
                     return [7 /*endfinally*/];
-                case 52: return [7 /*endfinally*/];
-                case 53: return [3 /*break*/, 55];
-                case 54:
+                case 51: return [7 /*endfinally*/];
+                case 52: return [3 /*break*/, 54];
+                case 53:
                     console.log("Please specify a proper OPERATION_TYPE");
-                    _1.label = 55;
-                case 55: return [3 /*break*/, 57];
-                case 56:
+                    _1.label = 54;
+                case 54: return [3 /*break*/, 56];
+                case 55:
                     error_1 = _1.sent();
                     console.log("==== i was caught =====");
                     console.log(error_1);
@@ -237,8 +234,8 @@ function main(optType) {
                         throw error_1;
                     else
                         throw new etl_exception_1.default(error_1.message, etl_exception_1.etlExceptionType.UNKNOWN);
-                    return [3 /*break*/, 57];
-                case 57: return [2 /*return*/];
+                    return [3 /*break*/, 56];
+                case 56: return [2 /*return*/];
             }
         });
     }); };

@@ -42,8 +42,6 @@ export default async function sync() {
     database: config.NRLAIS_DB_NAME,
   });
   const client = await pool.connect();
-  // ST_AsText(ST_Transform(t_parcels.geometry,4326)) as location,
-  // ST_AsText(ST_Transform(t_woreda.geometry,4326)) as woreda_location ,
   const cursor = client.query(
     new Cursor(
       `select 
@@ -136,7 +134,11 @@ export async function syncWithOutGeom() {
       method: EXTRACTION_METHOD.SYSTEMATIC,
     });
     for (let x = 0; x < rows.length; x++) {
-      await insert("nrlais_parcel_without_geom", rows[x], rows[x]["parcel_id"]);
+      let record = {
+        ...rows[x],
+        area: Number(rows[x]["areageom"]),
+      };
+      await insert("nrlais_parcel_without_geom", record, record["parcel_id"]);
     }
     rows = await cursor.read(numOrRow);
   }
