@@ -143,7 +143,7 @@ function syncWithOutGeom() {
                     return [4 /*yield*/, pool.connect()];
                 case 1:
                     client = _a.sent();
-                    cursor = client.query(new Cursor("select\n      familyrole.en,t_parcels.syscreatedate as created_at, \n       t_parcels.syslastmoddate as updated_at, \n       t_parcels.uid as parcel_id,  \n       t_parcels.syscreatedate as date,\n       t_party.uid as party_id,\n       t_party.gender as gender, \n       t_party.partytype,\n       t_rights.partyuid,\n       t_reg.csaregionnameeng as region_name, \n       t_zone.csazonenameeng as zone_name, \n       t_woreda.woredanameeng as woreda_name, \n       t_kebeles.kebelenameeng as kebele_name, \n       t_holdings.holdingtype, \n       t_parcels.areageom  \n      from nrlais_inventory.t_parcels as t_parcels\n      left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid\n      left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid\n      left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid\n      left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid\n      left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid \n      left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid \n      left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid \n      left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid \n      left join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid \n      inner join nrlais_sys.t_cl_familyrole as familyrole on familyrole.codeid = t_party.mreg_familyrole\n    "));
+                    cursor = client.query(new Cursor("select\n       familyrole.en,t_parcels.syscreatedate as created_at, \n       t_parcels.syslastmoddate as updated_at, \n       t_parcels.uid as parcel_id,  \n       t_parcels.syscreatedate as date,\n       t_party.uid as party_id,\n       t_party.gender as gender, \n       t_party.partytype,\n       t_rights.partyuid,\n       t_reg.csaregionnameeng as region_name, \n       t_zone.csazonenameeng as zone_name, \n       t_woreda.woredanameeng as woreda_name, \n       t_kebeles.kebelenameeng as kebele_name, \n       t_holdings.holdingtype, \n       t_parcels.areageom  \n      from nrlais_inventory.t_parcels as t_parcels\n      left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid\n      left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid\n      left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid\n      left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid\n      left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid \n      left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid \n      left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid\n    "));
                     numOrRow = 10000;
                     return [4 /*yield*/, cursor.read(numOrRow)];
                 case 2:
@@ -164,7 +164,7 @@ function syncWithOutGeom() {
                     _a.label = 5;
                 case 5:
                     if (!(x < rows.length)) return [3 /*break*/, 8];
-                    return [4 /*yield*/, (0, extract_1.insertIntoElastic)("nrlais_parcel_without_geom", rows[x], "".concat(rows[x].parcel_id, "-").concat(rows[x].partyuid))];
+                    return [4 /*yield*/, (0, extract_1.insertIntoElastic)("nrlais_parcel_without_geom", rows[x], rows[x]["parcel_id"])];
                 case 6:
                     _a.sent();
                     _a.label = 7;
@@ -185,3 +185,13 @@ function syncWithOutGeom() {
     });
 }
 exports.syncWithOutGeom = syncWithOutGeom;
+(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, syncWithOutGeom()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); })();

@@ -32,6 +32,7 @@ async function conn(pool: any) {
     console.error(error);
   }
 }
+
 export default async function sync() {
   const pool = new Pool({
     host: config.NRLAIS_DB_HOST,
@@ -107,7 +108,7 @@ export async function syncWithOutGeom() {
   const cursor = client.query(
     new Cursor(
       `select
-      familyrole.en,t_parcels.syscreatedate as created_at, 
+       familyrole.en,t_parcels.syscreatedate as created_at, 
        t_parcels.syslastmoddate as updated_at, 
        t_parcels.uid as parcel_id,  
        t_parcels.syscreatedate as date,
@@ -128,10 +129,7 @@ export async function syncWithOutGeom() {
       left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid
       left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid 
       left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid 
-      left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid 
-      left join nrlais_inventory.t_rights as t_rights on t_rights.parceluid = t_parcels.uid 
-      left join nrlais_inventory.t_party as t_party on t_rights.partyuid = t_party.uid 
-      inner join nrlais_sys.t_cl_familyrole as familyrole on familyrole.codeid = t_party.mreg_familyrole
+      left join nrlais_sys.t_kebeles as t_kebeles on t_parcels.nrlais_kebeleid = t_kebeles.nrlais_kebeleid
     `
     )
   );
@@ -146,11 +144,7 @@ export async function syncWithOutGeom() {
       method: EXTRACTION_METHOD.SYSTEMATIC,
     });
     for (let x = 0; x < rows.length; x++) {
-      await insert(
-        "nrlais_parcel_without_geom",
-        rows[x],
-        `${rows[x].parcel_id}-${rows[x].partyuid}`
-      );
+      await insert("nrlais_parcel_without_geom", rows[x], rows[x]["parcel_id"]);
     }
     rows = await cursor.read(numOrRow);
   }
@@ -158,3 +152,7 @@ export async function syncWithOutGeom() {
     client.release();
   });
 }
+
+(async () => {
+  await syncWithOutGeom();
+})();

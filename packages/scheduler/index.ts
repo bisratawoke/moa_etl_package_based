@@ -20,13 +20,13 @@ schedule.scheduleJob(
   jobber("kmis etl", kmis, config.KMIS_API_ETL_RETRY_RATE)
 );
 
-//  calm etl schedule
+// calm etl schedule
 schedule.scheduleJob(
   config.CALM_DB_ETL_FREQUENCY,
   jobber("CALM MIS", calm, config.CALM_DB_ETL_RETRY_RATE)
 );
 
-//   irrigation schedule
+// irrigation schedule
 schedule.scheduleJob(
   config.IRRIGATION_ETL_FREQUENCY,
   jobber(
@@ -36,7 +36,7 @@ schedule.scheduleJob(
   )
 );
 
-//  psnp pw schedules
+// psnp pw schedules
 schedule.scheduleJob(
   config.PSNP_PW_DB_ETL_FREQUENCY,
   jobber(
@@ -73,7 +73,7 @@ schedule.scheduleJob(
   )
 );
 
-//   nrlais etl
+// nrlais etl
 schedule.scheduleJob(
   config.NRLAIS_DB_ETL_FREQUENCY,
   jobber(

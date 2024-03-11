@@ -56,7 +56,6 @@ export default function main(optType: OPERATION_TYPE) {
           }
           break;
         case OPERATION_TYPE.ACTIVITIES:
-          console.log("====== in activities ======");
           for await (const activity of extract_activites_info()) {
             let record = actTransformer(activity);
             record.Unit.toLowerCase() == "ha"
