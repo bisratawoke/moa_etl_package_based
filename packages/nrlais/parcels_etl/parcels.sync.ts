@@ -108,24 +108,16 @@ export async function syncWithOutGeom() {
   const cursor = client.query(
     new Cursor(
       `select
-       familyrole.en,t_parcels.syscreatedate as created_at, 
+      t_parcels.syscreatedate as created_at, 
        t_parcels.syslastmoddate as updated_at, 
        t_parcels.uid as parcel_id,  
        t_parcels.syscreatedate as date,
-       t_party.uid as party_id,
-       t_party.gender as gender, 
-       t_party.partytype,
-       t_rights.partyuid,
        t_reg.csaregionnameeng as region_name, 
        t_zone.csazonenameeng as zone_name, 
        t_woreda.woredanameeng as woreda_name, 
-       t_kebeles.kebelenameeng as kebele_name, 
-       t_holdings.holdingtype, 
+       t_kebeles.kebelenameeng as kebele_name,  
        t_parcels.areageom  
       from nrlais_inventory.t_parcels as t_parcels
-      left join nrlais_inventory.fdconnector as fd on fd.wfsid = t_parcels.uid
-      left join nrlais_inventory.t_sys_fc_holding as t_sys on t_sys.fdc_uid = fd.uid
-      left join nrlais_inventory.t_holdings as t_holdings on t_sys.holdinguid = t_holdings.uid
       left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid
       left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid 
       left join nrlais_sys.t_woredas as t_woreda on t_parcels.nrlais_woredaid = t_woreda.nrlais_woredaid 
