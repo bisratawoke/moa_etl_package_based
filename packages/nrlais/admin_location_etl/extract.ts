@@ -42,7 +42,7 @@ export async function etl_region() {
           id as region_id,
           csaregionnameeng as region_name,
           csaregionid as region_code,
-          ST_AsText(ST_Transform(geometry,4326)) as location
+          ST_AsGeoJson(ST_Transform(geometry,4326)) as location
         from nrlais_sys.t_regions;
     `
     );
@@ -117,7 +117,7 @@ export async function etl_woreda() {
         t_zone.csazonenameeng as zone_name,
         t_woreda.woredanameeng as woreda_name,
         t_woreda.nrlais_woredaid as woreda_code,
-        ST_AsText(ST_Transform(t_woreda.geometry,4326)) as location
+        ST_AsGeoJson(ST_Transform(t_woreda.geometry,4326)) as location
         from nrlais_sys.t_woredas as t_woreda
         inner join nrlais_sys.t_zones as t_zone on t_zone.nrlais_zoneid = t_woreda.nrlais_zoneid
         inner join nrlais_sys.t_regions as t_region on t_zone.csaregionid = t_region.csaregionid
@@ -160,7 +160,7 @@ export async function etl_kebele() {
         t_woreda.nrlais_woredaid as woreda_code,
         t_kebele.nrlais_kebeleid as kebele_code,
         t_kebele.kebelenameeng as kebele_name,
-        ST_AsText(ST_Transform(t_kebele.geometry,4326)) as location
+        ST_AsGeoJson(ST_Transform(t_kebele.geometry,4326)) as location
         from nrlais_sys.t_kebeles as t_kebele
         inner join nrlais_sys.t_woredas as t_woreda on t_woreda.nrlais_woredaid = t_kebele.nrlais_woredaid
         inner join nrlais_sys.t_zones as t_zone on t_zone.nrlais_zoneid = t_woreda.nrlais_zoneid

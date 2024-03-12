@@ -106,15 +106,15 @@ export async function syncWithOutGeom() {
   const cursor = client.query(
     new Cursor(
       `select
-      t_parcels.syscreatedate as created_at, 
-       t_parcels.syslastmoddate as updated_at, 
-       t_parcels.uid as parcel_id,  
-       t_parcels.syscreatedate as date,
-       t_reg.csaregionnameeng as region_name, 
-       t_zone.csazonenameeng as zone_name, 
-       t_woreda.woredanameeng as woreda_name, 
-       t_kebeles.kebelenameeng as kebele_name,  
-       t_parcels.areageom  
+        t_parcels.syscreatedate as created_at, 
+        t_parcels.syslastmoddate as updated_at, 
+        t_parcels.uid as parcel_id,  
+        t_parcels.syscreatedate as date,
+        t_reg.csaregionnameeng as region_name, 
+        t_zone.csazonenameeng as zone_name, 
+        t_woreda.woredanameeng as woreda_name, 
+        t_kebeles.kebelenameeng as kebele_name,  
+        t_parcels.areageom  
       from nrlais_inventory.t_parcels as t_parcels
       left join nrlais_sys.t_regions as t_reg on t_parcels.csaregionid = t_reg.csaregionid
       left join nrlais_sys.t_zones as t_zone on t_parcels.nrlais_zoneid = t_zone.nrlais_zoneid 
@@ -146,7 +146,3 @@ export async function syncWithOutGeom() {
     client.release();
   });
 }
-
-(async () => {
-  await syncWithOutGeom();
-})();

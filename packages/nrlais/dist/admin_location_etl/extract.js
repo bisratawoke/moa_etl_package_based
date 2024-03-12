@@ -84,7 +84,7 @@ function etl_region() {
                     return [4 /*yield*/, pool.connect()];
                 case 1:
                     conn = _a.sent();
-                    return [4 /*yield*/, conn.query("\n        select \n          id as region_id,\n          csaregionnameeng as region_name,\n          csaregionid as region_code,\n          ST_AsText(ST_Transform(geometry,4326)) as location\n        from nrlais_sys.t_regions;\n    ")];
+                    return [4 /*yield*/, conn.query("\n        select \n          id as region_id,\n          csaregionnameeng as region_name,\n          csaregionid as region_code,\n          ST_AsGeoJson(ST_Transform(geometry,4326)) as location\n        from nrlais_sys.t_regions;\n    ")];
                 case 2:
                     response = _a.sent();
                     x = 0;
@@ -174,7 +174,7 @@ function etl_woreda() {
                     return [4 /*yield*/, pool.connect()];
                 case 1:
                     conn = _a.sent();
-                    return [4 /*yield*/, conn.query("\n      select \n        t_woreda.id as woreda_id,\n        t_zone.nrlais_zoneid as zone_code,\n        t_region.csaregionid as region_code,\n        t_region.csaregionnameeng as region_name,\n        t_zone.csazonenameeng as zone_name,\n        t_woreda.woredanameeng as woreda_name,\n        t_woreda.nrlais_woredaid as woreda_code,\n        ST_AsText(ST_Transform(t_woreda.geometry,4326)) as location\n        from nrlais_sys.t_woredas as t_woreda\n        inner join nrlais_sys.t_zones as t_zone on t_zone.nrlais_zoneid = t_woreda.nrlais_zoneid\n        inner join nrlais_sys.t_regions as t_region on t_zone.csaregionid = t_region.csaregionid\n\n    ")];
+                    return [4 /*yield*/, conn.query("\n      select \n        t_woreda.id as woreda_id,\n        t_zone.nrlais_zoneid as zone_code,\n        t_region.csaregionid as region_code,\n        t_region.csaregionnameeng as region_name,\n        t_zone.csazonenameeng as zone_name,\n        t_woreda.woredanameeng as woreda_name,\n        t_woreda.nrlais_woredaid as woreda_code,\n        ST_AsGeoJson(ST_Transform(t_woreda.geometry,4326)) as location\n        from nrlais_sys.t_woredas as t_woreda\n        inner join nrlais_sys.t_zones as t_zone on t_zone.nrlais_zoneid = t_woreda.nrlais_zoneid\n        inner join nrlais_sys.t_regions as t_region on t_zone.csaregionid = t_region.csaregionid\n\n    ")];
                 case 2:
                     response = _a.sent();
                     x = 0;
@@ -219,7 +219,7 @@ function etl_kebele() {
                     return [4 /*yield*/, pool.connect()];
                 case 1:
                     conn = _a.sent();
-                    return [4 /*yield*/, conn.query("\n      select \n        t_kebele.id as kebele_id,\n        t_zone.nrlais_zoneid as zone_code,\n        t_region.csaregionid as region_code,\n        t_region.csaregionnameeng as region_name,\n        t_zone.csazonenameeng as zone_name,\n        t_woreda.woredanameeng as woreda_name,\n        t_woreda.nrlais_woredaid as woreda_code,\n        t_kebele.nrlais_kebeleid as kebele_code,\n        t_kebele.kebelenameeng as kebele_name,\n        ST_AsText(ST_Transform(t_kebele.geometry,4326)) as location\n        from nrlais_sys.t_kebeles as t_kebele\n        inner join nrlais_sys.t_woredas as t_woreda on t_woreda.nrlais_woredaid = t_kebele.nrlais_woredaid\n        inner join nrlais_sys.t_zones as t_zone on t_zone.nrlais_zoneid = t_woreda.nrlais_zoneid\n        inner join nrlais_sys.t_regions as t_region on t_zone.csaregionid = t_region.csaregionid\n    ")];
+                    return [4 /*yield*/, conn.query("\n      select \n        t_kebele.id as kebele_id,\n        t_zone.nrlais_zoneid as zone_code,\n        t_region.csaregionid as region_code,\n        t_region.csaregionnameeng as region_name,\n        t_zone.csazonenameeng as zone_name,\n        t_woreda.woredanameeng as woreda_name,\n        t_woreda.nrlais_woredaid as woreda_code,\n        t_kebele.nrlais_kebeleid as kebele_code,\n        t_kebele.kebelenameeng as kebele_name,\n        ST_AsGeoJson(ST_Transform(t_kebele.geometry,4326)) as location\n        from nrlais_sys.t_kebeles as t_kebele\n        inner join nrlais_sys.t_woredas as t_woreda on t_woreda.nrlais_woredaid = t_kebele.nrlais_woredaid\n        inner join nrlais_sys.t_zones as t_zone on t_zone.nrlais_zoneid = t_woreda.nrlais_zoneid\n        inner join nrlais_sys.t_regions as t_region on t_zone.csaregionid = t_region.csaregionid\n    ")];
                 case 2:
                     response = _a.sent();
                     x = 0;
