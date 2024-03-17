@@ -13,89 +13,97 @@ const notifire = new Notifier({
 });
 
 async function etl(connection: any) {
-  const { date } = readConfigFile();
-  connection.query(
-    `select  
-        woredas.woreda_name , 
-        zones.zone_name , 
-        regions.region_name ,
-        sum(demarcated) as demarcated ,
-        sum(digitized) as digitized ,
-        sum(certificates_approved) as certificates_approved , 
-        sum(certificates_printed) as certificates_printed , 
-        sum(certificates_collected) as certificates_collected 
-        from weekly_progress_details 
-        inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code 
-        inner join zones on woredas.zone_id = zones.id 
-        inner join regions on zones.region_id = regions.id 
-        where weekly_progress_id in (select id from weekly_progresses where  report_to = '${date}')  
-        group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
-    async (err: any, results: any, fields: any) => {
-      if (err) {
-        console.log(err);
-      } else {
-        await notifire.notify({
-          index: "calm",
-          extraction_date: new Date(),
-          extraction_status: EXTRACTION_STATUS.COMPLETED,
-          number_of_extracted_records: results.length,
-          method: EXTRACTION_METHOD.SYSTEMATIC,
-        });
-        let records: any = [];
-        for (let x = 0; x < results.length; x++) {
-          let woreda = results[x];
-          let prev: any = await getOldest(connection, date, woreda.woreda_name);
-          let record: any = {
-            woreda_name: woreda.woreda_name,
-            zone_name: woreda.zone_name,
-            region_name:
-              woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
-            demarcated: Number(woreda.demarcated) - Number(prev.demarcated),
-            digitized: Number(woreda.digitized) - Number(prev.digitized),
-            certificates_approved:
-              Number(woreda.certificates_approved) -
-              Number(prev.certificates_approved),
-            certificates_printed:
-              Number(woreda.certificates_printed) -
-              Number(prev.certificates_printed),
-            certificates_collected:
-              Number(woreda.certificates_collected) -
-              Number(prev.certificates_collected),
-            date: date,
-            year: date.split("-")[0],
-            month: date.split("-")[1],
-            day: date.split("-")[2],
-            text_date: date.split("-")[2],
-          };
-          let id = `${String(record.date)}_${String(
-            record.woreda_name.replace(/\//g, "")
-          )}`;
-          records.push(record);
-          setTimeout(async () => {
-            try {
-              await insertIntoElastic(record, id);
-            } catch (error) {
-              if (error instanceof etlExceptions) {
-                let message = {
-                  index: "calm",
-                  extraction_date: new Date(),
-                  extraction_status: EXTRACTION_STATUS.COMPLETED,
-                  number_of_extracted_records: results.length,
-                  method: EXTRACTION_METHOD.SYSTEMATIC,
-                  message: error.message,
-                };
-                await notifire.notify(message);
+  try {
+    const { date } = readConfigFile();
+    connection.query(
+      `select  
+          woredas.woreda_name , 
+          zones.zone_name , 
+          regions.region_name ,
+          sum(demarcated) as demarcated ,
+          sum(digitized) as digitized ,
+          sum(certificates_approved) as certificates_approved , 
+          sum(certificates_printed) as certificates_printed , 
+          sum(certificates_collected) as certificates_collected 
+          from weekly_progress_details 
+          inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code 
+          inner join zones on woredas.zone_id = zones.id 
+          inner join regions on zones.region_id = regions.id 
+          where weekly_progress_id in (select id from weekly_progresses where  report_to = '${date}')  
+          group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
+      async (err: any, results: any, fields: any) => {
+        if (err) {
+          console.log(err);
+        } else {
+          await notifire.notify({
+            index: "calm",
+            extraction_date: new Date(),
+            extraction_status: EXTRACTION_STATUS.COMPLETED,
+            number_of_extracted_records: results.length,
+            method: EXTRACTION_METHOD.SYSTEMATIC,
+          });
+          let records: any = [];
+          for (let x = 0; x < results.length; x++) {
+            let woreda = results[x];
+            let prev: any = await getOldest(
+              connection,
+              date,
+              woreda.woreda_name
+            );
+            let record: any = {
+              woreda_name: woreda.woreda_name,
+              zone_name: woreda.zone_name,
+              region_name:
+                woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
+              demarcated: Number(woreda.demarcated) - Number(prev.demarcated),
+              digitized: Number(woreda.digitized) - Number(prev.digitized),
+              certificates_approved:
+                Number(woreda.certificates_approved) -
+                Number(prev.certificates_approved),
+              certificates_printed:
+                Number(woreda.certificates_printed) -
+                Number(prev.certificates_printed),
+              certificates_collected:
+                Number(woreda.certificates_collected) -
+                Number(prev.certificates_collected),
+              date: date,
+              year: date.split("-")[0],
+              month: date.split("-")[1],
+              day: date.split("-")[2],
+              text_date: date.split("-")[2],
+            };
+            let id = `${String(record.date)}_${String(
+              record.woreda_name.replace(/\//g, "")
+            )}`;
+            records.push(record);
+            setTimeout(async () => {
+              try {
+                await insertIntoElastic(record, id);
+              } catch (error) {
+                if (error instanceof etlExceptions) {
+                  let message = {
+                    index: "calm",
+                    extraction_date: new Date(),
+                    extraction_status: EXTRACTION_STATUS.COMPLETED,
+                    number_of_extracted_records: results.length,
+                    method: EXTRACTION_METHOD.SYSTEMATIC,
+                    message: error.message,
+                  };
+                  await notifire.notify(message);
+                }
               }
-            }
-          }, 300 * x);
+            }, 300 * x);
+          }
+          let new_date = addOneWeek(date);
+          updateConfigFile({ date: new_date });
+          await updateCsvFile(records);
+          await etl(connection);
         }
-        let new_date = addOneWeek(date);
-        updateConfigFile({ date: new_date });
-        await updateCsvFile(records);
-        await etl(connection);
       }
-    }
-  );
+    );
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function oneWeekLess(inputDate) {
@@ -107,40 +115,44 @@ function oneWeekLess(inputDate) {
 
 function getOldest(connection, date, woreda_name) {
   return new Promise(async (resolve, reject) => {
-    let new_date = oneWeekLess(date);
+    try {
+      let new_date = oneWeekLess(date);
 
-    if (new Date(new_date) > new Date("2021-01-01")) {
-      connection.query(
-        `select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '${new_date}') and woredas.woreda_name = '${woreda_name}' group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
-        async (err, results, fields) => {
-          if (err) {
-            if (err.errno == 1525)
-              resolve({
-                demarcated: 0,
-                digitized: 0,
-                certificates_approved: 0,
-                certificates_printed: 0,
-                certificates_collected: 0,
-              });
-          } else {
-            if (results.length < 1) {
-              let res = await getOldest(connection, new_date, woreda_name);
-
-              resolve(res);
+      if (new Date(new_date) > new Date("2021-01-01")) {
+        connection.query(
+          `select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '${new_date}') and woredas.woreda_name = '${woreda_name}' group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
+          async (err, results, fields) => {
+            if (err) {
+              if (err.errno == 1525)
+                resolve({
+                  demarcated: 0,
+                  digitized: 0,
+                  certificates_approved: 0,
+                  certificates_printed: 0,
+                  certificates_collected: 0,
+                });
             } else {
-              resolve(results[0]);
+              if (results.length < 1) {
+                let res = await getOldest(connection, new_date, woreda_name);
+
+                resolve(res);
+              } else {
+                resolve(results[0]);
+              }
             }
           }
-        }
-      );
-    } else {
-      resolve({
-        demarcated: 0,
-        digitized: 0,
-        certificates_approved: 0,
-        certificates_printed: 0,
-        certificates_collected: 0,
-      });
+        );
+      } else {
+        resolve({
+          demarcated: 0,
+          digitized: 0,
+          certificates_approved: 0,
+          certificates_printed: 0,
+          certificates_collected: 0,
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   });
 }
@@ -184,79 +196,83 @@ async function insertIntoElastic(rec: any, id: any) {
 }
 
 export default async function initialEtl() {
-  let date = "2021-12-23";
-  const connection = mysql.createConnection({
-    host: config.CALM_MYSQL_HOST,
-    port: config.CALM_MYSQL_PORT,
-    user: config.CALM_MYSQL_USER,
-    password: config.CALM_MYSQL_PASSWORD,
-    database: config.CALM_MYSQL_DB,
-  });
-  connection.query(
-    `select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '2021-12-23')  group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
-    async (err: any, results: any, fields: any) => {
-      if (err) {
-        console.log(err);
-      } else {
-        let records: any = [];
-        await notifire.notify({
-          index: "calm",
-          extraction_date: new Date(),
-          extraction_status: EXTRACTION_STATUS.COMPLETED,
-          number_of_extracted_records: results.length,
-          method: EXTRACTION_METHOD.SYSTEMATIC,
-        });
-        for (let x = 0; x < results.length; x++) {
-          let woreda = results[x];
+  try {
+    let date = "2021-12-23";
+    const connection = mysql.createConnection({
+      host: config.CALM_MYSQL_HOST,
+      port: config.CALM_MYSQL_PORT,
+      user: config.CALM_MYSQL_USER,
+      password: config.CALM_MYSQL_PASSWORD,
+      database: config.CALM_MYSQL_DB,
+    });
+    connection.query(
+      `select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '2021-12-23')  group by woredas.woreda_name,zones.zone_name , regions.region_name;`,
+      async (err: any, results: any, fields: any) => {
+        if (err) {
+          console.log(err);
+        } else {
+          let records: any = [];
+          await notifire.notify({
+            index: "calm",
+            extraction_date: new Date(),
+            extraction_status: EXTRACTION_STATUS.COMPLETED,
+            number_of_extracted_records: results.length,
+            method: EXTRACTION_METHOD.SYSTEMATIC,
+          });
+          for (let x = 0; x < results.length; x++) {
+            let woreda = results[x];
 
-          let record = {
-            woreda_name: woreda.woreda_name,
-            zone_name: woreda.zone_name,
-            region_name:
-              woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
-            demarcated: Number(woreda.demarcated),
-            digitized: Number(woreda.digitized),
-            certificates_approved: Number(woreda.certificates_approved),
-            certificates_printed: Number(woreda.certificates_printed),
-            certificates_collected: Number(woreda.certificates_collected),
-            date: date,
-            year: date.split("-")[0],
-            month: date.split("-")[1],
-            day: date.split("-")[2],
-            text_date: date.split("-")[2],
-          };
+            let record = {
+              woreda_name: woreda.woreda_name,
+              zone_name: woreda.zone_name,
+              region_name:
+                woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
+              demarcated: Number(woreda.demarcated),
+              digitized: Number(woreda.digitized),
+              certificates_approved: Number(woreda.certificates_approved),
+              certificates_printed: Number(woreda.certificates_printed),
+              certificates_collected: Number(woreda.certificates_collected),
+              date: date,
+              year: date.split("-")[0],
+              month: date.split("-")[1],
+              day: date.split("-")[2],
+              text_date: date.split("-")[2],
+            };
 
-          let id = `${String(record.date)}_${String(
-            record.woreda_name.replace(/\//g, "")
-          )}`;
-          console.log(record, id);
-          records.push(record);
-          setTimeout(async () => {
-            try {
-              await insertIntoElastic(record, id);
-            } catch (error) {
-              if (error instanceof etlExceptions) {
-                let message = {
-                  index: "calm",
-                  extraction_date: new Date(),
-                  extraction_status: EXTRACTION_STATUS.COMPLETED,
-                  number_of_extracted_records: results.length,
-                  method: EXTRACTION_METHOD.SYSTEMATIC,
-                  message: error.message,
-                };
-                await notifire.notify(message);
+            let id = `${String(record.date)}_${String(
+              record.woreda_name.replace(/\//g, "")
+            )}`;
+            console.log(record, id);
+            records.push(record);
+            setTimeout(async () => {
+              try {
+                await insertIntoElastic(record, id);
+              } catch (error) {
+                if (error instanceof etlExceptions) {
+                  let message = {
+                    index: "calm",
+                    extraction_date: new Date(),
+                    extraction_status: EXTRACTION_STATUS.COMPLETED,
+                    number_of_extracted_records: results.length,
+                    method: EXTRACTION_METHOD.SYSTEMATIC,
+                    message: error.message,
+                  };
+                  await notifire.notify(message);
+                }
               }
-            }
-          }, 300 * x);
-        }
-        let new_date = addOneWeek(date);
-        updateConfigFile({ date: new_date });
+            }, 300 * x);
+          }
+          let new_date = addOneWeek(date);
+          updateConfigFile({ date: new_date });
 
-        await updateCsvFile(records);
-        await etl(connection);
+          await updateCsvFile(records);
+          await etl(connection);
+        }
       }
-    }
-  );
+    );
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 const csvWriter = createCsvWriter({

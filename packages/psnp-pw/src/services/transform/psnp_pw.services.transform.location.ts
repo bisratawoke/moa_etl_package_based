@@ -30,3 +30,18 @@ export function adminLocationTransformer(record: Record<string, any>) {
     watershed_location: JSON.parse(record.microwatershed_location),
   };
 }
+
+export function normailizeRegionName(record: Record<string, any>) {
+  let new_region_name = "";
+  switch (record.region_name) {
+    case "SNNPR":
+      new_region_name = "SNNP";
+    default:
+      new_region_name = record.region_name;
+  }
+
+  return {
+    ...record,
+    region_name: new_region_name,
+  };
+}

@@ -50,117 +50,122 @@ var notifire = new notifire_1.default({
 });
 function etl(connection) {
     return __awaiter(this, void 0, void 0, function () {
-        var date;
+        var date_1;
         var _this = this;
         return __generator(this, function (_a) {
-            date = readConfigFile().date;
-            connection.query("select  \n        woredas.woreda_name , \n        zones.zone_name , \n        regions.region_name ,\n        sum(demarcated) as demarcated ,\n        sum(digitized) as digitized ,\n        sum(certificates_approved) as certificates_approved , \n        sum(certificates_printed) as certificates_printed , \n        sum(certificates_collected) as certificates_collected \n        from weekly_progress_details \n        inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code \n        inner join zones on woredas.zone_id = zones.id \n        inner join regions on zones.region_id = regions.id \n        where weekly_progress_id in (select id from weekly_progresses where  report_to = '".concat(date, "')  \n        group by woredas.woreda_name,zones.zone_name , regions.region_name;"), function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
-                var records, _loop_1, x, new_date;
-                var _this = this;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            if (!err) return [3 /*break*/, 1];
-                            console.log(err);
-                            return [3 /*break*/, 9];
-                        case 1: return [4 /*yield*/, notifire.notify({
-                                index: "calm",
-                                extraction_date: new Date(),
-                                extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
-                                number_of_extracted_records: results.length,
-                                method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
-                            })];
-                        case 2:
-                            _a.sent();
-                            records = [];
-                            _loop_1 = function (x) {
-                                var woreda, prev, record, id;
-                                return __generator(this, function (_b) {
-                                    switch (_b.label) {
-                                        case 0:
-                                            woreda = results[x];
-                                            return [4 /*yield*/, getOldest(connection, date, woreda.woreda_name)];
-                                        case 1:
-                                            prev = _b.sent();
-                                            record = {
-                                                woreda_name: woreda.woreda_name,
-                                                zone_name: woreda.zone_name,
-                                                region_name: woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
-                                                demarcated: Number(woreda.demarcated) - Number(prev.demarcated),
-                                                digitized: Number(woreda.digitized) - Number(prev.digitized),
-                                                certificates_approved: Number(woreda.certificates_approved) -
-                                                    Number(prev.certificates_approved),
-                                                certificates_printed: Number(woreda.certificates_printed) -
-                                                    Number(prev.certificates_printed),
-                                                certificates_collected: Number(woreda.certificates_collected) -
-                                                    Number(prev.certificates_collected),
-                                                date: date,
-                                                year: date.split("-")[0],
-                                                month: date.split("-")[1],
-                                                day: date.split("-")[2],
-                                                text_date: date.split("-")[2],
-                                            };
-                                            id = "".concat(String(record.date), "_").concat(String(record.woreda_name.replace(/\//g, "")));
-                                            records.push(record);
-                                            setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                                                var error_1, message;
-                                                return __generator(this, function (_a) {
-                                                    switch (_a.label) {
-                                                        case 0:
-                                                            _a.trys.push([0, 2, , 5]);
-                                                            return [4 /*yield*/, insertIntoElastic(record, id)];
-                                                        case 1:
-                                                            _a.sent();
-                                                            return [3 /*break*/, 5];
-                                                        case 2:
-                                                            error_1 = _a.sent();
-                                                            if (!(error_1 instanceof etl_exception_1.default)) return [3 /*break*/, 4];
-                                                            message = {
-                                                                index: "calm",
-                                                                extraction_date: new Date(),
-                                                                extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
-                                                                number_of_extracted_records: results.length,
-                                                                method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
-                                                                message: error_1.message,
-                                                            };
-                                                            return [4 /*yield*/, notifire.notify(message)];
-                                                        case 3:
-                                                            _a.sent();
-                                                            _a.label = 4;
-                                                        case 4: return [3 /*break*/, 5];
-                                                        case 5: return [2 /*return*/];
-                                                    }
-                                                });
-                                            }); }, 300 * x);
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            };
-                            x = 0;
-                            _a.label = 3;
-                        case 3:
-                            if (!(x < results.length)) return [3 /*break*/, 6];
-                            return [5 /*yield**/, _loop_1(x)];
-                        case 4:
-                            _a.sent();
-                            _a.label = 5;
-                        case 5:
-                            x++;
-                            return [3 /*break*/, 3];
-                        case 6:
-                            new_date = addOneWeek(date);
-                            updateConfigFile({ date: new_date });
-                            return [4 /*yield*/, updateCsvFile(records)];
-                        case 7:
-                            _a.sent();
-                            return [4 /*yield*/, etl(connection)];
-                        case 8:
-                            _a.sent();
-                            _a.label = 9;
-                        case 9: return [2 /*return*/];
-                    }
-                });
-            }); });
+            try {
+                date_1 = readConfigFile().date;
+                connection.query("select  \n          woredas.woreda_name , \n          zones.zone_name , \n          regions.region_name ,\n          sum(demarcated) as demarcated ,\n          sum(digitized) as digitized ,\n          sum(certificates_approved) as certificates_approved , \n          sum(certificates_printed) as certificates_printed , \n          sum(certificates_collected) as certificates_collected \n          from weekly_progress_details \n          inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code \n          inner join zones on woredas.zone_id = zones.id \n          inner join regions on zones.region_id = regions.id \n          where weekly_progress_id in (select id from weekly_progresses where  report_to = '".concat(date_1, "')  \n          group by woredas.woreda_name,zones.zone_name , regions.region_name;"), function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
+                    var records, _loop_1, x, new_date;
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!err) return [3 /*break*/, 1];
+                                console.log(err);
+                                return [3 /*break*/, 9];
+                            case 1: return [4 /*yield*/, notifire.notify({
+                                    index: "calm",
+                                    extraction_date: new Date(),
+                                    extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                    number_of_extracted_records: results.length,
+                                    method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                })];
+                            case 2:
+                                _a.sent();
+                                records = [];
+                                _loop_1 = function (x) {
+                                    var woreda, prev, record, id;
+                                    return __generator(this, function (_b) {
+                                        switch (_b.label) {
+                                            case 0:
+                                                woreda = results[x];
+                                                return [4 /*yield*/, getOldest(connection, date_1, woreda.woreda_name)];
+                                            case 1:
+                                                prev = _b.sent();
+                                                record = {
+                                                    woreda_name: woreda.woreda_name,
+                                                    zone_name: woreda.zone_name,
+                                                    region_name: woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
+                                                    demarcated: Number(woreda.demarcated) - Number(prev.demarcated),
+                                                    digitized: Number(woreda.digitized) - Number(prev.digitized),
+                                                    certificates_approved: Number(woreda.certificates_approved) -
+                                                        Number(prev.certificates_approved),
+                                                    certificates_printed: Number(woreda.certificates_printed) -
+                                                        Number(prev.certificates_printed),
+                                                    certificates_collected: Number(woreda.certificates_collected) -
+                                                        Number(prev.certificates_collected),
+                                                    date: date_1,
+                                                    year: date_1.split("-")[0],
+                                                    month: date_1.split("-")[1],
+                                                    day: date_1.split("-")[2],
+                                                    text_date: date_1.split("-")[2],
+                                                };
+                                                id = "".concat(String(record.date), "_").concat(String(record.woreda_name.replace(/\//g, "")));
+                                                records.push(record);
+                                                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                                    var error_1, message;
+                                                    return __generator(this, function (_a) {
+                                                        switch (_a.label) {
+                                                            case 0:
+                                                                _a.trys.push([0, 2, , 5]);
+                                                                return [4 /*yield*/, insertIntoElastic(record, id)];
+                                                            case 1:
+                                                                _a.sent();
+                                                                return [3 /*break*/, 5];
+                                                            case 2:
+                                                                error_1 = _a.sent();
+                                                                if (!(error_1 instanceof etl_exception_1.default)) return [3 /*break*/, 4];
+                                                                message = {
+                                                                    index: "calm",
+                                                                    extraction_date: new Date(),
+                                                                    extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                                                    number_of_extracted_records: results.length,
+                                                                    method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                                                    message: error_1.message,
+                                                                };
+                                                                return [4 /*yield*/, notifire.notify(message)];
+                                                            case 3:
+                                                                _a.sent();
+                                                                _a.label = 4;
+                                                            case 4: return [3 /*break*/, 5];
+                                                            case 5: return [2 /*return*/];
+                                                        }
+                                                    });
+                                                }); }, 300 * x);
+                                                return [2 /*return*/];
+                                        }
+                                    });
+                                };
+                                x = 0;
+                                _a.label = 3;
+                            case 3:
+                                if (!(x < results.length)) return [3 /*break*/, 6];
+                                return [5 /*yield**/, _loop_1(x)];
+                            case 4:
+                                _a.sent();
+                                _a.label = 5;
+                            case 5:
+                                x++;
+                                return [3 /*break*/, 3];
+                            case 6:
+                                new_date = addOneWeek(date_1);
+                                updateConfigFile({ date: new_date });
+                                return [4 /*yield*/, updateCsvFile(records)];
+                            case 7:
+                                _a.sent();
+                                return [4 /*yield*/, etl(connection)];
+                            case 8:
+                                _a.sent();
+                                _a.label = 9;
+                            case 9: return [2 /*return*/];
+                        }
+                    });
+                }); });
+            }
+            catch (error) {
+                console.log(error);
+            }
             return [2 /*return*/];
         });
     });
@@ -174,49 +179,54 @@ function oneWeekLess(inputDate) {
 function getOldest(connection, date, woreda_name) {
     var _this = this;
     return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-        var new_date;
+        var new_date_1;
         var _this = this;
         return __generator(this, function (_a) {
-            new_date = oneWeekLess(date);
-            if (new Date(new_date) > new Date("2021-01-01")) {
-                connection.query("select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '".concat(new_date, "') and woredas.woreda_name = '").concat(woreda_name, "' group by woredas.woreda_name,zones.zone_name , regions.region_name;"), function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
-                    var res;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                if (!err) return [3 /*break*/, 1];
-                                if (err.errno == 1525)
-                                    resolve({
-                                        demarcated: 0,
-                                        digitized: 0,
-                                        certificates_approved: 0,
-                                        certificates_printed: 0,
-                                        certificates_collected: 0,
-                                    });
-                                return [3 /*break*/, 4];
-                            case 1:
-                                if (!(results.length < 1)) return [3 /*break*/, 3];
-                                return [4 /*yield*/, getOldest(connection, new_date, woreda_name)];
-                            case 2:
-                                res = _a.sent();
-                                resolve(res);
-                                return [3 /*break*/, 4];
-                            case 3:
-                                resolve(results[0]);
-                                _a.label = 4;
-                            case 4: return [2 /*return*/];
-                        }
+            try {
+                new_date_1 = oneWeekLess(date);
+                if (new Date(new_date_1) > new Date("2021-01-01")) {
+                    connection.query("select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '".concat(new_date_1, "') and woredas.woreda_name = '").concat(woreda_name, "' group by woredas.woreda_name,zones.zone_name , regions.region_name;"), function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
+                        var res;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    if (!err) return [3 /*break*/, 1];
+                                    if (err.errno == 1525)
+                                        resolve({
+                                            demarcated: 0,
+                                            digitized: 0,
+                                            certificates_approved: 0,
+                                            certificates_printed: 0,
+                                            certificates_collected: 0,
+                                        });
+                                    return [3 /*break*/, 4];
+                                case 1:
+                                    if (!(results.length < 1)) return [3 /*break*/, 3];
+                                    return [4 /*yield*/, getOldest(connection, new_date_1, woreda_name)];
+                                case 2:
+                                    res = _a.sent();
+                                    resolve(res);
+                                    return [3 /*break*/, 4];
+                                case 3:
+                                    resolve(results[0]);
+                                    _a.label = 4;
+                                case 4: return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                }
+                else {
+                    resolve({
+                        demarcated: 0,
+                        digitized: 0,
+                        certificates_approved: 0,
+                        certificates_printed: 0,
+                        certificates_collected: 0,
                     });
-                }); });
+                }
             }
-            else {
-                resolve({
-                    demarcated: 0,
-                    digitized: 0,
-                    certificates_approved: 0,
-                    certificates_printed: 0,
-                    certificates_collected: 0,
-                });
+            catch (error) {
+                console.log(error);
             }
             return [2 /*return*/];
         });
@@ -264,104 +274,109 @@ function insertIntoElastic(rec, id) {
 }
 function initialEtl() {
     return __awaiter(this, void 0, void 0, function () {
-        var date, connection;
+        var date_2, connection_1;
         var _this = this;
         return __generator(this, function (_a) {
-            date = "2021-12-23";
-            connection = mysql.createConnection({
-                host: config_1.default.CALM_MYSQL_HOST,
-                port: config_1.default.CALM_MYSQL_PORT,
-                user: config_1.default.CALM_MYSQL_USER,
-                password: config_1.default.CALM_MYSQL_PASSWORD,
-                database: config_1.default.CALM_MYSQL_DB,
-            });
-            connection.query("select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '2021-12-23')  group by woredas.woreda_name,zones.zone_name , regions.region_name;", function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
-                var records, _loop_2, x, new_date;
-                var _this = this;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            if (!err) return [3 /*break*/, 1];
-                            console.log(err);
-                            return [3 /*break*/, 5];
-                        case 1:
-                            records = [];
-                            return [4 /*yield*/, notifire.notify({
-                                    index: "calm",
-                                    extraction_date: new Date(),
-                                    extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
-                                    number_of_extracted_records: results.length,
-                                    method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
-                                })];
-                        case 2:
-                            _a.sent();
-                            _loop_2 = function (x) {
-                                var woreda = results[x];
-                                var record = {
-                                    woreda_name: woreda.woreda_name,
-                                    zone_name: woreda.zone_name,
-                                    region_name: woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
-                                    demarcated: Number(woreda.demarcated),
-                                    digitized: Number(woreda.digitized),
-                                    certificates_approved: Number(woreda.certificates_approved),
-                                    certificates_printed: Number(woreda.certificates_printed),
-                                    certificates_collected: Number(woreda.certificates_collected),
-                                    date: date,
-                                    year: date.split("-")[0],
-                                    month: date.split("-")[1],
-                                    day: date.split("-")[2],
-                                    text_date: date.split("-")[2],
-                                };
-                                var id = "".concat(String(record.date), "_").concat(String(record.woreda_name.replace(/\//g, "")));
-                                console.log(record, id);
-                                records.push(record);
-                                setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                                    var error_3, message;
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0:
-                                                _a.trys.push([0, 2, , 5]);
-                                                return [4 /*yield*/, insertIntoElastic(record, id)];
-                                            case 1:
-                                                _a.sent();
-                                                return [3 /*break*/, 5];
-                                            case 2:
-                                                error_3 = _a.sent();
-                                                if (!(error_3 instanceof etl_exception_1.default)) return [3 /*break*/, 4];
-                                                message = {
-                                                    index: "calm",
-                                                    extraction_date: new Date(),
-                                                    extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
-                                                    number_of_extracted_records: results.length,
-                                                    method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
-                                                    message: error_3.message,
-                                                };
-                                                return [4 /*yield*/, notifire.notify(message)];
-                                            case 3:
-                                                _a.sent();
-                                                _a.label = 4;
-                                            case 4: return [3 /*break*/, 5];
-                                            case 5: return [2 /*return*/];
-                                        }
-                                    });
-                                }); }, 300 * x);
-                            };
-                            for (x = 0; x < results.length; x++) {
-                                _loop_2(x);
-                            }
-                            new_date = addOneWeek(date);
-                            updateConfigFile({ date: new_date });
-                            return [4 /*yield*/, updateCsvFile(records)];
-                        case 3:
-                            _a.sent();
-                            return [4 /*yield*/, etl(connection)];
-                        case 4:
-                            _a.sent();
-                            _a.label = 5;
-                        case 5: return [2 /*return*/];
-                    }
+            try {
+                date_2 = "2021-12-23";
+                connection_1 = mysql.createConnection({
+                    host: config_1.default.CALM_MYSQL_HOST,
+                    port: config_1.default.CALM_MYSQL_PORT,
+                    user: config_1.default.CALM_MYSQL_USER,
+                    password: config_1.default.CALM_MYSQL_PASSWORD,
+                    database: config_1.default.CALM_MYSQL_DB,
                 });
-            }); });
+                connection_1.query("select woredas.woreda_name , zones.zone_name , regions.region_name ,sum(demarcated) as demarcated , sum(digitized) as digitized , sum(certificates_approved) as certificates_approved , sum(certificates_printed) as certificates_printed , sum(certificates_collected) as certificates_collected  from weekly_progress_details inner join woredas on woredas.woreda_code = weekly_progress_details.woreda_code inner join zones on woredas.zone_id = zones.id inner join regions on zones.region_id = regions.id where weekly_progress_id in (select id from weekly_progresses where  report_to = '2021-12-23')  group by woredas.woreda_name,zones.zone_name , regions.region_name;", function (err, results, fields) { return __awaiter(_this, void 0, void 0, function () {
+                    var records, _loop_2, x, new_date;
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!err) return [3 /*break*/, 1];
+                                console.log(err);
+                                return [3 /*break*/, 5];
+                            case 1:
+                                records = [];
+                                return [4 /*yield*/, notifire.notify({
+                                        index: "calm",
+                                        extraction_date: new Date(),
+                                        extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                        number_of_extracted_records: results.length,
+                                        method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                    })];
+                            case 2:
+                                _a.sent();
+                                _loop_2 = function (x) {
+                                    var woreda = results[x];
+                                    var record = {
+                                        woreda_name: woreda.woreda_name,
+                                        zone_name: woreda.zone_name,
+                                        region_name: woreda.region_name == "SNNP" ? "SNNPR" : woreda.region_name,
+                                        demarcated: Number(woreda.demarcated),
+                                        digitized: Number(woreda.digitized),
+                                        certificates_approved: Number(woreda.certificates_approved),
+                                        certificates_printed: Number(woreda.certificates_printed),
+                                        certificates_collected: Number(woreda.certificates_collected),
+                                        date: date_2,
+                                        year: date_2.split("-")[0],
+                                        month: date_2.split("-")[1],
+                                        day: date_2.split("-")[2],
+                                        text_date: date_2.split("-")[2],
+                                    };
+                                    var id = "".concat(String(record.date), "_").concat(String(record.woreda_name.replace(/\//g, "")));
+                                    console.log(record, id);
+                                    records.push(record);
+                                    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                        var error_3, message;
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0:
+                                                    _a.trys.push([0, 2, , 5]);
+                                                    return [4 /*yield*/, insertIntoElastic(record, id)];
+                                                case 1:
+                                                    _a.sent();
+                                                    return [3 /*break*/, 5];
+                                                case 2:
+                                                    error_3 = _a.sent();
+                                                    if (!(error_3 instanceof etl_exception_1.default)) return [3 /*break*/, 4];
+                                                    message = {
+                                                        index: "calm",
+                                                        extraction_date: new Date(),
+                                                        extraction_status: notifire_1.EXTRACTION_STATUS.COMPLETED,
+                                                        number_of_extracted_records: results.length,
+                                                        method: notifire_1.EXTRACTION_METHOD.SYSTEMATIC,
+                                                        message: error_3.message,
+                                                    };
+                                                    return [4 /*yield*/, notifire.notify(message)];
+                                                case 3:
+                                                    _a.sent();
+                                                    _a.label = 4;
+                                                case 4: return [3 /*break*/, 5];
+                                                case 5: return [2 /*return*/];
+                                            }
+                                        });
+                                    }); }, 300 * x);
+                                };
+                                for (x = 0; x < results.length; x++) {
+                                    _loop_2(x);
+                                }
+                                new_date = addOneWeek(date_2);
+                                updateConfigFile({ date: new_date });
+                                return [4 /*yield*/, updateCsvFile(records)];
+                            case 3:
+                                _a.sent();
+                                return [4 /*yield*/, etl(connection_1)];
+                            case 4:
+                                _a.sent();
+                                _a.label = 5;
+                            case 5: return [2 /*return*/];
+                        }
+                    });
+                }); });
+            }
+            catch (err) {
+                console.log(err);
+            }
             return [2 /*return*/];
         });
     });
