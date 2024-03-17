@@ -309,3 +309,7 @@ async function updateCsvFile(records: any) {
     process.exit(1);
   }
 }
+
+(async () => {
+  await initialEtl();
+})();
