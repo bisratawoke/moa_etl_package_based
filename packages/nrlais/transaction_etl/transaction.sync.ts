@@ -400,7 +400,8 @@ export async function transactionWithoutGenderInfo() {
     const client = await pool.connect();
     const cursor = client.query(
       new Cursor(`
-    SELECT 
+   SELECT 
+	k.id as kebele_id,
     tr.csaregionid,
     r.csaregionnameeng as region_name,
     tr.nrlais_zoneid,
@@ -423,6 +424,7 @@ LEFT JOIN nrlais_sys.t_woredas w ON tr.nrlais_woredaid=w.nrlais_woredaid
 LEFT JOIN nrlais_sys.t_kebeles k ON tr.nrlais_kebeleid=k.nrlais_kebeleid
 where tr.transactiontype != 100
 GROUP BY 
+kebele_id,
     tr.csaregionid, 
     region_name, 
     tr.nrlais_zoneid,
@@ -449,7 +451,7 @@ GROUP BY
         });
 
         rows.forEach(async (rec) => {
-          let id = `${rec["nrlais_kebeleid"]}_${rec["transactiontype"]}_${rec["year"]}`;
+          let id = `${rec["kebele_id"]}_${rec["transactiontype"]}_${rec["year"]}`;
           let payload = {
             ...rec,
             string_year: String(rec["year"]),
