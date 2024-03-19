@@ -79,7 +79,7 @@ exports.nrlais_transaction_elt = nrlais_transaction_elt;
 (function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO)];
+            case 0: return [4 /*yield*/, nrlais_transaction_elt(TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO)()];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
