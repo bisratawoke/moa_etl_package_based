@@ -401,7 +401,7 @@ export async function transactionWithoutGenderInfo() {
     const cursor = client.query(
       new Cursor(`
    SELECT 
-	k.id as kebele_id,
+	  k.id as kebele_id,
     tr.csaregionid,
     r.csaregionnameeng as region_name,
     tr.nrlais_zoneid,

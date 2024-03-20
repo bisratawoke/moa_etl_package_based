@@ -6,3 +6,5 @@ export async function admin_location_etl() {
   await etl_woreda();
   await etl_kebele();
 }
+
+(async () => admin_location_etl())();

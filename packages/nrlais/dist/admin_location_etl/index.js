@@ -60,3 +60,6 @@ function admin_location_etl() {
     });
 }
 exports.admin_location_etl = admin_location_etl;
+(function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+    return [2 /*return*/, admin_location_etl()];
+}); }); })();
