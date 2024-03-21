@@ -4,18 +4,6 @@ import config from "config";
 import etlExceptions, { etlExceptionType } from "etl-exception";
 import * as fs from "fs";
 import * as path from "path";
-// export const indexName =
-//   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
-
-/**
- * 
- * @param indexName   // case 14:
-          //   record.transaction_type = "Boundary Correction";
-          //   break;
- * @param rec 
- * @param id 
- * @returns 
- */
 
 export function getRelationshipText(number) {
   switch (number) {

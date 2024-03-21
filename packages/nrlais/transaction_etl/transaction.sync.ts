@@ -400,43 +400,44 @@ export async function transactionWithoutGenderInfo() {
     const client = await pool.connect();
     const cursor = client.query(
       new Cursor(`
-   SELECT 
-	  k.id as kebele_id,
-    tr.csaregionid,
-    r.csaregionnameeng as region_name,
-    tr.nrlais_zoneid,
-    z.csazonenameeng as zone_name,
-    tr.nrlais_woredaid,
-    w.woredanameeng as woreda_name,
-    tr.nrlais_kebeleid,
-    k.kebelenameeng as kebele_name,
-    DATE_PART('year', tr.syscreatedate::date) as year,
-    tr.transactiontype,
-    trt.en as trtype,
-    trs.en as trstatus,
-    COUNT(tr.transactiontype) as no_trans
-FROM nrlais_inventory.t_transaction tr
-LEFT JOIN nrlais_sys.t_cl_transactiontype trt ON tr.transactiontype=trt.codeid  
-LEFT JOIN nrlais_sys.t_cl_txstatus trs ON tr.txstatus=trs.codeid
-LEFT JOIN nrlais_sys.t_regions r ON tr.csaregionid=r.csaregionid
-LEFT JOIN nrlais_sys.t_zones z ON tr.nrlais_zoneid=z.nrlais_zoneid
-LEFT JOIN nrlais_sys.t_woredas w ON tr.nrlais_woredaid=w.nrlais_woredaid
-LEFT JOIN nrlais_sys.t_kebeles k ON tr.nrlais_kebeleid=k.nrlais_kebeleid
-where tr.transactiontype != 100
-GROUP BY 
-kebele_id,
-    tr.csaregionid, 
-    region_name, 
-    tr.nrlais_zoneid,
-    zone_name, 
-    tr.nrlais_woredaid,
-    woreda_name, 
-    tr.nrlais_kebeleid,
-    kebele_name, 
-    year, 
-    tr.transactiontype, 
-    trtype, 
-    trstatus;`)
+        SELECT 
+          k.id as kebele_id,
+          tr.csaregionid,
+          r.csaregionnameeng as region_name,
+          tr.nrlais_zoneid,
+          z.csazonenameeng as zone_name,
+          tr.nrlais_woredaid,
+          w.woredanameeng as woreda_name,
+          tr.nrlais_kebeleid,
+          k.kebelenameeng as kebele_name,
+          DATE_PART('year', tr.syscreatedate::date) as year,
+          tr.transactiontype,
+          trt.en as trtype,
+          trs.en as trstatus,
+          COUNT(tr.transactiontype) as no_trans
+          FROM nrlais_inventory.t_transaction tr
+          LEFT JOIN nrlais_sys.t_cl_transactiontype trt ON tr.transactiontype=trt.codeid  
+          LEFT JOIN nrlais_sys.t_cl_txstatus trs ON tr.txstatus=trs.codeid
+          LEFT JOIN nrlais_sys.t_regions r ON tr.csaregionid=r.csaregionid
+          LEFT JOIN nrlais_sys.t_zones z ON tr.nrlais_zoneid=z.nrlais_zoneid
+          LEFT JOIN nrlais_sys.t_woredas w ON tr.nrlais_woredaid=w.nrlais_woredaid
+          LEFT JOIN nrlais_sys.t_kebeles k ON tr.nrlais_kebeleid=k.nrlais_kebeleid
+        where tr.transactiontype != 100
+        GROUP BY 
+        kebele_id,
+        tr.csaregionid, 
+        region_name, 
+        tr.nrlais_zoneid,
+        zone_name, 
+        tr.nrlais_woredaid,
+        woreda_name, 
+        tr.nrlais_kebeleid,
+        kebele_name, 
+        year, 
+        tr.transactiontype, 
+        trtype, 
+        trstatus;
+    `)
     );
     let numOfRecs = 1000;
     let rows = await cursor.read(numOfRecs);

@@ -27,6 +27,7 @@ schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.def
  *  - nrlais transaction etl
  */
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_transaction_data", (0, nrlais_1.nrlais_transaction_elt)(nrlais_1.TRANSACTION_OPERATION_TYPE.WITHGENDER_INFO), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
+schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_admin_location", nrlais_1.admin_location_etl, moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY));
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_transction_data", (0, nrlais_1.nrlais_transaction_elt)(nrlais_1.TRANSACTION_OPERATION_TYPE.WITHOUT_GENGER_INFO), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_watershed_link", (0, nrlais_1.nrlais_parcel_elt)(nrlais_1.OPERATION_TYPE.WATERSHED_SYNC), moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));
 schedule.scheduleJob(moa_config_1.default.NRLAIS_DB_ETL_FREQUENCY, (0, job_1.default)("nrlais_mortgage_data", nrlais_1.nrlais_mortgage_sync, moa_config_1.default.NRLAIS_DB_ETL_RETRY_RATE));

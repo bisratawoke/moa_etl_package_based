@@ -54,17 +54,6 @@ var config_1 = require("config");
 var etl_exception_1 = require("etl-exception");
 var fs = require("fs");
 var path = require("path");
-// export const indexName =
-//   "nrlais_land_admin_system_parcels_weekly_extracted_data_test";
-/**
- *
- * @param indexName   // case 14:
-          //   record.transaction_type = "Boundary Correction";
-          //   break;
- * @param rec
- * @param id
- * @returns
- */
 function getRelationshipText(number) {
     switch (number) {
         case 1:

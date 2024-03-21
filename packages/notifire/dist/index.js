@@ -167,10 +167,8 @@ var Notifier = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        // await this.sendEmail(message);
                         return [4 /*yield*/, this.sendToElasticLog(message)];
                     case 1:
-                        // await this.sendEmail(message);
                         _a.sent();
                         return [3 /*break*/, 3];
                     case 2:
