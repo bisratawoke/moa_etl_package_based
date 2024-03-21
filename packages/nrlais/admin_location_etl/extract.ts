@@ -25,6 +25,77 @@ export async function insertIntoElastic(
   }
 }
 
+async function getCountOfLLUPKebeles(indexName: string) {
+  try {
+    const response = await axios.get(
+      `${config.ELASTIC_URL}/${indexName}/_count`,
+      {
+        auth: {
+          username: config.ELASTIC_USERNAME,
+          password: config.ELASTIC_PASSWORD,
+        },
+      }
+    );
+    const { count } = response.data;
+
+    return count;
+  } catch (error) {
+    console.log("============ in get count of llup kebeles =================");
+    console.log(error);
+  }
+}
+
+async function getListOfLLUPKebeles(indexName: string) {
+  try {
+    const count = await getCountOfLLUPKebeles("llup_data_report_with_pdf_ref");
+    const result = await axios.get(
+      `${config.ELASTIC_URL}/${indexName}/_search?size=${count}`,
+      {
+        auth: {
+          username: config.ELASTIC_USERNAME,
+          password: config.ELASTIC_PASSWORD,
+        },
+      }
+    );
+
+    return result.data.hits.hits;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function etl_llup() {
+  try {
+    const llupKebeles = await getListOfLLUPKebeles(
+      "llup_data_report_with_pdf_ref"
+    );
+    for (let x = 0; x < llupKebeles.length; x++) {
+      let query = {
+        query: {
+          match: {
+            "kebele_name.keyword": llupKebeles[x]["_source"]["kebele_name"],
+          },
+        },
+      };
+
+      const response = await axios.post(
+        `${config.ELASTIC_URL}/nrlais_kebeles/_search`,
+        query,
+        {
+          auth: {
+            username: config.ELASTIC_USERNAME,
+            password: config.ELASTIC_PASSWORD,
+          },
+        }
+      );
+
+      console.log(response.data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function etl_region() {
   try {
     const pool = new Pool({

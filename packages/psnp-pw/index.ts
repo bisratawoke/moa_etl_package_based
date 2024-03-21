@@ -58,9 +58,7 @@ export default function main(optType: OPERATION_TYPE) {
         case OPERATION_TYPE.ACTIVITIES:
           for await (const activity of extract_activites_info()) {
             let record = actTransformer(activity);
-            record.Unit.toLowerCase() == "ha"
-              ? console.log(record)
-              : console.log("yo");
+            console.log(record);
             await insertIntoElastic(
               record,
               "psnp_swc_treatment_result_scheduler_test",

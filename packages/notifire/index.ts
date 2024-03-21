@@ -109,7 +109,6 @@ export default class Notifier {
 
   public async notify(message: IMessage) {
     try {
-      // await this.sendEmail(message);
       await this.sendToElasticLog(message);
     } catch (error) {
       console.log(error);

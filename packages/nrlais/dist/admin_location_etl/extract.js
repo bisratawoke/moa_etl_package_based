@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.etl_kebele = exports.etl_woreda = exports.etl_zone = exports.etl_region = exports.insertIntoElastic = void 0;
+exports.etl_kebele = exports.etl_woreda = exports.etl_zone = exports.etl_region = exports.etl_llup = exports.insertIntoElastic = void 0;
 var pg_1 = require("pg");
 var moa_config_1 = require("moa_config");
 var transform_1 = require("./transform");
@@ -67,9 +67,109 @@ function insertIntoElastic(indexName, payload, id) {
     });
 }
 exports.insertIntoElastic = insertIntoElastic;
+function getCountOfLLUPKebeles(indexName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, count, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, axios_1.default.get("".concat(moa_config_1.default.ELASTIC_URL, "/").concat(indexName, "/_count"), {
+                            auth: {
+                                username: moa_config_1.default.ELASTIC_USERNAME,
+                                password: moa_config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 1:
+                    response = _a.sent();
+                    count = response.data.count;
+                    return [2 /*return*/, count];
+                case 2:
+                    error_2 = _a.sent();
+                    console.log("============ in get count of llup kebeles =================");
+                    console.log(error_2);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+function getListOfLLUPKebeles(indexName) {
+    return __awaiter(this, void 0, void 0, function () {
+        var count, result, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, getCountOfLLUPKebeles("llup_data_report_with_pdf_ref")];
+                case 1:
+                    count = _a.sent();
+                    return [4 /*yield*/, axios_1.default.get("".concat(moa_config_1.default.ELASTIC_URL, "/").concat(indexName, "/_search?size=").concat(count), {
+                            auth: {
+                                username: moa_config_1.default.ELASTIC_USERNAME,
+                                password: moa_config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.data.hits.hits];
+                case 3:
+                    error_3 = _a.sent();
+                    console.log(error_3);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+function etl_llup() {
+    return __awaiter(this, void 0, void 0, function () {
+        var llupKebeles, x, query, response, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 6, , 7]);
+                    return [4 /*yield*/, getListOfLLUPKebeles("llup_data_report_with_pdf_ref")];
+                case 1:
+                    llupKebeles = _a.sent();
+                    x = 0;
+                    _a.label = 2;
+                case 2:
+                    if (!(x < llupKebeles.length)) return [3 /*break*/, 5];
+                    query = {
+                        query: {
+                            match: {
+                                "kebele_name.keyword": llupKebeles[x]["_source"]["kebele_name"],
+                            },
+                        },
+                    };
+                    return [4 /*yield*/, axios_1.default.post("".concat(moa_config_1.default.ELASTIC_URL, "/nrlais_kebeles/_search"), query, {
+                            auth: {
+                                username: moa_config_1.default.ELASTIC_USERNAME,
+                                password: moa_config_1.default.ELASTIC_PASSWORD,
+                            },
+                        })];
+                case 3:
+                    response = _a.sent();
+                    console.log(response.data);
+                    _a.label = 4;
+                case 4:
+                    x++;
+                    return [3 /*break*/, 2];
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    error_4 = _a.sent();
+                    console.log(error_4);
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.etl_llup = etl_llup;
 function etl_region() {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, conn, response, x, trans_record, error_2;
+        var pool, conn, response, x, trans_record, error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -103,8 +203,8 @@ function etl_region() {
                     return [3 /*break*/, 3];
                 case 7: return [3 /*break*/, 9];
                 case 8:
-                    error_2 = _a.sent();
-                    console.log(error_2);
+                    error_5 = _a.sent();
+                    console.log(error_5);
                     return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];
             }
@@ -114,7 +214,7 @@ function etl_region() {
 exports.etl_region = etl_region;
 function etl_zone() {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, conn, response, x, trans_record, error_3;
+        var pool, conn, response, x, trans_record, error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -148,8 +248,8 @@ function etl_zone() {
                     return [3 /*break*/, 3];
                 case 7: return [3 /*break*/, 9];
                 case 8:
-                    error_3 = _a.sent();
-                    console.log(error_3);
+                    error_6 = _a.sent();
+                    console.log(error_6);
                     return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];
             }
@@ -159,7 +259,7 @@ function etl_zone() {
 exports.etl_zone = etl_zone;
 function etl_woreda() {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, conn, response, x, trans_record, error_4;
+        var pool, conn, response, x, trans_record, error_7;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -193,8 +293,8 @@ function etl_woreda() {
                     return [3 /*break*/, 3];
                 case 7: return [3 /*break*/, 9];
                 case 8:
-                    error_4 = _a.sent();
-                    console.log(error_4);
+                    error_7 = _a.sent();
+                    console.log(error_7);
                     return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];
             }
@@ -204,7 +304,7 @@ function etl_woreda() {
 exports.etl_woreda = etl_woreda;
 function etl_kebele() {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, conn, response, x, trans_record, error_5;
+        var pool, conn, response, x, trans_record, error_8;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -238,8 +338,8 @@ function etl_kebele() {
                     return [3 /*break*/, 3];
                 case 7: return [3 /*break*/, 9];
                 case 8:
-                    error_5 = _a.sent();
-                    console.log(error_5);
+                    error_8 = _a.sent();
+                    console.log(error_8);
                     return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];
             }

@@ -37,39 +37,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.insertIntoElastic = void 0;
-var axios_1 = require("axios");
-var moa_config_1 = require("moa_config");
 var etl_exception_1 = require("etl-exception");
 var uuidv4 = require("uuid").v4;
-//slmp_2001_2015_swc_treatments_result,psnp_phy_swc_treatment_result,mass_mobilization_physical_swc_treatment_report,calm_soil_water_conservation_treatments,pasidp_swc_treatments*
 function insertIntoElastic(obj, indexname, id) {
     return __awaiter(this, void 0, void 0, function () {
-        var indexName, result, error_1, exp;
+        var indexName, exp;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    indexName = indexname;
-                    return [4 /*yield*/, axios_1.default.post("".concat(moa_config_1.default.ELASTIC_URL, "/").concat(indexName, "/_doc/").concat(id ? id : uuidv4()), obj, {
-                            auth: {
-                                username: moa_config_1.default.ELASTIC_USERNAME,
-                                password: moa_config_1.default.ELASTIC_PASSWORD,
-                            },
-                        })];
-                case 1:
-                    result = _a.sent();
-                    console.log(result.status);
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.log("== in here ==");
-                    console.log(error_1);
-                    exp = new etl_exception_1.default(error_1.message, 
-                    // JSON.stringify(error.response.data),
-                    etl_exception_1.etlExceptionType.LOADING);
-                    throw exp;
-                case 3: return [2 /*return*/];
+            try {
+                indexName = indexname;
+                console.log(obj.region_name == "SNNPR" ? obj : "");
+                // const result = await axios.post(
+                //   `${config.ELASTIC_URL}/${indexName}/_doc/${id ? id : uuidv4()}`,
+                //   obj,
+                //   {
+                //     auth: {
+                //       username: config.ELASTIC_USERNAME,
+                //       password: config.ELASTIC_PASSWORD,
+                //     },
+                //   }
+                // );
+                // console.log(result.status);
             }
+            catch (error) {
+                console.log("== in here ==");
+                console.log(error);
+                exp = new etl_exception_1.default(error.message, 
+                // JSON.stringify(error.response.data),
+                etl_exception_1.etlExceptionType.LOADING);
+                throw exp;
+            }
+            return [2 /*return*/];
         });
     });
 }

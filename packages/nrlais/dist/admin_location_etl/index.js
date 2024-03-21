@@ -42,17 +42,8 @@ function admin_location_etl() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, extract_1.etl_region)()];
+                case 0: return [4 /*yield*/, (0, extract_1.etl_llup)()];
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, (0, extract_1.etl_zone)()];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, (0, extract_1.etl_woreda)()];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, (0, extract_1.etl_kebele)()];
-                case 4:
                     _a.sent();
                     return [2 /*return*/];
             }
@@ -60,6 +51,13 @@ function admin_location_etl() {
     });
 }
 exports.admin_location_etl = admin_location_etl;
-(function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    return [2 /*return*/, admin_location_etl()];
-}); }); })();
+(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, admin_location_etl()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); })();

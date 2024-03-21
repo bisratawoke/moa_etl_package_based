@@ -194,9 +194,7 @@ function main(optType) {
                     _l = false;
                     activity = _0;
                     record = (0, pnsp_pw_services_transform_activities_1.default)(activity);
-                    record.Unit.toLowerCase() == "ha"
-                        ? console.log(record)
-                        : console.log("yo");
+                    console.log(record);
                     return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_swc_treatment_result_scheduler_test", record.id)];
                 case 43:
                     _1.sent();
