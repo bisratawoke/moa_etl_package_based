@@ -195,8 +195,12 @@ function main(optType) {
                     activity = _0;
                     record = (0, pnsp_pw_services_transform_activities_1.default)(activity);
                     console.log(record);
-                    return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_swc_treatment_result_scheduler_test", record.id)];
+                    //psnp_swc_treatment_result_scheduler_test
+                    // psnp_swc_treatment_week_data;
+                    return [4 /*yield*/, (0, psnp_pw_services_load_1.insertIntoElastic)(record, "psnp_swc_treatment_week_data", record.id)];
                 case 43:
+                    //psnp_swc_treatment_result_scheduler_test
+                    // psnp_swc_treatment_week_data;
                     _1.sent();
                     _1.label = 44;
                 case 44:
@@ -239,3 +243,13 @@ function main(optType) {
     }); };
 }
 exports.default = main;
+(function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, main(OPERATION_TYPE.ACTIVITIES)()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); })();

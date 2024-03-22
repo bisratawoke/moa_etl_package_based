@@ -9,8 +9,6 @@ export async function* extract_activites_info(): AsyncGenerator<
   unknown
 > {
   try {
-    console.log("========= in extract_activites_info ========");
-    // act.attribs as activity_attribs
     const client = await pool.connect();
     const cursor = client.query(
       new Cursor(`select
@@ -46,7 +44,6 @@ export async function* extract_activites_info(): AsyncGenerator<
     );
     let rows = await cursor.read(1);
     while (rows.length) {
-      console.log("====== in extract activities info =====");
       yield rows[0];
       rows = await cursor.read(1);
     }

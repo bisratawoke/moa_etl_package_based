@@ -52,7 +52,6 @@ function extract_activites_info() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 8, , 9]);
-                    console.log("========= in extract_activites_info ========");
                     return [4 /*yield*/, __await(psnp_pw_services_database_1.default.connect())];
                 case 1:
                     client_1 = _a.sent();
@@ -63,7 +62,6 @@ function extract_activites_info() {
                     _a.label = 3;
                 case 3:
                     if (!rows.length) return [3 /*break*/, 7];
-                    console.log("====== in extract activities info =====");
                     return [4 /*yield*/, __await(rows[0])];
                 case 4: return [4 /*yield*/, _a.sent()];
                 case 5:

@@ -59,9 +59,11 @@ export default function main(optType: OPERATION_TYPE) {
           for await (const activity of extract_activites_info()) {
             let record = actTransformer(activity);
             console.log(record);
+            //psnp_swc_treatment_result_scheduler_test
+            // psnp_swc_treatment_week_data;
             await insertIntoElastic(
               record,
-              "psnp_swc_treatment_result_scheduler_test",
+              "psnp_swc_treatment_week_data",
               record.id
             );
           }
@@ -77,3 +79,7 @@ export default function main(optType: OPERATION_TYPE) {
     }
   };
 }
+
+(async () => {
+  await main(OPERATION_TYPE.ACTIVITIES)();
+})();
