@@ -83,7 +83,7 @@ This project utilizes Elasticsearch, Kibana, and Node.js. Follow the instruction
 
 1. Open a terminal and navigate to the desired directory where you want to clone the repository.
 
-2. Clone the repository using the following command (replace `your/repo.git` with the actual repository URL):
+2. Clone the repository using the following command (replace `your/repo.git` with the actual repository repo path ):
    ```bash
    git clone https://github.com/your/repo.git
    ```
@@ -102,7 +102,20 @@ This project utilizes Elasticsearch, Kibana, and Node.js. Follow the instruction
    npm install
    ```
 
-3. Start the application:
+3. Set NODE_ENV enviroment variable to production
+
+```bash
+    export NODE_ENV=production
+```
+
+4. Check that prodConfig.json file exists in the project directory. If it does not exist create the file by copying the prodConfig.default to prodConfig.json and inserting the appropriate variables.
+
+```bash
+    cd packages/config/dist \
+    ls
+```
+
+5. Start the application:
    ```bash
    npm start
    ```
@@ -194,19 +207,3 @@ To stop the application you would need to stop elasticsearch , kibana , nginx an
 4.  ```bash
     sudo systemctl stop nginx.service
     ```
-
-#### Monitoring services
-
-To monitor the ETL application you would need to first insert setup the smtp server which is already preconfigured to be honest you just have to specify t he email address and password of that the email will send from.
-
-1.  ```bash
-    curl -X PUT \
-    -H "Content-Type: application/json" \
-    -d '{"email":"your email address", "password":"your password"}' \
-    -u elastic-username:elastic-password \
-    http://your-ip-address/elastic/notifire/_doc/1
-
-
-    ```
-
-Thats it now your will get notification to your email about the status of the various extraction , transformation and loading activities that are being performed by the custom ETL application. You can also read the logs in kibana observations feature. Head over to your elastic dashboard and using the left side nav bar and select observability > logs and you can see the status of the various extraction , transformation and loading activities that are being performed by the custom ETL application.
