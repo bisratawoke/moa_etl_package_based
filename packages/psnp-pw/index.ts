@@ -79,7 +79,3 @@ export default function main(optType: OPERATION_TYPE) {
     }
   };
 }
-
-(async () => {
-  await main(OPERATION_TYPE.ACTIVITIES)();
-})();
